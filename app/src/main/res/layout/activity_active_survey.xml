@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dash_board_background"
+    tools:context="lumstic.example.com.lumstic.DashBoardActivity">
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/dashboard_bg_img"></View>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp"
+        android:background="@color/dash_board_foreground">
+        <TextView
+            android:id="@+id/active_survey_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Active Surveys"
+            android:textSize="24sp" />
+        <LinearLayout
+            android:id="@+id/upload_container"
+            android:layout_below="@+id/active_survey_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/login_button_color"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/ic_complete_responces" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/login_button_color"
+                android:text="@string/upload_comleted_responses"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <View
+            android:id="@+id/devider"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@+id/active_survey_text"
+            android:layout_marginLeft="50dp"
+            android:background="@color/black"></View>
+        <ListView
+            android:id="@+id/active_surve_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/upload_container"
+            android:layout_margin="10dp"
+            android:padding="10dp"></ListView>
+    </RelativeLayout>
+</RelativeLayout>

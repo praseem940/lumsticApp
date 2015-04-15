@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/answer_text"
+        android:layout_centerHorizontal="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="type your answer here"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:singleLine="true"
+        android:maxLength="20"
+        android:background="@drawable/custom_edittext"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="max length 20"
+        android:layout_below="@+id/answer_text"
+        android:paddingLeft="20dp"
+        android:textColor="@color/orange_text"
+        android:textSize="18sp"
+        android:layout_alignParentLeft="true"/>
+
+</RelativeLayout>

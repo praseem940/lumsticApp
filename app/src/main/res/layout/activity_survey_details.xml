@@ -1,0 +1,206 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="lumstic.example.com.lumstic.SurveyDetailsActivity">
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/dashboard_bg_img"></View>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_margin="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/survey_title_text"
+            android:layout_width="wrap_content"
+            android:text="Temperature Details as per city"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:padding="10dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/survey_description_text"
+            android:layout_below="@+id/survey_title_text"
+            android:layout_width="wrap_content"
+            android:text="@string/survey_description"
+            android:textColor="@color/descrioption_text_color"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:layout_height="wrap_content" />
+
+
+        <LinearLayout
+            android:id="@+id/ends_date_container"
+            android:layout_width="fill_parent"
+            android:paddingLeft="10dp"
+            android:layout_below="@+id/survey_description_text"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="6dp"
+                android:text="Ends on:"
+                android:textColor="@color/endson_text_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/end_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="18th Feb 2015"
+                android:textColor="@color/endson_text_color"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Responses"
+            android:textColor="@color/black"
+            android:paddingLeft="12dp"
+            android:textSize="24sp"
+            android:layout_below="@+id/ends_date_container"/>
+        <View
+            android:id="@+id/devider"
+            android:layout_below="@+id/response"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/black"></View>
+
+        <RelativeLayout
+
+            android:id="@+id/responses_container"
+            android:layout_below="@+id/response"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/complete_response_container"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Complete Responses"
+                android:textSize="20sp"
+                android:textColor="@color/completed_survey_text"/>
+
+            <TextView
+                android:id="@+id/complete_response"
+                android:text="02"
+                android:textColor="@color/completed_survey_text"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+<View
+    android:id="@+id/devider2"
+    android:layout_below="@+id/complete_response_container"
+    android:layout_width="fill_parent"
+    android:layout_height="0.5dp"
+    android:layout_marginLeft="30dp"
+    android:background="@color/black"></View>
+
+        <LinearLayout
+            android:id="@+id/incomplete_response_container"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_below="@+id/devider2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Incomplete Responses"
+                android:textSize="20sp"
+                android:textColor="@color/incomplete_survey_text"/>
+
+            <TextView
+                android:id="@+id/incomplete_response"
+                android:text="02"
+                android:textColor="@color/incomplete_survey_text"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/devider3"
+            android:layout_below="@+id/incomplete_response_container"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/black"></View>
+
+        <LinearLayout
+            android:id="@+id/uploaded_response_container"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_below="@+id/devider3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Uploaded Responses"
+                android:textSize="20sp"
+                android:textColor="@color/uploaded_survey_text"/>
+
+            <TextView
+                android:id="@+id/uploaded_response"
+                android:text="02"
+                android:textColor="@color/uploaded_survey_text"
+                android:textSize="24sp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <View
+            android:id="@+id/main_devider"
+            android:layout_below="@+id/uploaded_response_container"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/black"></View>
+</RelativeLayout>
+        <Button
+            android:id="@+id/add_responses_button"
+            android:layout_below="@+id/responses_container"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="20dp"
+            android:layout_margin="20dp"
+            android:padding="8dp"
+            android:textSize="20sp"
+            android:background="@color/login_button_color"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:text="+  Add Response"/>
+    </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
