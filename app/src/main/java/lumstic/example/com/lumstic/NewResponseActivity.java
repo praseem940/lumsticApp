@@ -33,8 +33,8 @@ public class NewResponseActivity extends Activity {
     Uri picUri;
     int CAMERA_REQUEST=1;
     final int PIC_CROP = 2;
-    int layouts[]={R.layout.answer_single_line, R.layout.answer_multi_line, R.layout.answer_date_picker,R.layout.answer_image_picker,R.layout.answer_numeric,R.layout.answer_rating,R.layout.answer_multi_choice};
-    String questions[]={"What is your name","Describe yourself","Your Date of Birth","Upload your picture","Whats is your age","Rate this app","Choose multiple options"};
+    int layouts[]={R.layout.answer_single_line, R.layout.answer_multi_line, R.layout.answer_date_picker,R.layout.answer_image_picker,R.layout.answer_numeric,R.layout.answer_rating,R.layout.answer_multi_choice,R.layout.answer_radio_button};
+    String questions[]={"What is your name","Describe yourself","Your Date of Birth","Upload your picture","Whats is your age","Rate this app","Choose multiple options","Choose any one"};
     int questionCounter = 0;
     Button nextQuestion, previousQuestion;
 
