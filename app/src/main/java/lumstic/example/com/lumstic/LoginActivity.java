@@ -4,11 +4,28 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import lumstic.example.com.lumstic.Adapters.DBAdapter;
+import lumstic.example.com.lumstic.Models.Answers;
+import lumstic.example.com.lumstic.Models.Categories;
+import lumstic.example.com.lumstic.Models.Choices;
+import lumstic.example.com.lumstic.Models.Options;
+import lumstic.example.com.lumstic.Models.Questions;
+import lumstic.example.com.lumstic.Models.Records;
+import lumstic.example.com.lumstic.Models.Responses;
+import lumstic.example.com.lumstic.Models.Surveys;
+import lumstic.example.com.lumstic.Utils.JsonHelper;
 
 
 public class LoginActivity extends Activity {
@@ -16,10 +33,16 @@ public class LoginActivity extends Activity {
     ActionBar actionBar;
     Button loginButton;
     TextView  fogotPassword;
+    DBAdapter dbAdapter;
+    Questions questions;
+
+    int ctr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        dbAdapter= new DBAdapter(LoginActivity.this);
+
         actionBar= getActionBar();
         actionBar.setTitle("Login");
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -40,6 +63,16 @@ public class LoginActivity extends Activity {
                 startActivity(i);
             }
         });
+
+
+       // Toast.makeText(LoginActivity.this,dbAdapter.insertDataOptionsTable(new Options(1,2,1,"zaz"))+"",Toast.LENGTH_LONG).show();
+
+       JsonHelper jsonHelper;
+        jsonHelper= new JsonHelper(LoginActivity.this);
+        jsonHelper.getStringFromJson();
+
+
+
     }
 
 
@@ -57,4 +90,5 @@ public class LoginActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

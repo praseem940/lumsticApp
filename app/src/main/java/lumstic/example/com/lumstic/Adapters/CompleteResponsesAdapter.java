@@ -13,9 +13,7 @@ import lumstic.example.com.lumstic.Models.CompleteResponses;
 import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.R;
 
-/**
- * Created by work on 14/4/15.
- */
+
 public class CompleteResponsesAdapter extends BaseAdapter {
 
     Context context;
@@ -27,7 +25,6 @@ public class CompleteResponsesAdapter extends BaseAdapter {
         this.completeResponseses = completeResponseses;
     }
 
-    @Override
     public int getCount() {
         return completeResponseses.size();
     }
@@ -37,12 +34,10 @@ public class CompleteResponsesAdapter extends BaseAdapter {
         return completeResponseses.get(i);
     }
 
-    @Override
     public long getItemId(int i) {
         return i;
     }
 
-    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
