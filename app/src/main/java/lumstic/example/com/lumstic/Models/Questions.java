@@ -1,5 +1,7 @@
 package lumstic.example.com.lumstic.Models;
 
+import java.util.List;
+
 /**
  * Created by work on 17/4/15.
  */
@@ -25,8 +27,15 @@ public class Questions {
     String type;
     String content;
 
+    List<Options> options;
 
+    public List<Options> getOptions() {
+        return options;
+    }
 
+    public void setOptions(List<Options> options) {
+        this.options = options;
+    }
 
     public int getIdentifier() {
         return identifier;

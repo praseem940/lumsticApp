@@ -51,9 +51,10 @@ public class JsonHelper {
 
         try {
             JSONArray jsonArray = new JSONArray(rawJson);
+            JSONParser jsonParser= new JSONParser();
+            jsonParser.parseSurvey(jsonArray);
             JSONObject jsonObject = jsonArray.getJSONObject(0);
-            JSONParser jsonParser = new JSONParser();
-            jsonParser.parseSurvey(jsonObject);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

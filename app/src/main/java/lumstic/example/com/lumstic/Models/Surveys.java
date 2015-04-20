@@ -1,5 +1,7 @@
 package lumstic.example.com.lumstic.Models;
 
+import java.util.List;
+
 /**
  * Created by work on 17/4/15.
  */
@@ -9,6 +11,24 @@ public class Surveys {
     String name;
     String description;
     String expiryDate;
+    List<Questions> questions;
+    List<Categories> categories;
+
+    public List<Categories> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Categories> categories) {
+        this.categories = categories;
+    }
+
+    public List<Questions> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Questions> questions) {
+        this.questions = questions;
+    }
 
     public int getId() {
         return id;
@@ -50,11 +70,4 @@ public class Surveys {
         this.expiryDate = expiryDate;
     }
 
-//    public Surveys(int id, String publishedOn, String name, String description, String expiryDate) {
-//        this.id = id;
-//        this.publishedOn = publishedOn;
-//        this.name = name;
-//        this.description = description;
-//        this.expiryDate = expiryDate;
-//    }
 }

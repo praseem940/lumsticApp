@@ -7,9 +7,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lumstic.example.com.lumstic.Models.Questions;
+import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
 
 /**
@@ -17,9 +19,12 @@ import lumstic.example.com.lumstic.Models.Surveys;
  */
 public class JSONParser {
 
+    List<Questions> questionses;
+    List<Surveys> surveyses;
 
     public Questions parseQuestions(JSONObject jsonObjectQuestions) {
         Questions questions = new Questions();
+
         try {
             try {
                 questions.setId(jsonObjectQuestions.getInt("id"));
@@ -33,8 +38,7 @@ public class JSONParser {
                     questions.setIdentifier(1);
                 else
                     questions.setIdentifier(0);
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -88,8 +92,7 @@ public class JSONParser {
                     questions.setMandatory(1);
                 else
                     questions.setMandatory(0);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -97,29 +100,39 @@ public class JSONParser {
             e.printStackTrace();
         }
 
-return questions;
+        return questions;
     }
 
 
-    public void parseSurvey(JSONObject jsonObject) {
-        Surveys surveys = new Surveys();
-        try {
-            surveys.setId(Integer.parseInt(jsonObject.getString("id")));
+    public List<Surveys> parseSurvey(JSONArray jsonArrayMain) {
 
-            surveys.setDescription(jsonObject.getString("description"));
-            surveys.setExpiryDate(jsonObject.getString("expiry_date"));
-            surveys.setName(jsonObject.getString("name"));
-            surveys.setPublishedOn(jsonObject.getString("published_on"));
-            JSONArray jsonArray = jsonObject.getJSONArray("questions");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObjectQuestion = jsonArray.getJSONObject(i);
-               Questions questions= parseQuestions(jsonObjectQuestion);
+
+        surveyses= new ArrayList<Surveys>();
+        for (int i = 0; i < jsonArrayMain.length(); i++) {
+            Surveys surveys;
+            surveys= new Surveys();
+            try {
+                JSONObject jsonObject = jsonArrayMain.getJSONObject(i);
+                questionses = new ArrayList<Questions>();
+                surveys.setId(Integer.parseInt(jsonObject.getString("id")));
+                surveys.setDescription(jsonObject.getString("description"));
+                surveys.setExpiryDate(jsonObject.getString("expiry_date"));
+                surveys.setName(jsonObject.getString("name"));
+                surveys.setPublishedOn(jsonObject.getString("published_on"));
+                JSONArray jsonArray = jsonObject.getJSONArray("questions");
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    JSONObject jsonObjectQuestion = jsonArray.getJSONObject(i);
+                    Questions questions = parseQuestions(jsonObjectQuestion);
+                    questionses.add(j, questions);
+                }
+                surveys.setQuestions(questionses);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            surveyses.add(surveys);
         }
+
+return  surveyses;
     }
-
-
 }
