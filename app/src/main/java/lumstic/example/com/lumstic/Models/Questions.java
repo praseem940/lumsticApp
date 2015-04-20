@@ -5,35 +5,28 @@ package lumstic.example.com.lumstic.Models;
  */
 public class Questions {
 
+    int id;
+    String imageUrl;
+    int orderNumber;
+
+
+
+
     int identifier;
     int parentId;
     int minValue;
     int maxVlue;
-    int id;
+
     int surveyId;
     int maxLength;
     int mandatory;
-    int orderNumber;
+
     int categoryId;
     String type;
     String content;
-    String imageUrl;
 
-    public Questions(int identifier, int parentId, int minValue, int maxVlue, int id, int surveyId, int maxLength, int mandatory, int orderNumber, int categoryId, String type, String content, String imageUrl) {
-        this.identifier = identifier;
-        this.parentId = parentId;
-        this.minValue = minValue;
-        this.maxVlue = maxVlue;
-        this.id = id;
-        this.surveyId = surveyId;
-        this.maxLength = maxLength;
-        this.mandatory = mandatory;
-        this.orderNumber = orderNumber;
-        this.categoryId = categoryId;
-        this.type = type;
-        this.content = content;
-        this.imageUrl = imageUrl;
-    }
+
+
 
     public int getIdentifier() {
         return identifier;

@@ -1,8 +1,6 @@
 package lumstic.example.com.lumstic.Models;
 
-/**
- * Created by work on 17/4/15.
- */
+
 public class Choices {
     int id;
     int optionId;

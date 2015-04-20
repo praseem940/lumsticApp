@@ -50,11 +50,11 @@ public class Surveys {
         this.expiryDate = expiryDate;
     }
 
-    public Surveys(int id, String publishedOn, String name, String description, String expiryDate) {
-        this.id = id;
-        this.publishedOn = publishedOn;
-        this.name = name;
-        this.description = description;
-        this.expiryDate = expiryDate;
-    }
+//    public Surveys(int id, String publishedOn, String name, String description, String expiryDate) {
+//        this.id = id;
+//        this.publishedOn = publishedOn;
+//        this.name = name;
+//        this.description = description;
+//        this.expiryDate = expiryDate;
+//    }
 }

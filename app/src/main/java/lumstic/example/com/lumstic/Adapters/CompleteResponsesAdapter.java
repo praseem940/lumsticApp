@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import lumstic.example.com.lumstic.Models.CompleteResponses;
-import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.R;
 
 

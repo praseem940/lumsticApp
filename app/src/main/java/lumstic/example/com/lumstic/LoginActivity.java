@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +38,8 @@ public class LoginActivity extends Activity {
     TextView  fogotPassword;
     DBAdapter dbAdapter;
     Questions questions;
+    JSONArray jsonArray;
+    JsonHelper jsonHelper;
 
     int ctr;
     @Override
@@ -65,11 +70,11 @@ public class LoginActivity extends Activity {
         });
 
 
-       // Toast.makeText(LoginActivity.this,dbAdapter.insertDataOptionsTable(new Options(1,2,1,"zaz"))+"",Toast.LENGTH_LONG).show();
+        // Toast.makeText(LoginActivity.this,dbAdapter.insertDataOptionsTable(new Options(1,2,1,"zaz"))+"",Toast.LENGTH_LONG).show();
 
-       JsonHelper jsonHelper;
-        jsonHelper= new JsonHelper(LoginActivity.this);
-        jsonHelper.getStringFromJson();
+
+            jsonHelper= new JsonHelper(LoginActivity.this);
+            jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
 

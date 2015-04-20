@@ -142,7 +142,6 @@ public class NewResponseActivity extends Activity {
         return true;
     }
 
-    //option menu
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
@@ -151,7 +150,6 @@ public class NewResponseActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    //datepicker listener clas
     class mDateSetListener implements DatePickerDialog.OnDateSetListener {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear,

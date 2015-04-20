@@ -1,8 +1,5 @@
 package lumstic.example.com.lumstic.Models;
 
-/**
- * Created by work on 14/4/15.
- */
 public class IncompleteResponses {
     String responseNumber;
     String responseText;
