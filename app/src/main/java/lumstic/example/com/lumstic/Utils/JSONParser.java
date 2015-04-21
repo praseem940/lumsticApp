@@ -25,49 +25,50 @@ public class JSONParser {
 
     public Categories parseCategories(JSONObject jsonObjectCategories) {
         Categories categories = new Categories();
-     try{   try {
-            categories.setId(jsonObjectCategories.getInt("id"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         try {
-            categories.setSurveyId(jsonObjectCategories.getInt("survey_id"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            categories.setOrderNumber(jsonObjectCategories.getInt("order_number"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            categories.setCategoryId(jsonObjectCategories.getInt("category_id"));
+            try {
+                categories.setId(jsonObjectCategories.getInt("id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setSurveyId(jsonObjectCategories.getInt("survey_id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setOrderNumber(jsonObjectCategories.getInt("order_number"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setCategoryId(jsonObjectCategories.getInt("category_id"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setContent(jsonObjectCategories.getString("content"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setType(jsonObjectCategories.getString("type"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                categories.setParentId(jsonObjectCategories.getInt("parent_id"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            categories.setContent(jsonObjectCategories.getString("content"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            categories.setType(jsonObjectCategories.getString("type"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            categories.setParentId(jsonObjectCategories.getInt("parent_id"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }catch (Exception  e){
-         e.printStackTrace();
-     }
         return categories;
     }
 
-    public Options parseOptions(JSONObject jsonObjectOptions){
-        Options options= new Options();
+    public Options parseOptions(JSONObject jsonObjectOptions) {
+        Options options = new Options();
         try {
             options.setId(jsonObjectOptions.getInt("id"));
         } catch (JSONException e) {
@@ -94,7 +95,7 @@ public class JSONParser {
 
     public Questions parseQuestions(JSONObject jsonObjectQuestions) {
         Questions questions = new Questions();
-        optionses= new ArrayList<Options>();
+        optionses = new ArrayList<Options>();
 
         try {
             try {
@@ -170,14 +171,14 @@ public class JSONParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-           if(jsonObjectQuestions.has("options"))
-             Log.e("ithas","ithas");
+        if (jsonObjectQuestions.has("options"))
+            Log.e("ithas", "ithas");
         try {
-            JSONArray jsonArrayOptions= jsonObjectQuestions.getJSONArray("options");
-            for(int k=0;k< jsonArrayOptions.length();k++){
+            JSONArray jsonArrayOptions = jsonObjectQuestions.getJSONArray("options");
+            for (int k = 0; k < jsonArrayOptions.length(); k++) {
                 JSONObject jsonObjectOptions = jsonArrayOptions.getJSONObject(k);
-                Options options= parseOptions(jsonObjectOptions);
-                optionses.add(k,options);
+                Options options = parseOptions(jsonObjectOptions);
+                optionses.add(k, options);
 
             }
         } catch (JSONException e) {
@@ -193,10 +194,10 @@ public class JSONParser {
     public List<Surveys> parseSurvey(JSONArray jsonArrayMain) {
 
 
-        surveyses= new ArrayList<Surveys>();
+        surveyses = new ArrayList<Surveys>();
         for (int i = 0; i < jsonArrayMain.length(); i++) {
             Surveys surveys;
-            surveys= new Surveys();
+            surveys = new Surveys();
             try {
                 JSONObject jsonObject = jsonArrayMain.getJSONObject(i);
                 questionses = new ArrayList<Questions>();
@@ -215,13 +216,11 @@ public class JSONParser {
                 }
                 surveys.setQuestions(questionses);
 
-
-
                 JSONArray jsonArrayCategories = jsonObject.getJSONArray("categories");
-                for(int l=0;l<jsonArrayCategories.length();l++){
+                for (int l = 0; l < jsonArrayCategories.length(); l++) {
                     JSONObject jsonObjectCategories = jsonArrayCategories.getJSONObject(l);
-                    Categories categories= parseCategories(jsonObjectCategories);
-                    categorieses.add(l,categories);
+                    Categories categories = parseCategories(jsonObjectCategories);
+                    categorieses.add(l, categories);
 
                 }
                 surveys.setCategories(categorieses);
@@ -232,6 +231,6 @@ public class JSONParser {
             surveyses.add(surveys);
         }
 
-        return  surveyses;
+        return surveyses;
     }
 }

@@ -59,9 +59,41 @@ public class NewResponseActivity extends Activity {
         setContentView(R.layout.activity_new_response);
         getActionBar().setTitle("New Response");
         questionsList= new ArrayList<Questions>();
+        layout= new ArrayList<Integer>();
         questionsList= (List<Questions>) getIntent().getExtras().getSerializable(IntentConstants.QUESTIONS);
         Toast.makeText(NewResponseActivity.this,questionsList.get(0).getId()+"",Toast.LENGTH_LONG).show();
-        layout= new ArrayList<Integer>();
+        for(int type=0;type<questionsList.size();type++)
+        {
+            String questionType=questionsList.get(type).getType();
+            if(questionType.contains("PhotoQuestion"))
+                layout.add(R.layout.answer_image_picker);
+
+            if(questionType.contains("SingleLineQuestion"))
+                layout.add(R.layout.answer_single_line);
+
+            if(questionType.contains("MultiLineQuestion"))
+                layout.add(R.layout.answer_multi_line);
+
+            if(questionType.contains("NumericQuestion"))
+                layout.add(R.layout.answer_numeric);
+
+            if(questionType.contains("DateQuestion"))
+                layout.add(R.layout.answer_date_picker);
+
+            if(questionType.contains("RatingQuestion"))
+                layout.add(R.layout.answer_rating);
+
+            if(questionType.contains("RadioQuestion"))
+                layout.add(R.layout.answer_radio_button);
+
+            if(questionType.contains("MultiChoiceQuestion"))
+                layout.add(R.layout.answer_multi_choice);
+
+            if(questionType.contains("SingleLineQuestion"))
+                layout.add(R.layout.answer_single_line);
+
+        }
+
 
 
 

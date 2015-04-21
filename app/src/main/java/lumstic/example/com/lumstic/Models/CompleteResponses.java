@@ -6,7 +6,7 @@ public class CompleteResponses {
     String responseText;
 
     public CompleteResponses(String responseNumber, String responseText) {
-        this.responseNumber = responseNumber;
+        this.responseNumber= responseNumber;
         this.responseText = responseText;
     }
 
