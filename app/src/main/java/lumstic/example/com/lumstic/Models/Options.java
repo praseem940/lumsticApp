@@ -7,12 +7,7 @@ public class Options {
     int questionId;
     String content;
 
-    public Options(int orderNumber, int id, int questionId, String content) {
-        this.orderNumber = orderNumber;
-        this.id = id;
-        this.questionId = questionId;
-        this.content = content;
-    }
+
 
     public int getOrderNumber() {
         return orderNumber;

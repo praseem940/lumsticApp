@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
@@ -21,9 +22,37 @@ public class JSONParser {
 
     List<Questions> questionses;
     List<Surveys> surveyses;
+    List<Options> optionses;
+
+    public Options parseOptions(JSONObject jsonObjectOptions){
+        Options options= new Options();
+        try {
+            options.setId(jsonObjectOptions.getInt("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            options.setOrderNumber(jsonObjectOptions.getInt("order_number"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            options.setContent(jsonObjectOptions.getString("content"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            options.setQuestionId(jsonObjectOptions.getInt("question_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return options;
+
+    }
 
     public Questions parseQuestions(JSONObject jsonObjectQuestions) {
         Questions questions = new Questions();
+        optionses= new ArrayList<Options>();
 
         try {
             try {
@@ -99,6 +128,21 @@ public class JSONParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+           if(jsonObjectQuestions.has("options"))
+             Log.e("ithas","ithas");
+        try {
+            JSONArray jsonArrayOptions= jsonObjectQuestions.getJSONArray("options");
+            for(int k=0;k< jsonArrayOptions.length();k++){
+                JSONObject jsonObjectOptions = jsonArrayOptions.getJSONObject(k);
+                Options options= parseOptions(jsonObjectOptions);
+                optionses.add(k,options);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        questions.setOptions(optionses);
+
 
         return questions;
     }
@@ -121,7 +165,7 @@ public class JSONParser {
                 surveys.setPublishedOn(jsonObject.getString("published_on"));
                 JSONArray jsonArray = jsonObject.getJSONArray("questions");
                 for (int j = 0; j < jsonArray.length(); j++) {
-                    JSONObject jsonObjectQuestion = jsonArray.getJSONObject(i);
+                    JSONObject jsonObjectQuestion = jsonArray.getJSONObject(j);
                     Questions questions = parseQuestions(jsonObjectQuestion);
                     questionses.add(j, questions);
                 }
@@ -133,6 +177,6 @@ public class JSONParser {
             surveyses.add(surveys);
         }
 
-return  surveyses;
+        return  surveyses;
     }
 }

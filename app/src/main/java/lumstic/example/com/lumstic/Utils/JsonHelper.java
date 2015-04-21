@@ -15,7 +15,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
+import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.R;
 
 public class JsonHelper {
@@ -52,7 +54,7 @@ public class JsonHelper {
         try {
             JSONArray jsonArray = new JSONArray(rawJson);
             JSONParser jsonParser= new JSONParser();
-            jsonParser.parseSurvey(jsonArray);
+            List<Surveys> surveyses=  jsonParser.parseSurvey(jsonArray);
             JSONObject jsonObject = jsonArray.getJSONObject(0);
 
         } catch (JSONException e) {

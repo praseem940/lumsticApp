@@ -18,6 +18,7 @@ import org.json.JSONException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Models.Answers;
@@ -74,7 +75,7 @@ public class LoginActivity extends Activity {
 
 
             jsonHelper= new JsonHelper(LoginActivity.this);
-            jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+        jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
 
