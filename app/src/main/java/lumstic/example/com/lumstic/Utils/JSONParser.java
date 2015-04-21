@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import lumstic.example.com.lumstic.Models.Categories;
 import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Models.Survey;
@@ -23,6 +24,50 @@ public class JSONParser {
     List<Questions> questionses;
     List<Surveys> surveyses;
     List<Options> optionses;
+    List<Categories> categorieses;
+
+    public Categories parseCategories(JSONObject jsonObjectCategories) {
+        Categories categories = new Categories();
+     try{   try {
+            categories.setId(jsonObjectCategories.getInt("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setSurveyId(jsonObjectCategories.getInt("survey_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setOrderNumber(jsonObjectCategories.getInt("order_number"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setCategoryId(jsonObjectCategories.getInt("category_id"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setContent(jsonObjectCategories.getString("content"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setType(jsonObjectCategories.getString("type"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            categories.setParentId(jsonObjectCategories.getInt("parent_id"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }catch (Exception  e){
+         e.printStackTrace();
+     }
+        return categories;
+    }
 
     public Options parseOptions(JSONObject jsonObjectOptions){
         Options options= new Options();
@@ -158,11 +203,13 @@ public class JSONParser {
             try {
                 JSONObject jsonObject = jsonArrayMain.getJSONObject(i);
                 questionses = new ArrayList<Questions>();
+                categorieses = new ArrayList<Categories>();
                 surveys.setId(Integer.parseInt(jsonObject.getString("id")));
                 surveys.setDescription(jsonObject.getString("description"));
                 surveys.setExpiryDate(jsonObject.getString("expiry_date"));
                 surveys.setName(jsonObject.getString("name"));
                 surveys.setPublishedOn(jsonObject.getString("published_on"));
+
                 JSONArray jsonArray = jsonObject.getJSONArray("questions");
                 for (int j = 0; j < jsonArray.length(); j++) {
                     JSONObject jsonObjectQuestion = jsonArray.getJSONObject(j);
@@ -170,6 +217,17 @@ public class JSONParser {
                     questionses.add(j, questions);
                 }
                 surveys.setQuestions(questionses);
+
+
+
+                JSONArray jsonArrayCategories = jsonObject.getJSONArray("categories");
+                for(int l=0;l<jsonArrayCategories.length();l++){
+                    JSONObject jsonObjectCategories = jsonArrayCategories.getJSONObject(l);
+                    Categories categories= parseCategories(jsonObjectCategories);
+                    categorieses.add(l,categories);
+
+                }
+                surveys.setCategories(categorieses);
 
             } catch (JSONException e) {
                 e.printStackTrace();

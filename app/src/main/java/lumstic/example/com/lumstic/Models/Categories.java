@@ -68,12 +68,5 @@ public class Categories {
         this.content = content;
     }
 
-    public Categories(int id, int surveyId, int parentId, int orderNumber, int categoryId, String type) {
-        this.id = id;
-        this.surveyId = surveyId;
-        this.parentId = parentId;
-        this.orderNumber = orderNumber;
-        this.categoryId = categoryId;
-        this.type = type;
-    }
+
 }
