@@ -1,7 +1,9 @@
 package lumstic.example.com.lumstic.Models;
 
 
-public class Options {
+import java.io.Serializable;
+
+public class Options implements Serializable{
     int orderNumber;
     int id;
     int questionId;

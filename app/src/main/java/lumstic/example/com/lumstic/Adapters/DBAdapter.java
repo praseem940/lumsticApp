@@ -250,6 +250,7 @@ public class DBAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
 
+
         }
     }
 

@@ -5,18 +5,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import lumstic.example.com.lumstic.Adapters.DashBoardAdapter;
+import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Models.Survey;
+import lumstic.example.com.lumstic.Models.Surveys;
+import lumstic.example.com.lumstic.Utils.IntentConstants;
+import lumstic.example.com.lumstic.Utils.JsonHelper;
 
 
 public class ActiveSurveyActivity extends Activity {
     ListView listView;
-    List<Survey> survey;
+
+    JsonHelper jsonHelper;
+    List<Surveys> surveysList;
 
     DashBoardAdapter dashBoardAdapter;
 
@@ -25,16 +33,22 @@ public class ActiveSurveyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
+        surveysList= new ArrayList<Surveys>();
+        jsonHelper= new JsonHelper(ActiveSurveyActivity.this);
+        surveysList=jsonHelper.tryParsing(jsonHelper.getStringFromJson());
         listView=(ListView)findViewById(R.id.active_surve_list);
-        survey= new ArrayList<Survey>();
-        survey.add(0,new Survey("survey name 1",00,01,04,"12-oct-2012"));
-        survey.add(0,new Survey("survey name 2",01,02,02,"12-oct-2012"));
-        survey.add(0,new Survey("survey name 3",00,03,05,"12-oct-2012"));
-        survey.add(0,new Survey("survey name 4",01,04,01,"12-oct-2012"));
-        survey.add(0,new Survey("survey name 5",02,05,02,"12-oct-2012"));
-        survey.add(0,new Survey("survey name 6",01,05,03,"12-oct-2012"));
-        dashBoardAdapter= new DashBoardAdapter(getApplicationContext(),survey);
+
+        dashBoardAdapter= new DashBoardAdapter(getApplicationContext(),surveysList);
         listView.setAdapter(dashBoardAdapter);
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Surveys surveys=surveysList.get(i);
+            Intent intent = new Intent(ActiveSurveyActivity.this, SurveyDetailsActivity.class);
+            intent.putExtra(IntentConstants.SURVEY,surveys);
+            startActivity(intent);
+        }
+    });
     }
 
 

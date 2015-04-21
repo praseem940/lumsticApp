@@ -1,11 +1,12 @@
 package lumstic.example.com.lumstic.Models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by work on 17/4/15.
  */
-public class Questions {
+public class Questions implements Serializable {
 
     int id;
     String imageUrl;

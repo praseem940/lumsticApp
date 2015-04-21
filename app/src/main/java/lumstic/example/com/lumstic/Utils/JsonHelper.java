@@ -48,17 +48,18 @@ public class JsonHelper {
         }
         return "";
     }
-    public void tryParsing(String rawJson){
+    public List<Surveys> tryParsing(String rawJson){
 
 
         try {
             JSONArray jsonArray = new JSONArray(rawJson);
             JSONParser jsonParser= new JSONParser();
             List<Surveys> surveyses=  jsonParser.parseSurvey(jsonArray);
-            JSONObject jsonObject = jsonArray.getJSONObject(0);
 
+return  surveyses;
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return  null;
     }
 }

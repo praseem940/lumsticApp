@@ -20,7 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import lumstic.example.com.lumstic.Models.Questions;
+import lumstic.example.com.lumstic.Models.Surveys;
+import lumstic.example.com.lumstic.Utils.IntentConstants;
+import lumstic.example.com.lumstic.Utils.JsonHelper;
 
 public class NewResponseActivity extends Activity {
 
@@ -33,6 +40,14 @@ public class NewResponseActivity extends Activity {
     Uri picUri;
     int CAMERA_REQUEST=1;
     final int PIC_CROP = 2;
+    ArrayList<Integer>layout;
+
+
+    List<Questions> questionsList;
+
+
+
+
     int layouts[]={R.layout.answer_single_line, R.layout.answer_multi_line, R.layout.answer_date_picker,R.layout.answer_image_picker,R.layout.answer_numeric,R.layout.answer_rating,R.layout.answer_multi_choice,R.layout.answer_radio_button};
     String questions[]={"What is your name","Describe yourself","Your Date of Birth","Upload your picture","Whats is your age","Rate this app","Choose multiple options","Choose any one"};
     int questionCounter = 0;
@@ -43,6 +58,14 @@ public class NewResponseActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_response);
         getActionBar().setTitle("New Response");
+        questionsList= new ArrayList<Questions>();
+        questionsList= (List<Questions>) getIntent().getExtras().getSerializable(IntentConstants.QUESTIONS);
+        Toast.makeText(NewResponseActivity.this,questionsList.get(0).getId()+"",Toast.LENGTH_LONG).show();
+        layout= new ArrayList<Integer>();
+
+
+
+
         fieldContainer = (RelativeLayout) findViewById(R.id.field_container);
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);

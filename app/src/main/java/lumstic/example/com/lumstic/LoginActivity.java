@@ -73,9 +73,9 @@ public class LoginActivity extends Activity {
 
         // Toast.makeText(LoginActivity.this,dbAdapter.insertDataOptionsTable(new Options(1,2,1,"zaz"))+"",Toast.LENGTH_LONG).show();
 
-
-            jsonHelper= new JsonHelper(LoginActivity.this);
-        jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+//
+//            jsonHelper= new JsonHelper(LoginActivity.this);
+//        jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
 

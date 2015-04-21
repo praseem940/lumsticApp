@@ -13,12 +13,9 @@ import java.util.List;
 import lumstic.example.com.lumstic.Models.Categories;
 import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
-import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
 
-/**
- * Created by work on 17/4/15.
- */
+
 public class JSONParser {
 
     List<Questions> questionses;

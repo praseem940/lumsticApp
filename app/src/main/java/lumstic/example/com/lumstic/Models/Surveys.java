@@ -1,11 +1,15 @@
 package lumstic.example.com.lumstic.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by work on 17/4/15.
  */
-public class Surveys {
+public class Surveys implements Serializable{
     int id;
     String publishedOn;
     String name;
@@ -13,6 +17,34 @@ public class Surveys {
     String expiryDate;
     List<Questions> questions;
     List<Categories> categories;
+
+
+
+    private int completedSurvey,incompleteSurvey,uploadedSurvey;
+
+    public int getCompletedSurvey() {
+        return completedSurvey;
+    }
+
+    public void setCompletedSurvey(int completedSurvey) {
+        this.completedSurvey = completedSurvey;
+    }
+
+    public int getUploadedSurvey() {
+        return uploadedSurvey;
+    }
+
+    public void setUploadedSurvey(int uploadedSurvey) {
+        this.uploadedSurvey = uploadedSurvey;
+    }
+
+    public int getIncompleteSurvey() {
+        return incompleteSurvey;
+    }
+
+    public void setIncompleteSurvey(int incompleteSurvey) {
+        this.incompleteSurvey = incompleteSurvey;
+    }
 
     public List<Categories> getCategories() {
         return categories;
@@ -69,5 +101,6 @@ public class Surveys {
     public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
+
 
 }

@@ -1,9 +1,11 @@
 package lumstic.example.com.lumstic.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by work on 17/4/15.
  */
-public class Categories {
+public class Categories implements Serializable{
     int id;
     int surveyId;
     int parentId;
