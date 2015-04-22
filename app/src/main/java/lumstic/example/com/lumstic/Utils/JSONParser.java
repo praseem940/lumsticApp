@@ -23,6 +23,8 @@ public class JSONParser {
     List<Options> optionses;
     List<Categories> categorieses;
 
+
+
     public Categories parseCategories(JSONObject jsonObjectCategories) {
         Categories categories = new Categories();
         try {
@@ -172,7 +174,7 @@ public class JSONParser {
             e.printStackTrace();
         }
         if (jsonObjectQuestions.has("options"))
-            Log.e("ithas", "ithas");
+            Log.e("ithas", "");
         try {
             JSONArray jsonArrayOptions = jsonObjectQuestions.getJSONArray("options");
             for (int k = 0; k < jsonArrayOptions.length(); k++) {
@@ -203,8 +205,8 @@ public class JSONParser {
                 questionses = new ArrayList<Questions>();
                 categorieses = new ArrayList<Categories>();
                 surveys.setId(Integer.parseInt(jsonObject.getString("id")));
-                surveys.setDescription(jsonObject.getString("description"));
                 surveys.setExpiryDate(jsonObject.getString("expiry_date"));
+                surveys.setDescription(jsonObject.getString("description"));
                 surveys.setName(jsonObject.getString("name"));
                 surveys.setPublishedOn(jsonObject.getString("published_on"));
 
@@ -215,6 +217,7 @@ public class JSONParser {
                     questionses.add(j, questions);
                 }
                 surveys.setQuestions(questionses);
+
 
                 JSONArray jsonArrayCategories = jsonObject.getJSONArray("categories");
                 for (int l = 0; l < jsonArrayCategories.length(); l++) {

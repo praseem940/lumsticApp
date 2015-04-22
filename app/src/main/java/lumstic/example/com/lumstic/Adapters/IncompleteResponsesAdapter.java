@@ -25,7 +25,7 @@ public class IncompleteResponsesAdapter extends BaseAdapter {
 
     public IncompleteResponsesAdapter(Context context, List<IncompleteResponses> incompleteResponseses) {
         this.context = context;
-        this.incompleteResponseses= incompleteResponseses;
+        this.incompleteResponseses = incompleteResponseses;
     }
 
     @Override
@@ -50,16 +50,17 @@ public class IncompleteResponsesAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.item_complete_responses, null);
         viewHolder = new ViewHolder();
         viewHolder.responseNumber = (TextView) view.findViewById(R.id.response_number_text);
-        viewHolder.responseText=(TextView)view.findViewById(R.id.response_description_text);
+        viewHolder.responseText = (TextView) view.findViewById(R.id.response_description_text);
 
         view.setTag(viewHolder);
-        final IncompleteResponses incompleteResponses= (IncompleteResponses) getItem(i);
+        final IncompleteResponses incompleteResponses = (IncompleteResponses) getItem(i);
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
-        viewHolder.responseNumber.setText("Response: "+incompleteResponses.getResponseNumber());
+        viewHolder.responseNumber.setText("Response: " + incompleteResponses.getResponseNumber());
         viewHolder.responseText.setText(incompleteResponses.getResponseText());
         return view;
     }
+
     private static class ViewHolder {
-        TextView responseNumber,responseText;
+        TextView responseNumber, responseText;
     }
 }

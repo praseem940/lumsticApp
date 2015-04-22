@@ -19,20 +19,21 @@ public class IncompleteResponseActivity extends Activity {
     ListView listView;
     List<IncompleteResponses> incompleteResponseses;
     IncompleteResponsesAdapter incompleteResponsesAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomplete_response);
         getActionBar().setTitle("Completed Responses");
-        listView=(ListView)findViewById(R.id.listview);
-        incompleteResponseses= new ArrayList<IncompleteResponses>();
+        listView = (ListView) findViewById(R.id.listview);
+        incompleteResponseses = new ArrayList<IncompleteResponses>();
         incompleteResponseses.add(0, new IncompleteResponses("1", "Name of the city: Pune"));
-        incompleteResponseses.add(1, new IncompleteResponses("2","Name of the city: Pune"));
+        incompleteResponseses.add(1, new IncompleteResponses("2", "Name of the city: Pune"));
         incompleteResponseses.add(2, new IncompleteResponses("3", "Name of the city: Pune"));
         incompleteResponseses.add(3, new IncompleteResponses("4", "Name of the city: Pune"));
         incompleteResponseses.add(4, new IncompleteResponses("5", "Name of the city: Pune"));
-        incompleteResponseses.add(5, new IncompleteResponses("6","Name of the city: Pune"));
-        incompleteResponsesAdapter= new IncompleteResponsesAdapter(getApplicationContext(),incompleteResponseses);
+        incompleteResponseses.add(5, new IncompleteResponses("6", "Name of the city: Pune"));
+        incompleteResponsesAdapter = new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses);
         listView.setAdapter(incompleteResponsesAdapter);
     }
 

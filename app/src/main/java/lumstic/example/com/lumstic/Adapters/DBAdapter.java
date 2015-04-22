@@ -24,123 +24,114 @@ public class DBAdapter {
     DBhelper dBhelper;
     SQLiteDatabase sqLiteDatabase;
 
-    public DBAdapter(Context context)
-    {
-        dBhelper= new DBhelper(context);
-        sqLiteDatabase= dBhelper.getWritableDatabase();
+    public DBAdapter(Context context) {
+        dBhelper = new DBhelper(context);
+        sqLiteDatabase = dBhelper.getWritableDatabase();
     }
 
-    public long insertDataQuestionTable(Questions questions)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.IDENTIFIER,questions.getIdentifier());
-        contentValues.put(DBhelper.PARENT_ID,questions.getParentId());
-        contentValues.put(DBhelper.MIN_VALUE,questions.getMinValue());
-        contentValues.put(DBhelper.MAX_VALUE,questions.getMaxVlue());
-        contentValues.put(DBhelper.TYPE,questions.getType());
-        contentValues.put(DBhelper.ID,questions.getId());
-        contentValues.put(DBhelper.CONTENT,questions.getContent());
-        contentValues.put(DBhelper.SURVEY_ID,questions.getSurveyId());
-        contentValues.put(DBhelper.MAX_LENGTH,questions.getMaxLength());
-        contentValues.put(DBhelper.MANDATORY,questions.getMandatory());
-        contentValues.put(DBhelper.IMAGE_URL,questions.getImageUrl());
-        contentValues.put(DBhelper.ORDER_NUMBER,questions.getOrderNumber());
-        contentValues.put(DBhelper.CATEGORY_ID,questions.getCategoryId());
-        long idd=sqLiteDatabase.insert(DBhelper.TABLE_questions,null,contentValues);
+    public long insertDataQuestionTable(Questions questions) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.IDENTIFIER, questions.getIdentifier());
+        contentValues.put(DBhelper.PARENT_ID, questions.getParentId());
+        contentValues.put(DBhelper.MIN_VALUE, questions.getMinValue());
+        contentValues.put(DBhelper.MAX_VALUE, questions.getMaxVlue());
+        contentValues.put(DBhelper.TYPE, questions.getType());
+        contentValues.put(DBhelper.ID, questions.getId());
+        contentValues.put(DBhelper.CONTENT, questions.getContent());
+        contentValues.put(DBhelper.SURVEY_ID, questions.getSurveyId());
+        contentValues.put(DBhelper.MAX_LENGTH, questions.getMaxLength());
+        contentValues.put(DBhelper.MANDATORY, questions.getMandatory());
+        contentValues.put(DBhelper.IMAGE_URL, questions.getImageUrl());
+        contentValues.put(DBhelper.ORDER_NUMBER, questions.getOrderNumber());
+        contentValues.put(DBhelper.CATEGORY_ID, questions.getCategoryId());
+        long idd = sqLiteDatabase.insert(DBhelper.TABLE_questions, null, contentValues);
 
         return idd;
 
 
-
-    }
-    public long insertDataChoicesTable(Choices choices)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,choices.getId());
-        contentValues.put(DBhelper.OPTION_ID,choices.getOptionId());
-        contentValues.put(DBhelper.ANSWER_ID,choices.getAnswerId());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_choices,null,contentValues);
-
     }
 
+    public long insertDataChoicesTable(Choices choices) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, choices.getId());
+        contentValues.put(DBhelper.OPTION_ID, choices.getOptionId());
+        contentValues.put(DBhelper.ANSWER_ID, choices.getAnswerId());
+        return sqLiteDatabase.insert(DBhelper.TABLE_choices, null, contentValues);
 
-    public long insertDataOptionsTable(Options options)
-    {
-        ContentValues  contentValues= new ContentValues();
+    }
+
+
+    public long insertDataOptionsTable(Options options) {
+        ContentValues contentValues = new ContentValues();
         contentValues.put(DBhelper.ID, options.getId());
-        contentValues.put(DBhelper.QUESTION_ID,options.getQuestionId());
-        contentValues.put(DBhelper.ORDER_NUMBER,options.getOrderNumber());
+        contentValues.put(DBhelper.QUESTION_ID, options.getQuestionId());
+        contentValues.put(DBhelper.ORDER_NUMBER, options.getOrderNumber());
         contentValues.put(DBhelper.CONTENT, options.getContent());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_options,null,contentValues);
+        return sqLiteDatabase.insert(DBhelper.TABLE_options, null, contentValues);
 
     }
 
-    public long insertDataSurveysTable(Surveys surveys)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,surveys.getId());
-        contentValues.put(DBhelper.DESCRIPTION,surveys.getDescription());
-        contentValues.put(DBhelper.PUBLISHED_ON,surveys.getPublishedOn());
+    public long insertDataSurveysTable(Surveys surveys) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, surveys.getId());
+        contentValues.put(DBhelper.DESCRIPTION, surveys.getDescription());
+        contentValues.put(DBhelper.PUBLISHED_ON, surveys.getPublishedOn());
         contentValues.put(DBhelper.EXPIRY_DATE, surveys.getExpiryDate());
         contentValues.put(DBhelper.NAME, surveys.getName());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_surveys,null,contentValues);
+        return sqLiteDatabase.insert(DBhelper.TABLE_surveys, null, contentValues);
 
     }
 
-    public long insertDataCategoriesTable(Categories categories)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,categories.getId());
+    public long insertDataCategoriesTable(Categories categories) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, categories.getId());
         contentValues.put(DBhelper.CATEGORY_ID, categories.getCategoryId());
-        contentValues.put(DBhelper.ORDER_NUMBER,categories.getOrderNumber());
-        contentValues.put(DBhelper.PARENT_ID,categories.getParentId());
+        contentValues.put(DBhelper.ORDER_NUMBER, categories.getOrderNumber());
+        contentValues.put(DBhelper.PARENT_ID, categories.getParentId());
         contentValues.put(DBhelper.SURVEY_ID, categories.getSurveyId());
-        contentValues.put(DBhelper.CONTENT,categories.getContent());
+        contentValues.put(DBhelper.CONTENT, categories.getContent());
         contentValues.put(DBhelper.TYPE, categories.getType());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_categories,null,contentValues);
+        return sqLiteDatabase.insert(DBhelper.TABLE_categories, null, contentValues);
 
     }
 
-    public long insertDataAnswersTable(Answers answers)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,answers.getId());
-        contentValues.put(DBhelper.RECORD_ID,answers.getRecordId());
-        contentValues.put(DBhelper.IMAGE,answers.getImage());
-        contentValues.put(DBhelper.WEB_ID,answers.getWebId());
-        contentValues.put(DBhelper.UPDATED_AT,answers.getUpdatedAt());
-        contentValues.put(DBhelper.CONTENT,answers.getContent());
-        contentValues.put(DBhelper.RESPONSE_ID,answers.getResponseId());
+    public long insertDataAnswersTable(Answers answers) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, answers.getId());
+        contentValues.put(DBhelper.RECORD_ID, answers.getRecordId());
+        contentValues.put(DBhelper.IMAGE, answers.getImage());
+        contentValues.put(DBhelper.WEB_ID, answers.getWebId());
+        contentValues.put(DBhelper.UPDATED_AT, answers.getUpdatedAt());
+        contentValues.put(DBhelper.CONTENT, answers.getContent());
+        contentValues.put(DBhelper.RESPONSE_ID, answers.getResponseId());
         contentValues.put(DBhelper.QUESTION_ID, answers.getQuestionId());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_answers,null,contentValues);
+        return sqLiteDatabase.insert(DBhelper.TABLE_answers, null, contentValues);
 
     }
 
-    public long insertDataRecordsTable(Records records)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,records.getId());
-        contentValues.put(DBhelper.CATEGORY_ID,records.getCategoryId());
-        contentValues.put(DBhelper.RESPONSE_ID,records.getResponseId());
-        contentValues.put(DBhelper.WEB_ID,records.getWebId());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_records,null,contentValues);
+    public long insertDataRecordsTable(Records records) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, records.getId());
+        contentValues.put(DBhelper.CATEGORY_ID, records.getCategoryId());
+        contentValues.put(DBhelper.RESPONSE_ID, records.getResponseId());
+        contentValues.put(DBhelper.WEB_ID, records.getWebId());
+        return sqLiteDatabase.insert(DBhelper.TABLE_records, null, contentValues);
 
     }
 
-    public long insertDataResponsesTable(Responses responses)
-    {
-        ContentValues  contentValues= new ContentValues();
-        contentValues.put(DBhelper.ID,responses.getId());
-        contentValues.put(DBhelper.STATUS,responses.getStatus());
-        contentValues.put(DBhelper.ORGANISATION_ID,responses.getOrganisationId());
-        contentValues.put(DBhelper.WEB_ID,responses.getWebId());
-        contentValues.put(DBhelper.MOBILE_ID,responses.getMobileId());
-        contentValues.put(DBhelper.USER_ID,responses.getUserId());
-        contentValues.put(DBhelper.LONGITUDE,responses.getLongitude());
-        contentValues.put(DBhelper.LATITUDE,responses.getLatitude());
-        contentValues.put(DBhelper.UPDATED_AT,responses.getUpdatedAt());
-        contentValues.put(DBhelper.SURVEY_ID,responses.getSurveyId());
-        return  sqLiteDatabase.insert(DBhelper.TABLE_responses,null,contentValues);
+    public long insertDataResponsesTable(Responses responses) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.ID, responses.getId());
+        contentValues.put(DBhelper.STATUS, responses.getStatus());
+        contentValues.put(DBhelper.ORGANISATION_ID, responses.getOrganisationId());
+        contentValues.put(DBhelper.WEB_ID, responses.getWebId());
+        contentValues.put(DBhelper.MOBILE_ID, responses.getMobileId());
+        contentValues.put(DBhelper.USER_ID, responses.getUserId());
+        contentValues.put(DBhelper.LONGITUDE, responses.getLongitude());
+        contentValues.put(DBhelper.LATITUDE, responses.getLatitude());
+        contentValues.put(DBhelper.UPDATED_AT, responses.getUpdatedAt());
+        contentValues.put(DBhelper.SURVEY_ID, responses.getSurveyId());
+        return sqLiteDatabase.insert(DBhelper.TABLE_responses, null, contentValues);
 
     }
 
@@ -161,9 +152,9 @@ public class DBAdapter {
         private static final String ID = "id";
         private static final String OPTION_ID = "option_id";
         private static final String ANSWER_ID = "answer_id";
-        private static final String IDENTIFIER= "identifier";
+        private static final String IDENTIFIER = "identifier";
         private static final String PARENT_ID = "parent_id";
-        private static final String MIN_VALUE= "min_value";
+        private static final String MIN_VALUE = "min_value";
         private static final String MAX_VALUE = "max_value";
         private static final String TYPE = "type";
         private static final String CONTENT = "content";
@@ -176,15 +167,15 @@ public class DBAdapter {
         private static final String QUESTION_ID = "question_id";
         private static final String PUBLISHED_ON = "published_on";
         private static final String NAME = "name";
-        private static final String DESCRIPTION= "description";
+        private static final String DESCRIPTION = "description";
         private static final String EXPIRY_DATE = "expiry_date";
         private static final String RECORD_ID = "record_id";
         private static final String IMAGE = "image";
         private static final String WEB_ID = "web_id";
-        private static final String UPDATED_AT= "updated_at";
+        private static final String UPDATED_AT = "updated_at";
         private static final String RESPONSE_ID = "response_id";
         private static final String MOBILE_ID = "mobile_id";
-        private static final String USER_ID= "user_id";
+        private static final String USER_ID = "user_id";
         private static final String LONGITUDE = "longitude";
         private static final String LATITUDE = "latitude";
         private static final String STATUS = "status";
@@ -199,11 +190,11 @@ public class DBAdapter {
                 + TABLE_questions + "(" + ID + " INTEGER PRIMARY KEY,"
                 + IDENTIFIER + " INTEGER," + PARENT_ID + " INTEGER," + MIN_VALUE + " INTEGER," + MAX_VALUE + " INTEGER," + TYPE + " VARCHAR(255)," + CONTENT + " VARCHAR(255)," + SURVEY_ID + " INTEGER," + MAX_LENGTH + " INTEGER," + MANDATORY + " INTEGER," + IMAGE_URL + " VARCHAR(255)," + ORDER_NUMBER + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
 
-        private static final String  CREATE_TABLE_options  = "CREATE TABLE "
+        private static final String CREATE_TABLE_options = "CREATE TABLE "
                 + TABLE_options + "(" + ID + " INTEGER PRIMARY KEY,"
                 + ORDER_NUMBER + " INTEGER," + CONTENT + " VARCHAR(255)," + QUESTION_ID + " INTEGER" + ")";
 
-        private static final String  CREATE_TABLE_surveys  = "CREATE TABLE "
+        private static final String CREATE_TABLE_surveys = "CREATE TABLE "
                 + TABLE_surveys + "(" + ID + " INTEGER PRIMARY KEY,"
                 + PUBLISHED_ON + " VARCHAR(255)," + NAME + " VARCHAR(255)," + EXPIRY_DATE + " VARCHAR(255)," + DESCRIPTION + " VARCHAR(255)" + ")";
 
@@ -216,7 +207,7 @@ public class DBAdapter {
                 + RECORD_ID + " INTEGER," + WEB_ID + " INTEGER," + UPDATED_AT + " INTEGER," + CONTENT + " VARCHAR(255)," + IMAGE + " VARCHAR(255)," + RESPONSE_ID + " INTEGER," + QUESTION_ID + " INTEGER" + ")";
 
 
-        private  static final String CREATE_TABLE_records = "CREATE TABLE "
+        private static final String CREATE_TABLE_records = "CREATE TABLE "
                 + TABLE_records + "(" + ID + " INTEGER PRIMARY KEY,"
                 + RESPONSE_ID + " INTEGER," + WEB_ID + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
 
@@ -227,7 +218,7 @@ public class DBAdapter {
         public DBhelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             Log.e("contructor", "called");
-            mcontext=context;
+            mcontext = context;
             Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
         }
 
@@ -242,9 +233,9 @@ public class DBAdapter {
             sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             sqLiteDatabase.execSQL(CREATE_TABLE_records);
             sqLiteDatabase.execSQL(CREATE_TABLE_responses);
-            Log.e("success","success");
+            Log.e("success", "success");
 
-            Toast.makeText(mcontext,"oncreate",Toast.LENGTH_LONG).show();
+            Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
         }
 
         @Override

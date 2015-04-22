@@ -34,7 +34,7 @@ public class SurveyDetailsActivity extends Activity {
 
         if(getIntent().hasExtra(IntentConstants.SURVEY)){
             surveys= new Surveys();
-            surveys= (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+            surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         }
         getActionBar().setTitle(surveys.getName());
         questionsList= new ArrayList<Questions>();

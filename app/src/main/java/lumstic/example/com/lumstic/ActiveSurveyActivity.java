@@ -18,6 +18,7 @@ import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
 import lumstic.example.com.lumstic.Utils.JsonHelper;
+import retrofit.RestAdapter;
 
 
 public class ActiveSurveyActivity extends Activity {
@@ -33,22 +34,23 @@ public class ActiveSurveyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
-        surveysList= new ArrayList<Surveys>();
-        jsonHelper= new JsonHelper(ActiveSurveyActivity.this);
-        surveysList=jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-        listView=(ListView)findViewById(R.id.active_surve_list);
+        surveysList = new ArrayList<Surveys>();
+        jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
+        surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+        listView = (ListView) findViewById(R.id.active_surve_list);
 
-        dashBoardAdapter= new DashBoardAdapter(getApplicationContext(),surveysList);
+
+        dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
         listView.setAdapter(dashBoardAdapter);
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Surveys surveys=surveysList.get(i);
-            Intent intent = new Intent(ActiveSurveyActivity.this, SurveyDetailsActivity.class);
-            intent.putExtra(IntentConstants.SURVEY,surveys);
-            startActivity(intent);
-        }
-    });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Surveys surveys = surveysList.get(i);
+                Intent intent = new Intent(ActiveSurveyActivity.this, SurveyDetailsActivity.class);
+                intent.putExtra(IntentConstants.SURVEY, surveys);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -64,11 +66,10 @@ public class ActiveSurveyActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id==R.id.action_logout)
-        {
-            Intent i = new Intent(ActiveSurveyActivity.this,LoginActivity.class);
+        if (id == R.id.action_logout) {
+            Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
             startActivity(i);
-            return  true;
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -25,12 +25,12 @@ public class JsonHelper {
     Context context;
 
 
-    public JsonHelper(Context context){
-        this.context= context;
+    public JsonHelper(Context context) {
+        this.context = context;
     }
 
-    public String getStringFromJson(){
-        try{
+    public String getStringFromJson() {
+        try {
 
             InputStream inputStream = context.
                     getResources().openRawResource(R.raw.json_data);
@@ -39,27 +39,25 @@ public class JsonHelper {
             inputStream.read(buffer);
             inputStream.close();
 
-            return  new String(buffer);
-        }
-
-        catch (Exception e)
-        {
+            return new String(buffer);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
-    public List<Surveys> tryParsing(String rawJson){
+
+    public List<Surveys> tryParsing(String rawJson) {
 
 
         try {
             JSONArray jsonArray = new JSONArray(rawJson);
-            JSONParser jsonParser= new JSONParser();
-            List<Surveys> surveyses=  jsonParser.parseSurvey(jsonArray);
+            JSONParser jsonParser = new JSONParser();
+            List<Surveys> surveyses = jsonParser.parseSurvey(jsonArray);
 
-return  surveyses;
+            return surveyses;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
 }

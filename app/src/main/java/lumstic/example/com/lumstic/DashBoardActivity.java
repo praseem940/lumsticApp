@@ -17,7 +17,6 @@ import lumstic.example.com.lumstic.Models.Survey;
 public class DashBoardActivity extends Activity {
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
@@ -35,7 +34,7 @@ public class DashBoardActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_fetch) {
-            Intent i  = new Intent(DashBoardActivity.this,ActiveSurveyActivity.class);
+            Intent i = new Intent(DashBoardActivity.this, ActiveSurveyActivity.class);
             startActivity(i);
             return true;
         }

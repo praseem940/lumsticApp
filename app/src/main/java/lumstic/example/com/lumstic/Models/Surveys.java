@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by work on 17/4/15.
  */
-public class Surveys implements Serializable{
+public class Surveys implements Serializable {
     int id;
     String publishedOn;
     String name;
@@ -19,8 +19,7 @@ public class Surveys implements Serializable{
     List<Categories> categories;
 
 
-
-    private int completedSurvey,incompleteSurvey,uploadedSurvey;
+    private int completedSurvey, incompleteSurvey, uploadedSurvey;
 
     public int getCompletedSurvey() {
         return completedSurvey;

@@ -12,16 +12,17 @@ import android.widget.Button;
 public class ForgotPasswordActivity extends Activity {
 
     Button requestPasswordButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         getActionBar().setTitle("Forgot Password");
-        requestPasswordButton=(Button)findViewById(R.id.request_password);
+        requestPasswordButton = (Button) findViewById(R.id.request_password);
         requestPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ForgotPasswordActivity.this,LoginActivity.class);
+                Intent i = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(i);
                 finish();
             }

@@ -43,16 +43,17 @@ public class CompleteResponsesAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.item_complete_responses, null);
         viewHolder = new ViewHolder();
         viewHolder.responseNumber = (TextView) view.findViewById(R.id.response_number_text);
-       viewHolder.responseText=(TextView)view.findViewById(R.id.response_description_text);
+        viewHolder.responseText = (TextView) view.findViewById(R.id.response_description_text);
 
         view.setTag(viewHolder);
-        final CompleteResponses completeResponses= (CompleteResponses) getItem(i);
+        final CompleteResponses completeResponses = (CompleteResponses) getItem(i);
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
-        viewHolder.responseNumber.setText("Response: "+completeResponses.getResponseNumber());
+        viewHolder.responseNumber.setText("Response: " + completeResponses.getResponseNumber());
         viewHolder.responseText.setText(completeResponses.getResponseText());
         return view;
     }
+
     private static class ViewHolder {
-        TextView responseNumber,responseText;
+        TextView responseNumber, responseText;
     }
 }

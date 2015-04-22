@@ -36,28 +36,29 @@ public class LoginActivity extends Activity {
 
     ActionBar actionBar;
     Button loginButton;
-    TextView  fogotPassword;
+    TextView fogotPassword;
     DBAdapter dbAdapter;
     Questions questions;
     JSONArray jsonArray;
     JsonHelper jsonHelper;
 
     int ctr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        dbAdapter= new DBAdapter(LoginActivity.this);
+        dbAdapter = new DBAdapter(LoginActivity.this);
 
-        actionBar= getActionBar();
+        actionBar = getActionBar();
         actionBar.setTitle("Login");
         actionBar.setDisplayHomeAsUpEnabled(false);
-        loginButton=(Button)findViewById(R.id.login_button);
-        fogotPassword=(TextView)findViewById(R.id.forgot_password);
+        loginButton = (Button) findViewById(R.id.login_button);
+        fogotPassword = (TextView) findViewById(R.id.forgot_password);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this,DashBoardActivity.class);
+                Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
                 startActivity(i);
 
             }
@@ -65,19 +66,10 @@ public class LoginActivity extends Activity {
         fogotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                Intent i = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(i);
             }
         });
-
-
-        // Toast.makeText(LoginActivity.this,dbAdapter.insertDataOptionsTable(new Options(1,2,1,"zaz"))+"",Toast.LENGTH_LONG).show();
-
-//
-//            jsonHelper= new JsonHelper(LoginActivity.this);
-//        jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-
-
 
     }
 

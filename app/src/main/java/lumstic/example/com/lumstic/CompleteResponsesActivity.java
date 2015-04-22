@@ -19,25 +19,28 @@ public class CompleteResponsesActivity extends Activity {
     ListView listView;
     List<CompleteResponses> completeResponseses;
     CompleteResponsesAdapter completeResponsesAdapter;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_responses);
         getActionBar().setTitle("Completed Responses");
-        listView=(ListView)findViewById(R.id.listview);
-        completeResponseses= new ArrayList<CompleteResponses>();
-        completeResponseses.add(0, new CompleteResponses("1","Name of the city: Pune"));
-        completeResponseses.add(1, new CompleteResponses("2","Name of the city: Pune"));
+        listView = (ListView) findViewById(R.id.listview);
+        completeResponseses = new ArrayList<CompleteResponses>();
+        completeResponseses.add(0, new CompleteResponses("1", "Name of the city: Pune"));
+        completeResponseses.add(1, new CompleteResponses("2", "Name of the city: Pune"));
         completeResponseses.add(2, new CompleteResponses("3", "Name of the city: Pune"));
         completeResponseses.add(3, new CompleteResponses("4", "Name of the city: Pune"));
         completeResponseses.add(4, new CompleteResponses("5", "Name of the city: Pune"));
-        completeResponseses.add(5, new CompleteResponses("6","Name of the city: Pune"));
-        completeResponsesAdapter= new CompleteResponsesAdapter(getApplicationContext(),completeResponseses);
+        completeResponseses.add(5, new CompleteResponses("6", "Name of the city: Pune"));
+        completeResponsesAdapter = new CompleteResponsesAdapter(getApplicationContext(), completeResponseses);
         listView.setAdapter(completeResponsesAdapter);
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.complete_responses, menu);
         return true;
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
