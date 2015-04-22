@@ -4,29 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:orientation="vertical"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="xsxsxsxsx"
-        android:button="@drawable/custom_radio_button"
-        android:id="@+id/radioButton1"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="second"
-            android:button="@drawable/custom_radio_button"
-            android:id="@+id/radioButton2"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="third"
-            android:button="@drawable/custom_radio_button"
-            android:id="@+id/radioButton3"/>
 
-    </LinearLayout>
+
+    </ScrollView>
 </RelativeLayout>
