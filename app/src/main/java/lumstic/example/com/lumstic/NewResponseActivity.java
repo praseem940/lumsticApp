@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,13 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
 
@@ -40,7 +35,6 @@ public class NewResponseActivity extends Activity {
     RadioButton button;
     RadioGroup rg;
     TableRow row;
-
 
        RelativeLayout fieldContainer;
        LayoutInflater inflater;
@@ -59,9 +53,6 @@ public class NewResponseActivity extends Activity {
     List<Integer> layouts;
     Questions currentQuestions;
 
-
-   // int layouts[] = {R.layout.answer_single_line, R.layout.answer_multi_line, R.layout.answer_date_picker, R.layout.answer_image_picker, R.layout.answer_numeric, R.layout.answer_rating, R.layout.answer_multi_choice, R.layout.answer_dropdown,R.layout.answer_dropdown};
-   // String questions[] = {"What is your name", "Describe yourself", "Your Date of Birth", "Upload your picture", "Whats is your age", "Rate this app", "Choose multiple options", "Choose any one"};
     int questionCounter = 0;
     Button nextQuestion, previousQuestion;
 
@@ -215,6 +206,49 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(ll);
         }
 
+        if(currentQuestions.getType().contains("SingleLineQuestion")){
+            boolean hintAvailable=true,textHintAvailable=true,imageHintAvailable=false;
+            final RelativeLayout hintContainer= (RelativeLayout)findViewById(R.id.hint_container);
+            if(hintAvailable) {
+                LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
+                final Button textHintButton =(Button)findViewById(R.id.text_hint_button);
+                final Button imageHintButton=(Button)findViewById(R.id.image_hint_button);
+                hintButtonContainer.setVisibility(View.VISIBLE);
+
+
+                textHintButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        hintContainer.setVisibility(View.VISIBLE);
+
+                        TextView textHint = (TextView)findViewById(R.id.text_hint);
+                        ImageView imageHint=(ImageView)findViewById(R.id.image_hint);
+                        textHint.setVisibility(View.VISIBLE);
+                        textHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
+                        imageHintButton.setBackgroundResource(R.drawable.hint_button);
+                        imageHint.setVisibility(View.GONE);
+                    }
+                });
+
+                imageHintButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        hintContainer.setVisibility(View.VISIBLE);
+                        imageHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
+                        textHintButton.setBackgroundResource(R.drawable.hint_button);
+                        TextView textHint = (TextView)findViewById(R.id.text_hint);
+                        ImageView imageHint=(ImageView)findViewById(R.id.image_hint);
+                        textHint.setVisibility(View.GONE);
+                        imageHint.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
+            }
+
+        }
 
     }
 
@@ -226,15 +260,9 @@ public class NewResponseActivity extends Activity {
                 Bundle extras = data.getExtras();
                 Bitmap thePic = extras.getParcelable("data");
                 imageView.setImageBitmap(thePic);
-
-//                picUri = data.getData();
-//                performCrop(picUri);
             }
-
         }
-//
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_response, menu);
         return true;
@@ -288,6 +316,5 @@ public class NewResponseActivity extends Activity {
         if(questionType.contains("DropDownQuestion"))
             layouts.add(position,R.layout.answer_dropdown);
     }
-
 }
 
