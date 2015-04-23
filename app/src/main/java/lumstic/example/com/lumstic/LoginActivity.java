@@ -1,65 +1,82 @@
 package lumstic.example.com.lumstic;
-
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import lumstic.example.com.lumstic.Adapters.DBAdapter;
-import lumstic.example.com.lumstic.Models.Answers;
-import lumstic.example.com.lumstic.Models.Categories;
-import lumstic.example.com.lumstic.Models.Choices;
-import lumstic.example.com.lumstic.Models.Options;
-import lumstic.example.com.lumstic.Models.Questions;
-import lumstic.example.com.lumstic.Models.Records;
-import lumstic.example.com.lumstic.Models.Responses;
-import lumstic.example.com.lumstic.Models.Surveys;
-import lumstic.example.com.lumstic.Utils.JsonHelper;
-
+import lumstic.example.com.lumstic.Utils.CommonUtil;
+import lumstic.example.com.lumstic.api.ApiRequestHelper;
+import lumstic.example.com.lumstic.api.ApiResponse;
 
 public class LoginActivity extends Activity {
 
     ActionBar actionBar;
     Button loginButton;
     TextView fogotPassword;
-    DBAdapter dbAdapter;
-    Questions questions;
-    JSONArray jsonArray;
-    JsonHelper jsonHelper;
-
+    LumsticApp lumsticApp;
+    private EditText emailEditText,passwordEditText;
+    private ProgressDialog progressDialog;
+    private String email=null,password=null;
     int ctr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        dbAdapter = new DBAdapter(LoginActivity.this);
-
+        lumsticApp= (LumsticApp) getApplication();
         actionBar = getActionBar();
         actionBar.setTitle("Login");
         actionBar.setDisplayHomeAsUpEnabled(false);
+        emailEditText=(EditText)findViewById(R.id.email_edit_text);
+        passwordEditText=(EditText)findViewById(R.id.password_edit_text);
         loginButton = (Button) findViewById(R.id.login_button);
         fogotPassword = (TextView) findViewById(R.id.forgot_password);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                email=emailEditText.getText().toString();
+                password=passwordEditText.getText().toString();
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Logging in");
+                progressDialog.show();
+                if (!TextUtils.isEmpty(email) && CommonUtil.validateEmail(email)) {
+
+                    lumsticApp.getApiRequestHelper().loginUser(email, password, new ApiRequestHelper.onRequestComplete() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                lumsticApp.getPreferences().setAddAuthInHeader(true);
+                                lumsticApp.getPreferences().setAuthToken((String) object);
+                                progressDialog.dismiss();
+                                Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+                                startActivity(i);
+                            }
+
+                            @Override
+                            public void onFailure(ApiResponse apiResponse) {
+                                lumsticApp.showToast(apiResponse.getError().getMessage());
+                                progressDialog.dismiss();
+                                Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+                                startActivity(i);
+                            }
+                        });
+
+
+                } else {
+                    lumsticApp.showToast("Enter valid email");
+                                   }
                 Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
-                startActivity(i);
+                                startActivity(i);
+
+
 
             }
         });

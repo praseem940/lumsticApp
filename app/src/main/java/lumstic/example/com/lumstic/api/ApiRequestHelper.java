@@ -9,6 +9,9 @@ import java.net.HttpRetryException;
 import java.util.Map;
 
 import lumstic.example.com.lumstic.LumsticApp;
+import lumstic.example.com.lumstic.Models.UserDTO;
+import lumstic.example.com.lumstic.R;
+import lumstic.example.com.lumstic.Utils.DataMapParser;
 import lumstic.example.com.lumstic.Utils.Logger;
 import retrofit.Callback;
 import retrofit.ErrorHandler;
@@ -42,103 +45,27 @@ public class ApiRequestHelper {
      * Add all the api request's here
      */
 
-//    public void getAdvertisements(final onRequestComplete onRequestComplete) {
-//        lumsticService.getAdvertisements(new Callback<ApiResponse>() {
-//            @Override
-//            public void success(ApiResponse apiResponse, Response response) {
-//                if (apiResponse.isSuccess()) {
-//                    Map<String, Object> dataMap = (Map<String, Object>) apiResponse.getData();
-//                    onRequestComplete.onSuccess(DataMapParser.parseAdvertisements(dataMap));
-//                } else {
-//                    onRequestComplete.onFailure(apiResponse);
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError retrofitError) {
-//                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-//            }
-//        });
-//    }
-//
-//    public void registerUser(String emailAddress, String phoneNumber, final onRequestComplete onRequestComplete) {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setEmail(emailAddress);
-//        userDTO.setPhoneNumber(phoneNumber);
-//
-//        lumsticService.registerUser(userDTO, new Callback<ApiResponse>() {
-//            @Override
-//            public void success(ApiResponse apiResponse, Response response) {
-//                if (apiResponse.isSuccess()) {
-//                    Map<String, Object> responseMap = (Map<String, Object>) apiResponse.getData();
-//                    onRequestComplete.onSuccess(DataMapParser.parseAuthToken(responseMap));
-//                } else {
-//                    onRequestComplete.onFailure(apiResponse);
-//                }
-//            }
-//            @Override
-//            public void failure(RetrofitError retrofitError) {
-//                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-//            }
-//        });
-//    }
-//
-//    public void getPlaceResults(Place place, String searchLogId, final onRequestComplete onRequestComplete) {
-//        lumsticService.getPlaceResults(place.getPlaceId(), place.getLatitude(), place.getLongitude(), place.getName(), searchLogId, new Callback<ApiResponse>() {
-//            public void success(ApiResponse apiResponse, Response response) {
-//                if (apiResponse.isSuccess()) {
-//
-//                } else {
-//                    onRequestComplete.onFailure(apiResponse);
-//                }
-//            }
-//            @Override
-//            public void failure(RetrofitError retrofitError) {
-//                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-//            }
-//        });
-//    }
-//
-//
-//    public void getSearchResults(double latitude, double longitude, final onRequestComplete onRequestComplete) {
-//        lumsticService.getSearchResults(String.valueOf(latitude), String.valueOf(longitude), new Callback<ApiResponse>() {
-//            @Override
-//            public void success(ApiResponse apiResponse, Response response) {
-//                if (apiResponse.isSuccess()) {
-//                    Map<String, Object> dataMap = (Map<String, Object>) apiResponse.getData();
-//                    String searchLogId = dataMap.get("searchLog_id").toString();
-//                    application.getPreferences().setSearchLogId(searchLogId);
-//                    //application.getPreferences().setSearchLogId(((Map<String, Object>) apiResponse.getData()).get("searchLog_id").toString());
-//                    onRequestComplete.onSuccess(DataMapParser.parsePlaces(dataMap));
-//                } else {
-//                    onRequestComplete.onFailure(apiResponse);
-//                }
-//            }
-//            @Override
-//            public void failure(RetrofitError retrofitError) {
-//                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-//            }
-//        });
-//    }
-//
-//    public void  getPlaceSearchResult(String searchTerm, final onRequestComplete onRequestComplete) {
-//        lumsticService.getPlaceSearchResults(searchTerm, new Callback<ApiResponse>() {
-//            @Override
-//            public void success(ApiResponse apiResponse, Response response) {
-//                if (apiResponse.isSuccess()) {
-//                    Map<String, Object> dataMap = (Map<String, Object>) apiResponse.getData();
-//                    onRequestComplete.onSuccess(DataMapParser.parsePlaces(dataMap));
-//                } else {
-//                    onRequestComplete.onFailure(apiResponse);
-//                }
-//            }
-//            @Override
-//            public void failure(RetrofitError retrofitError) {
-//                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-//            }
-//        });
-//    }
+    public void loginUser(String email, String password, final onRequestComplete onRequestComplete) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(email);
+        userDTO.setPassword(password);
 
+        lumsticService.loginUser(userDTO, new Callback<ApiResponse>() {
+            @Override
+            public void success(ApiResponse apiResponse, Response response) {
+                if (apiResponse.isSuccess()) {
+                    Map<String, Object> responseMap = (Map<String, Object>) apiResponse.getData();
+                    onRequestComplete.onSuccess(DataMapParser.parseAuthToken(responseMap));
+                } else {
+                    onRequestComplete.onFailure(apiResponse);
+                }
+            }
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
+            }
+        });
+    }
     /**
      * End api requests
      */
@@ -166,7 +93,7 @@ public class ApiRequestHelper {
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setLog(new AndroidLog(Logger.TAG))
-                //.setEndpoint(application.getResources().getString(R.string.server_url))
+               .setEndpoint(application.getResources().getString(R.string.server_url))
                 .setRequestInterceptor(getRequestInterceptor())
                 .build();
 

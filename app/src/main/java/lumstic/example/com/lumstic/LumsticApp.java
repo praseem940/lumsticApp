@@ -6,7 +6,7 @@ import android.widget.Toast;
 import lumstic.example.com.lumstic.Utils.Logger;
 import lumstic.example.com.lumstic.api.ApiRequestHelper;
 
-public class LumsticApp extends Application {
+public class LumsticApp  extends Application {
 
     private ApiRequestHelper apiRequestHelper;
     private Logger logger;

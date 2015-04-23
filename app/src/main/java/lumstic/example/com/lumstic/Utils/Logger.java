@@ -1,5 +1,6 @@
 package lumstic.example.com.lumstic.Utils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,6 +15,8 @@ public class Logger {
     private static Logger instance;
 	private LumsticApp application;
 	boolean debugEnabled;
+    private LumsticApp lumsticApp;
+    private ProgressDialog progressDialog;
 
     public static synchronized Logger init(LumsticApp application) {
         if(null == instance) {

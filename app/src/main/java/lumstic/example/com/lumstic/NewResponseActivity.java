@@ -35,10 +35,8 @@ public class NewResponseActivity extends Activity {
     RadioButton button;
     RadioGroup rg;
     TableRow row;
-
-       RelativeLayout fieldContainer;
-       LayoutInflater inflater;
-
+    RelativeLayout fieldContainer;
+    LayoutInflater inflater;
     TextView answerText;
     RelativeLayout imageContainer;
     ImageView imageView;
@@ -46,81 +44,66 @@ public class NewResponseActivity extends Activity {
     int CAMERA_REQUEST = 1;
     final int PIC_CROP = 2;
     Spinner spinner;
-
-
     List<Questions> questionsList;
     List<String> questions;
     List<Integer> layouts;
     Questions currentQuestions;
-
     int questionCounter = 0;
     Button nextQuestion, previousQuestion;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_response);
         getActionBar().setTitle("New Response");
-
-        questionNumber=(TextView)findViewById(R.id.question_number_text);
-        questionText=(TextView)findViewById(R.id.question_text);
-        layouts=new ArrayList<Integer>();
-
+        questionNumber = (TextView) findViewById(R.id.question_number_text);
+        questionText = (TextView) findViewById(R.id.question_text);
+        layouts = new ArrayList<Integer>();
         questionsList = new ArrayList<Questions>();
         questionsList = (List<Questions>) getIntent().getExtras().getSerializable(IntentConstants.QUESTIONS);
-        questions= new ArrayList<String>();
-        for(int Counter=0;Counter<questionsList.size();Counter++){
+        questions = new ArrayList<String>();
+        for (int Counter = 0; Counter < questionsList.size(); Counter++) {
             questions.add(questionsList.get(Counter).getContent());
-            String questionType=questionsList.get(Counter).getType();
-           checkQuestionType(questionType,Counter);
-
+            String questionType = questionsList.get(Counter).getType();
+            checkQuestionType(questionType, Counter);
         }
-
         fieldContainer = (RelativeLayout) findViewById(R.id.field_container);
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
-
         questionText.setText(questions.get(0));
-        currentQuestions=questionsList.get(0);
+        currentQuestions = questionsList.get(0);
         fieldContainer.removeAllViews();
         inflater = getLayoutInflater();
-       fieldContainer.addView(inflater.inflate(layouts.get(0), null));
-
-
-
-
-
-
-
+        fieldContainer.addView(inflater.inflate(layouts.get(0), null));
         nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 questionCounter++;
-                currentQuestions=questionsList.get(questionCounter);
+                currentQuestions = questionsList.get(questionCounter);
                 fieldContainer.removeAllViews();
-                fieldContainer.addView(inflater.inflate(layouts.get(questionCounter),null));
-              questionText.setText(questions.get(questionCounter));
-                CheckQuestion(layouts.get(questionCounter),currentQuestions);
+                fieldContainer.addView(inflater.inflate(layouts.get(questionCounter), null));
+                questionText.setText(questions.get(questionCounter));
+                CheckQuestion(layouts.get(questionCounter), currentQuestions);
             }
         });
         previousQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 questionCounter--;
-                currentQuestions=questionsList.get(questionCounter);
+                currentQuestions = questionsList.get(questionCounter);
                 fieldContainer.removeAllViews();
-               fieldContainer.addView(inflater.inflate(layouts.get(questionCounter), null));
+                fieldContainer.addView(inflater.inflate(layouts.get(questionCounter), null));
                 questionText.setText(questions.get(questionCounter));
-                CheckQuestion(layouts.get(questionCounter),currentQuestions);
-
-
+                CheckQuestion(layouts.get(questionCounter), currentQuestions);
             }
         });
     }
 
-    public void CheckQuestion(int layoutId,Questions currentQuestions) {
+    public void CheckQuestion(int layoutId, Questions currentQuestions) {
         //for date questions
         if (layoutId == R.layout.answer_date_picker) {
-           TextView answerText = (TextView) findViewById(R.id.answer_text);
+            TextView answerText = (TextView) findViewById(R.id.answer_text);
             answerText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -139,8 +122,8 @@ public class NewResponseActivity extends Activity {
         if (layoutId == R.layout.answer_image_picker) {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text);
             RelativeLayout deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
-           ImageView imageView = (ImageView) findViewById(R.id.image);
-           imageContainer = (RelativeLayout) findViewById(R.id.image_container);
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            imageContainer = (RelativeLayout) findViewById(R.id.image_container);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -159,11 +142,10 @@ public class NewResponseActivity extends Activity {
 
         }
 
-        if(layoutId==R.layout.answer_dropdown){
-           Spinner spinner =(Spinner)findViewById(R.id.drop_down);
+        if (layoutId == R.layout.answer_dropdown) {
+            Spinner spinner = (Spinner) findViewById(R.id.drop_down);
             List<String> listOptions = new ArrayList<String>();
-            for(int i=0;i<currentQuestions.getOptions().size();i++)
-            {
+            for (int i = 0; i < currentQuestions.getOptions().size(); i++) {
                 listOptions.add(currentQuestions.getOptions().get(i).getContent());
             }
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
@@ -172,8 +154,7 @@ public class NewResponseActivity extends Activity {
         }
 
 
-
-        if(currentQuestions.getType().contains("RadioQuestion")){
+        if (currentQuestions.getType().contains("RadioQuestion")) {
             rg = new RadioGroup(this);
             rg.setOrientation(RadioGroup.VERTICAL);
             for (int i = 0; i < currentQuestions.getOptions().size(); i++) {
@@ -186,14 +167,13 @@ public class NewResponseActivity extends Activity {
 
             }
 
-                fieldContainer.addView(rg);
+            fieldContainer.addView(rg);
         }
 
-        if(currentQuestions.getType().contains("MultiChoiceQuestion")){
+        if (currentQuestions.getType().contains("MultiChoiceQuestion")) {
             LinearLayout ll = new LinearLayout(this);
             ll.setOrientation(LinearLayout.VERTICAL);
-            for (int i = 0; i < currentQuestions.getOptions().size(); i++)
-            {
+            for (int i = 0; i < currentQuestions.getOptions().size(); i++) {
 
                 CheckBox checkBox = new CheckBox(this);
                 //checkBox.setOnCheckedChangeListener(this);
@@ -206,13 +186,13 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(ll);
         }
 
-        if(currentQuestions.getType().contains("SingleLineQuestion")){
-            boolean hintAvailable=true,textHintAvailable=true,imageHintAvailable=false;
-            final RelativeLayout hintContainer= (RelativeLayout)findViewById(R.id.hint_container);
-            if(hintAvailable) {
+        if (currentQuestions.getType().contains("SingleLineQuestion")) {
+            boolean hintAvailable = true, textHintAvailable = true, imageHintAvailable = false;
+            final RelativeLayout hintContainer = (RelativeLayout) findViewById(R.id.hint_container);
+            if (hintAvailable) {
                 LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
-                final Button textHintButton =(Button)findViewById(R.id.text_hint_button);
-                final Button imageHintButton=(Button)findViewById(R.id.image_hint_button);
+                final Button textHintButton = (Button) findViewById(R.id.text_hint_button);
+                final Button imageHintButton = (Button) findViewById(R.id.image_hint_button);
                 hintButtonContainer.setVisibility(View.VISIBLE);
 
 
@@ -222,8 +202,8 @@ public class NewResponseActivity extends Activity {
 
                         hintContainer.setVisibility(View.VISIBLE);
 
-                        TextView textHint = (TextView)findViewById(R.id.text_hint);
-                        ImageView imageHint=(ImageView)findViewById(R.id.image_hint);
+                        TextView textHint = (TextView) findViewById(R.id.text_hint);
+                        ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
                         textHint.setVisibility(View.VISIBLE);
                         textHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
                         imageHintButton.setBackgroundResource(R.drawable.hint_button);
@@ -238,8 +218,8 @@ public class NewResponseActivity extends Activity {
                         hintContainer.setVisibility(View.VISIBLE);
                         imageHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
                         textHintButton.setBackgroundResource(R.drawable.hint_button);
-                        TextView textHint = (TextView)findViewById(R.id.text_hint);
-                        ImageView imageHint=(ImageView)findViewById(R.id.image_hint);
+                        TextView textHint = (TextView) findViewById(R.id.text_hint);
+                        ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
                         textHint.setVisibility(View.GONE);
                         imageHint.setVisibility(View.VISIBLE);
                     }
@@ -252,7 +232,6 @@ public class NewResponseActivity extends Activity {
 
     }
 
-    //for camera returned picture
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == RESULT_OK) {
@@ -263,6 +242,7 @@ public class NewResponseActivity extends Activity {
             }
         }
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_response, menu);
         return true;
@@ -287,34 +267,34 @@ public class NewResponseActivity extends Activity {
             answerText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
         }
     }
-    public void checkQuestionType(String questionType, int position)
-    {
+
+    public void checkQuestionType(String questionType, int position) {
         if (questionType.contains("PhotoQuestion"))
-            layouts.add(position,R.layout.answer_image_picker);
+            layouts.add(position, R.layout.answer_image_picker);
 
         if (questionType.contains("MultilineQuestion"))
-            layouts.add(position,R.layout.answer_multi_line);
+            layouts.add(position, R.layout.answer_multi_line);
 
         if (questionType.contains("NumericQuestion"))
-            layouts.add(position,R.layout.answer_numeric);
+            layouts.add(position, R.layout.answer_numeric);
 
         if (questionType.contains("DateQuestion"))
-            layouts.add(position,R.layout.answer_date_picker);
+            layouts.add(position, R.layout.answer_date_picker);
 
         if (questionType.contains("RatingQuestion"))
-            layouts.add(position,R.layout.answer_rating);
+            layouts.add(position, R.layout.answer_rating);
 
         if (questionType.contains("RadioQuestion"))
-            layouts.add(position,R.layout.answer_radio_button);
+            layouts.add(position, R.layout.answer_radio_button);
 
         if (questionType.contains("MultiChoiceQuestion"))
-            layouts.add(position,R.layout.answer_multi_choice);
+            layouts.add(position, R.layout.answer_multi_choice);
 
         if (questionType.contains("SingleLineQuestion"))
-            layouts.add(position,R.layout.answer_single_line);
+            layouts.add(position, R.layout.answer_single_line);
 
-        if(questionType.contains("DropDownQuestion"))
-            layouts.add(position,R.layout.answer_dropdown);
+        if (questionType.contains("DropDownQuestion"))
+            layouts.add(position, R.layout.answer_dropdown);
     }
 }
 
