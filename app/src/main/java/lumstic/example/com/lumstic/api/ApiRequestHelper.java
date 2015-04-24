@@ -1,13 +1,9 @@
 package lumstic.example.com.lumstic.api;
 
 
-
-
 import org.codehaus.jackson.map.ObjectMapper;
-
 import java.net.HttpRetryException;
 import java.util.Map;
-
 import lumstic.example.com.lumstic.LumsticApp;
 import lumstic.example.com.lumstic.Models.UserDTO;
 import lumstic.example.com.lumstic.R;
@@ -66,6 +62,8 @@ public class ApiRequestHelper {
             }
         });
     }
+
+
     /**
      * End api requests
      */

@@ -8,6 +8,6 @@ import java.util.Map;
     public class DataMapParser {
 
         public static String parseAuthToken(Map<String, Object> dataMap) {
-            return (String) dataMap.get("_id");
+            return (String) dataMap.get("auth_token");
         }
 }
