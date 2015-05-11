@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dash_board_background"
-    tools:context="lumstic.example.com.lumstic.DashBoardActivity">
+    tools:context="lumstic.example.com.lumstic.UI.DashBoardActivity">
     <View
         android:layout_width="fill_parent"
         android:layout_height="300dp"

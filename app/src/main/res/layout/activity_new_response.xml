@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dash_board_background"
-    tools:context="lumstic.example.com.lumstic.DashBoardActivity">
+    tools:context="lumstic.example.com.lumstic.UI.DashBoardActivity">
 <View
         android:layout_width="fill_parent"
         android:layout_height="300dp"
@@ -11,38 +11,22 @@
 
     <RelativeLayout
         android:id="@+id/question_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/controls_container"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/dash_board_foreground">
-        <TextView
-            android:id="@+id/question_number_text"
-            android:layout_width="wrap_content"
-            android:text="Q.1)"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:paddingTop="6dp"
-            android:paddingLeft="20dp"
-            android:textColor="@color/black"/>
-<TextView
-    android:id="@+id/question_text"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="What is the capital of india?"
-    android:textSize="20sp"
-    android:padding="6dp"
-    android:layout_toRightOf="@+id/question_number_text"/>
 
 
         <ScrollView
-            android:layout_below="@+id/question_text"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_below="@+id/question_text"
             android:id="@+id/field_container"
             android:layout_width="fill_parent"
@@ -51,7 +35,7 @@
             android:layout_marginTop="10dp"
             android:layout_height="fill_parent">
 
-            </RelativeLayout>
+            </LinearLayout>
         </ScrollView>
         </RelativeLayout>
 

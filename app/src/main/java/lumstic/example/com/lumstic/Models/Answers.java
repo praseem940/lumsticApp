@@ -77,14 +77,4 @@ public class Answers {
         this.content = content;
     }
 
-    public Answers(int recordId, int webId, int updatedAt, int id, int responseId, int questionId, String image, String content) {
-        this.recordId = recordId;
-        this.webId = webId;
-        this.updatedAt = updatedAt;
-        this.id = id;
-        this.responseId = responseId;
-        this.questionId = questionId;
-        this.image = image;
-        this.content = content;
-    }
 }

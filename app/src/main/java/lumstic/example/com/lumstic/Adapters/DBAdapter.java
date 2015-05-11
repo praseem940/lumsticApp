@@ -16,11 +16,7 @@ import lumstic.example.com.lumstic.Models.Records;
 import lumstic.example.com.lumstic.Models.Responses;
 import lumstic.example.com.lumstic.Models.Surveys;
 
-/**
- * Created by work on 17/4/15.
- */
 public class DBAdapter {
-
     DBhelper dBhelper;
     SQLiteDatabase sqLiteDatabase;
 
@@ -44,11 +40,7 @@ public class DBAdapter {
         contentValues.put(DBhelper.IMAGE_URL, questions.getImageUrl());
         contentValues.put(DBhelper.ORDER_NUMBER, questions.getOrderNumber());
         contentValues.put(DBhelper.CATEGORY_ID, questions.getCategoryId());
-        long idd = sqLiteDatabase.insert(DBhelper.TABLE_questions, null, contentValues);
-
-        return idd;
-
-
+        return sqLiteDatabase.insert(DBhelper.TABLE_questions, null, contentValues);
     }
 
     public long insertDataChoicesTable(Choices choices) {
@@ -57,9 +49,7 @@ public class DBAdapter {
         contentValues.put(DBhelper.OPTION_ID, choices.getOptionId());
         contentValues.put(DBhelper.ANSWER_ID, choices.getAnswerId());
         return sqLiteDatabase.insert(DBhelper.TABLE_choices, null, contentValues);
-
     }
-
 
     public long insertDataOptionsTable(Options options) {
         ContentValues contentValues = new ContentValues();
@@ -68,7 +58,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.ORDER_NUMBER, options.getOrderNumber());
         contentValues.put(DBhelper.CONTENT, options.getContent());
         return sqLiteDatabase.insert(DBhelper.TABLE_options, null, contentValues);
-
     }
 
     public long insertDataSurveysTable(Surveys surveys) {
@@ -79,7 +68,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.EXPIRY_DATE, surveys.getExpiryDate());
         contentValues.put(DBhelper.NAME, surveys.getName());
         return sqLiteDatabase.insert(DBhelper.TABLE_surveys, null, contentValues);
-
     }
 
     public long insertDataCategoriesTable(Categories categories) {
@@ -92,7 +80,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.CONTENT, categories.getContent());
         contentValues.put(DBhelper.TYPE, categories.getType());
         return sqLiteDatabase.insert(DBhelper.TABLE_categories, null, contentValues);
-
     }
 
     public long insertDataAnswersTable(Answers answers) {
@@ -106,7 +93,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.RESPONSE_ID, answers.getResponseId());
         contentValues.put(DBhelper.QUESTION_ID, answers.getQuestionId());
         return sqLiteDatabase.insert(DBhelper.TABLE_answers, null, contentValues);
-
     }
 
     public long insertDataRecordsTable(Records records) {
@@ -116,7 +102,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.RESPONSE_ID, records.getResponseId());
         contentValues.put(DBhelper.WEB_ID, records.getWebId());
         return sqLiteDatabase.insert(DBhelper.TABLE_records, null, contentValues);
-
     }
 
     public long insertDataResponsesTable(Responses responses) {
@@ -132,11 +117,9 @@ public class DBAdapter {
         contentValues.put(DBhelper.UPDATED_AT, responses.getUpdatedAt());
         contentValues.put(DBhelper.SURVEY_ID, responses.getSurveyId());
         return sqLiteDatabase.insert(DBhelper.TABLE_responses, null, contentValues);
-
     }
 
     public class DBhelper extends SQLiteOpenHelper {
-
         private Context mcontext;
         private static final String DATABASE_NAME = "SurveyAppDatabase";
         private static final int DATABASE_VERSION = 1;
@@ -180,16 +163,12 @@ public class DBAdapter {
         private static final String LATITUDE = "latitude";
         private static final String STATUS = "status";
         private static final String ORGANISATION_ID = "organisation_id";
-
-        //create table queries
         private static final String CREATE_TABLE_choices = "CREATE TABLE "
                 + TABLE_choices + "(" + ID + " INTEGER PRIMARY KEY,"
                 + OPTION_ID + " INTEGER," + ANSWER_ID + " INTEGER" + ")";
-
         private static final String CREATE_TABLE_questions = "CREATE TABLE "
                 + TABLE_questions + "(" + ID + " INTEGER PRIMARY KEY,"
                 + IDENTIFIER + " INTEGER," + PARENT_ID + " INTEGER," + MIN_VALUE + " INTEGER," + MAX_VALUE + " INTEGER," + TYPE + " VARCHAR(255)," + CONTENT + " VARCHAR(255)," + SURVEY_ID + " INTEGER," + MAX_LENGTH + " INTEGER," + MANDATORY + " INTEGER," + IMAGE_URL + " VARCHAR(255)," + ORDER_NUMBER + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
-
         private static final String CREATE_TABLE_options = "CREATE TABLE "
                 + TABLE_options + "(" + ID + " INTEGER PRIMARY KEY,"
                 + ORDER_NUMBER + " INTEGER," + CONTENT + " VARCHAR(255)," + QUESTION_ID + " INTEGER" + ")";
@@ -206,7 +185,6 @@ public class DBAdapter {
                 + TABLE_answers + "(" + ID + " INTEGER PRIMARY KEY,"
                 + RECORD_ID + " INTEGER," + WEB_ID + " INTEGER," + UPDATED_AT + " INTEGER," + CONTENT + " VARCHAR(255)," + IMAGE + " VARCHAR(255)," + RESPONSE_ID + " INTEGER," + QUESTION_ID + " INTEGER" + ")";
 
-
         private static final String CREATE_TABLE_records = "CREATE TABLE "
                 + TABLE_records + "(" + ID + " INTEGER PRIMARY KEY,"
                 + RESPONSE_ID + " INTEGER," + WEB_ID + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
@@ -214,7 +192,6 @@ public class DBAdapter {
         private static final String CREATE_TABLE_responses = "CREATE TABLE "
                 + TABLE_responses + "(" + ID + " INTEGER PRIMARY KEY,"
                 + MOBILE_ID + " VARCHAR(255)," + USER_ID + " INTEGER," + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + UPDATED_AT + " INTEGER," + SURVEY_ID + " INTEGER," + WEB_ID + " INTEGER," + STATUS + " VARCHAR(255)," + ORGANISATION_ID + " INTEGER" + ")";
-
         public DBhelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             Log.e("contructor", "called");
@@ -230,9 +207,9 @@ public class DBAdapter {
             sqLiteDatabase.execSQL(CREATE_TABLE_options);
             sqLiteDatabase.execSQL(CREATE_TABLE_surveys);
             sqLiteDatabase.execSQL(CREATE_TABLE_categories);
-            sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             sqLiteDatabase.execSQL(CREATE_TABLE_records);
             sqLiteDatabase.execSQL(CREATE_TABLE_responses);
+            sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             Log.e("success", "success");
 
             Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();

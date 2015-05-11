@@ -1,5 +1,6 @@
 package lumstic.example.com.lumstic.Utils;
 
+import android.database.DatabaseUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ public class JSONParser {
 
     List<Questions> questionses;
     List<Surveys> surveyses;
-    List<Options> optionses;
+
     List<Categories> categorieses;
 
 
@@ -91,14 +92,21 @@ public class JSONParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        try {
+
+            options.setQuestions(parseQuestions(jsonObjectOptions.getJSONArray("questions").getJSONObject(0)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return options;
 
     }
 
     public Questions parseQuestions(JSONObject jsonObjectQuestions) {
         Questions questions = new Questions();
+        List<Options> optionses;
         optionses = new ArrayList<Options>();
-
         try {
             try {
                 questions.setId(jsonObjectQuestions.getInt("id"));
@@ -106,7 +114,6 @@ public class JSONParser {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
                 if (jsonObjectQuestions.getBoolean("identifier"))
                     questions.setIdentifier(1);
@@ -115,13 +122,11 @@ public class JSONParser {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
                 questions.setParentId(jsonObjectQuestions.getInt("parent_id"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
                 questions.setMinValue(jsonObjectQuestions.getInt("min_value"));
             } catch (Exception e) {
@@ -174,18 +179,21 @@ public class JSONParser {
             e.printStackTrace();
         }
         if (jsonObjectQuestions.has("options"))
-            Log.e("ithas", "");
+        {
         try {
+
             JSONArray jsonArrayOptions = jsonObjectQuestions.getJSONArray("options");
             for (int k = 0; k < jsonArrayOptions.length(); k++) {
+
                 JSONObject jsonObjectOptions = jsonArrayOptions.getJSONObject(k);
                 Options options = parseOptions(jsonObjectOptions);
                 optionses.add(k, options);
 
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }}
         questions.setOptions(optionses);
 
 

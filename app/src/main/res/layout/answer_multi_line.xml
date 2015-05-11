@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent">
 
     <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
+        android:padding="6dp"
         android:layout_margin="14dp"
         android:background="@drawable/custom_edittext"
-        android:id="@+id/anser_text"></RelativeLayout>
+        android:id="@+id/anser_text">
 
     <EditText
         android:id="@+id/answer_text"
@@ -19,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="type your answer here"
-        android:padding="10dp"
+        android:padding="4dp"
         android:layout_margin="14dp"
         android:textSize="20sp"
         android:background="@android:color/transparent"

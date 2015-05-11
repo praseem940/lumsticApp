@@ -1,10 +1,9 @@
 package lumstic.example.com.lumstic.api;
 
-
 import org.codehaus.jackson.map.ObjectMapper;
 import java.net.HttpRetryException;
 import java.util.Map;
-import lumstic.example.com.lumstic.LumsticApp;
+import lumstic.example.com.lumstic.Utils.LumsticApp;
 import lumstic.example.com.lumstic.Models.UserDTO;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.DataMapParser;
@@ -16,18 +15,14 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.android.AndroidLog;
 import retrofit.client.Response;
-
 public class ApiRequestHelper {
-
     public static interface onRequestComplete {
         public void onSuccess(Object object);
         public void onFailure(ApiResponse apiResponse);
     }
-
     private static ApiRequestHelper instance;
     private LumsticService lumsticService;
     private LumsticApp application;
-
     public static synchronized ApiRequestHelper init(LumsticApp application) {
         if (null == instance) {
             instance = new ApiRequestHelper();
@@ -36,16 +31,13 @@ public class ApiRequestHelper {
         }
         return instance;
     }
-
     /**
      * Add all the api request's here
      */
-
     public void loginUser(String email, String password, final onRequestComplete onRequestComplete) {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(email);
         userDTO.setPassword(password);
-
         lumsticService.loginUser(userDTO, new Callback<ApiResponse>() {
             @Override
             public void success(ApiResponse apiResponse, Response response) {
@@ -62,8 +54,6 @@ public class ApiRequestHelper {
             }
         });
     }
-
-
     /**
      * End api requests
      */
@@ -97,7 +87,6 @@ public class ApiRequestHelper {
 
         lumsticService = restAdapter.create(LumsticService.class);
     }
-
     private RequestInterceptor getRequestInterceptor() {
         return new RequestInterceptor() {
             @Override
@@ -113,11 +102,9 @@ public class ApiRequestHelper {
             }
         };
     }
-
     /**
      * End REST Adapter Configuration
      */
-
     public void setLumsticService(LumsticService lumsticService) {
         this.lumsticService = lumsticService;
     }
@@ -125,9 +112,7 @@ public class ApiRequestHelper {
     public LumsticApp getApplication() {
         return application;
     }
-
     public void setApplication(LumsticApp application) {
         this.application = application;
     }
-
 }

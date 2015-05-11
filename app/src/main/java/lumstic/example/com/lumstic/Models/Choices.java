@@ -6,12 +6,6 @@ public class Choices {
     int optionId;
     int answerId;
 
-    public Choices(int id, int optionId, int answerId) {
-        this.id = id;
-        this.optionId = optionId;
-        this.answerId = answerId;
-    }
-
     public int getId() {
         return id;
     }

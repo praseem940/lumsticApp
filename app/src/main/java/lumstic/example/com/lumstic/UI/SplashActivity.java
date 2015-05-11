@@ -1,4 +1,4 @@
-package lumstic.example.com.lumstic;
+package lumstic.example.com.lumstic.UI;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import lumstic.example.com.lumstic.R;
 
 
 public class SplashActivity extends Activity {
@@ -20,17 +22,19 @@ public class SplashActivity extends Activity {
 
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
                 startActivity(intent);
-                finishscreen();
+
             }
         };
         Timer t = new Timer();
-        t.schedule(task, 2000);
+        t.schedule(task,2000);
+        finishscreen();
     }
 
-    private void finishscreen() {
-        this.finish();
+    public void finishscreen()
+    {
+        finish();
     }
 
 

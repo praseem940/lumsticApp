@@ -29,17 +29,23 @@
         android:layout_height="24dp"
         android:src="@drawable/ic_delete_img"
         android:layout_centerInParent="true"/></RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textView" />
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/answer_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/image_container"
         android:layout_marginLeft="20dp"
         android:layout_centerHorizontal="true"
-        android:background="@color/login_button_color"
+        android:background="@color/next_button_background"
         android:orientation="horizontal"
         android:padding="8dp">
 
@@ -49,12 +55,13 @@
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"
-            android:background="@drawable/ic_takeapic" />
+            android:background="@drawable/ic_takeapic"
+            android:id="@+id/image_button" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/login_button_color"
+            android:background="@color/next_button_background"
             android:text="Take a picture"
             android:textSize="20sp"
             android:textColor="@color/white" />

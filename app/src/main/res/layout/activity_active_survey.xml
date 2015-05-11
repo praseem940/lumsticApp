@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dash_board_background"
-    tools:context="lumstic.example.com.lumstic.DashBoardActivity">
+    tools:context="lumstic.example.com.lumstic.UI.DashBoardActivity">
     <View
         android:layout_width="fill_parent"
         android:layout_height="300dp"
@@ -49,14 +49,14 @@
                 android:textColor="@color/white" />
         </LinearLayout>
         <View
-            android:id="@+id/devider"
+            android:id="@+id/divider"
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
             android:layout_below="@+id/active_survey_text"
             android:layout_marginLeft="50dp"
             android:background="@color/black"></View>
         <ListView
-            android:id="@+id/active_surve_list"
+            android:id="@+id/active_survey_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@+id/upload_container"

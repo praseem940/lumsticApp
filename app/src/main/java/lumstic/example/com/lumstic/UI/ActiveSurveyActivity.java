@@ -1,4 +1,4 @@
-package lumstic.example.com.lumstic;
+package lumstic.example.com.lumstic.UI;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,38 +8,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import lumstic.example.com.lumstic.Adapters.DashBoardAdapter;
-import lumstic.example.com.lumstic.Models.Questions;
-import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
+import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
 import lumstic.example.com.lumstic.Utils.JsonHelper;
-import retrofit.RestAdapter;
 
 
 public class ActiveSurveyActivity extends Activity {
     ListView listView;
-
-    JsonHelper jsonHelper;
     List<Surveys> surveysList;
-
+    JsonHelper jsonHelper;
     DashBoardAdapter dashBoardAdapter;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
-        surveysList = new ArrayList<Surveys>();
         jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
+        surveysList = new ArrayList<Surveys>();
         surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-        listView = (ListView) findViewById(R.id.active_surve_list);
-
-
+        listView = (ListView) findViewById(R.id.active_survey_list);
         dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
         listView.setAdapter(dashBoardAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -53,14 +44,11 @@ public class ActiveSurveyActivity extends Activity {
         });
     }
 
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.active_survey, menu);
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
@@ -68,6 +56,11 @@ public class ActiveSurveyActivity extends Activity {
         }
         if (id == R.id.action_logout) {
             Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
+            startActivity(i);
+            return true;
+        }
+        if (id == R.id.action_help) {
+            Intent i = new Intent(ActiveSurveyActivity.this, HelpActivity.class);
             startActivity(i);
             return true;
         }

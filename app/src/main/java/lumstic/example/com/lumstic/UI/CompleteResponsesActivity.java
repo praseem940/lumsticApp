@@ -1,4 +1,4 @@
-package lumstic.example.com.lumstic;
+package lumstic.example.com.lumstic.UI;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,16 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lumstic.example.com.lumstic.Adapters.CompleteResponsesAdapter;
-import lumstic.example.com.lumstic.Adapters.DashBoardAdapter;
 import lumstic.example.com.lumstic.Models.CompleteResponses;
-import lumstic.example.com.lumstic.Models.Survey;
-
+import lumstic.example.com.lumstic.R;
 
 public class CompleteResponsesActivity extends Activity {
     ListView listView;
     List<CompleteResponses> completeResponseses;
     CompleteResponsesAdapter completeResponsesAdapter;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_responses);
@@ -41,11 +38,15 @@ public class CompleteResponsesActivity extends Activity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 }

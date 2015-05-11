@@ -1,12 +1,12 @@
-package lumstic.example.com.lumstic;
+package lumstic.example.com.lumstic.Utils;
 
 import android.app.Application;
 import android.widget.Toast;
 
-import lumstic.example.com.lumstic.Utils.Logger;
 import lumstic.example.com.lumstic.api.ApiRequestHelper;
 
 public class LumsticApp  extends Application {
+
 
     private ApiRequestHelper apiRequestHelper;
     private Logger logger;
@@ -40,7 +40,7 @@ public class LumsticApp  extends Application {
     public void showToast(int stringResId) {
         String message = getString(stringResId);
         if (null != message)
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     public synchronized Preferences getPreferences() {

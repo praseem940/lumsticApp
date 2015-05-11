@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_gradient"
-    tools:context="lumstic.example.com.lumstic.LoginActivity">
+    tools:context="lumstic.example.com.lumstic.UI.LoginActivity">
 <View
     android:layout_width="fill_parent"
     android:layout_marginTop="240dp"
