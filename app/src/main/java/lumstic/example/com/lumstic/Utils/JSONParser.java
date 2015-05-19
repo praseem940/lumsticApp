@@ -72,6 +72,7 @@ public class JSONParser {
 
     public Options parseOptions(JSONObject jsonObjectOptions) {
         Options options = new Options();
+        List<Questions> questionsList= new ArrayList<Questions>();
         try {
             options.setId(jsonObjectOptions.getInt("id"));
         } catch (JSONException e) {
@@ -95,7 +96,10 @@ public class JSONParser {
 
         try {
 
-            options.setQuestions(parseQuestions(jsonObjectOptions.getJSONArray("questions").getJSONObject(0)));
+            for(int i=0;i<jsonObjectOptions.getJSONArray("questions").length();i++){
+                questionsList.add(parseQuestions(jsonObjectOptions.getJSONArray("questions").getJSONObject(i)));
+            }
+            options.setQuestions(questionsList);
         } catch (JSONException e) {
             e.printStackTrace();
         }

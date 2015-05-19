@@ -2,22 +2,22 @@ package lumstic.example.com.lumstic.UI;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,15 +27,14 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
+import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
@@ -44,7 +43,6 @@ public class NewResponseActivity extends Activity {
 
 
     List<Questions> questionsList;
-    List<String> questions;
     boolean hint = true;
     TextView dateText;
     Spinner spinner;
@@ -52,22 +50,13 @@ public class NewResponseActivity extends Activity {
     TextView questionTextSingleLine;
     View v, v1;
     Questions currentQuestions;
-    List<Questions> nestedQuestionsList;
-    boolean currentQuestionChanged=false;
-    List<Integer> listOfViews;
+    List<Questions> nestedQuestions;
+    boolean nextLayoutCreated = false;
 
 
-
-
-
-    RadioButton button;
-    RadioGroup radioGroup;
     Questions qu;
-
     int questionCount = 0;
     LinearLayout fieldContainer;
-
-    LinearLayout fieldContainerNested;
     LayoutInflater inflater;
     TextView answerText;
     int CAMERA_REQUEST = 1;
@@ -78,6 +67,7 @@ public class NewResponseActivity extends Activity {
     int PICK_FROM_CAMERA = 1;
     final int PIC_CROP = 2;
     int questionCounter = 0;
+    List<Integer> idList;
 
     Button nextQuestion, previousQuestion;
 
@@ -87,27 +77,17 @@ public class NewResponseActivity extends Activity {
         setContentView(R.layout.activity_new_response);
         getActionBar().setTitle("New Response Activity");
         fieldContainer = (LinearLayout) findViewById(R.id.field_container);
-        fieldContainerNested = (LinearLayout) findViewById(R.id.field_container);
         inflater = getLayoutInflater();
-        nestedQuestionsList= new ArrayList<Questions>();
-        listOfViews= new ArrayList<Integer>();
-
-
+        nestedQuestions = new ArrayList<Questions>();
+        idList = new ArrayList<Integer>();
 
         questionsList = new ArrayList<Questions>();
         questionsList = (List<Questions>) getIntent().getExtras().getSerializable(IntentConstants.QUESTIONS);
         questionCount = questionsList.size();
-        questions = new ArrayList<String>();
-
-        for (int i = 0; i < questionsList.size(); i++) {
-            questions.add(questionsList.get(i).getType());
-
-
-        }
-
         Questions currentQuestion = questionsList.get(0);
-        addQuestion(currentQuestion);
+
         buildLayout(currentQuestion);
+        boolean nextLayoutPresent = false;
 
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
@@ -115,11 +95,12 @@ public class NewResponseActivity extends Activity {
             public void onClick(View view) {
 
                 if (questionCounter < questionCount - 1) {
-                    nestedQuestionsList.clear();
+                    nestedQuestions.clear();
+                    idList.clear();
                     fieldContainer.removeAllViews();
                     questionCounter++;
                     Questions currentQuestion = questionsList.get(questionCounter);
-                    addQuestion(currentQuestion);
+
                     buildLayout(currentQuestion);
                 }
             }
@@ -130,11 +111,12 @@ public class NewResponseActivity extends Activity {
             public void onClick(View view) {
 
                 if (questionCounter != 0) {
-                    nestedQuestionsList.clear();
+                    nestedQuestions.clear();
+                    idList.clear();
                     fieldContainer.removeAllViews();
                     questionCounter--;
                     Questions currentQuestion = questionsList.get(questionCounter);
-                    addQuestion(currentQuestion);
+
                     buildLayout(currentQuestion);
                 }
             }
@@ -158,41 +140,211 @@ public class NewResponseActivity extends Activity {
 
     public void buildLayout(final Questions ques) {
         if (ques.getType().equals("SingleLineQuestion")) {
-
-            fieldContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
-
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+            fieldContainer.addView(nestedContainer);
             EditText answerSingleLine = (EditText) findViewById(R.id.answer_text);
             checkHint();
         }
+
+
         if (ques.getType().contains("MultiLineQuestion")) {
-            fieldContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
+
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+            fieldContainer.addView(nestedContainer);
             EditText answerMultiLine = (EditText) findViewById(R.id.answer_text);
             checkHint();
 
         }
 
+        if (ques.getType().contains("DropDownQuestion")) {
+
+
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+            fieldContainer.addView(nestedContainer);
+
+            final Spinner spinner = (Spinner) findViewById(R.id.drop_down);
+            List<String> listOptions = new ArrayList<String>();
+            for (int i = 0; i < ques.getOptions().size(); i++) {
+                listOptions.add(ques.getOptions().get(i).getContent());
+            }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_dropdown_item, listOptions);
+            spinner.setAdapter(dataAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    Toast.makeText(NewResponseActivity.this,""+i,Toast.LENGTH_SHORT).show();
+                    Options options= ques.getOptions().get(i);
+                    if(options.getQuestions().size()>0){
+                        Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
+                        for(int j=0;j<options.getQuestions().size();j++){
+                            buildLayout(options.getQuestions().get(j));
+                        }
+                    }
+
+                    if(options.getQuestions().size()<=0){
+                        for(int j=0;j<idList.size();j++){
+                            if(idList.get(j)==options.getQuestionId())
+                            {
+                                for(int k=j+1;k<idList.size();){
+                                    try{
+                                        View myView = findViewById(idList.get(k));
+                                        ViewGroup parent = (ViewGroup) myView.getParent();
+                                        parent.removeView(myView);
+                                        idList.remove(k);
+                                        nestedQuestions.remove(k);
+                                    }catch ( Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
+
+
 
         if (ques.getType().contains("MultiChoiceQuestion")) {
 
 
+            nestedQuestions.add(ques);
+
+
+            Log.e("nestedquestionitem",nestedQuestions.size()+"");
+
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+
             LinearLayout ll = new LinearLayout(this);
             ll.setOrientation(LinearLayout.VERTICAL);
+            nestedContainer.addView(ll);
             for (int i = 0; i < ques.getOptions().size(); i++) {
                 CheckBox checkBox = new CheckBox(this);
-                checkBox.setId(i);
+                ll.addView(checkBox);
+                checkBox.setId(ques.getOptions().get(i).getId());
                 checkBox.setText(ques.getOptions().get(i).getContent());
                 checkBox.setTextSize(20);
+                checkBox.setTag(ques.getOptions().get(i));
                 checkBox.setButtonDrawable(R.drawable.custom_checkbox);
-                ll.addView(checkBox);
+                checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (((CheckBox) view).isChecked()) {
+
+                            CheckBox checkBox1= (CheckBox) view;
+                            Options options= (Options) checkBox1.getTag();
+                            if(options.getQuestions().size()>0){
+                                Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
+                                for(int i=0;i<options.getQuestions().size();i++){
+                                    buildLayout(options.getQuestions().get(i));
+                                }
+                            }
+                        }
+
+                        if(!((CheckBox) view).isChecked()){
+
+                            Toast.makeText(NewResponseActivity.this,"has been unchecked ",Toast.LENGTH_SHORT).show();
+                            CheckBox checkBox1= (CheckBox) view;
+                            Options options= (Options) checkBox1.getTag();
+
+                            if(options.getQuestions().size()>0){
+                            for(int j=0;j<idList.size();j++){
+                                if(idList.get(j)==options.getQuestionId())
+                                {
+                                    for(int k=j+1;k<idList.size();){
+                                        try{
+                                            View myView = findViewById(idList.get(k));
+                                            ViewGroup parent = (ViewGroup) myView.getParent();
+                                            parent.removeView(myView);
+                                                idList.remove(k);
+                                            nestedQuestions.remove(k);
+                                        }catch ( Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                }
+                            }}
+                        }
+
+                    }
+                });
+
+
+
             }
-            fieldContainer.addView(ll);
+            fieldContainer.addView(nestedContainer);
             checkHint();
         }
 
 
         if (ques.getType().contains("NumericQuestion")) {
-
-            fieldContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+            fieldContainer.addView(nestedContainer);
             EditText answerMultiLine = (EditText) findViewById(R.id.answer_text);
             checkHint();
 
@@ -200,8 +352,20 @@ public class NewResponseActivity extends Activity {
 
 
         if (ques.getType().contains("DateQuestion")) {
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+            fieldContainer.addView(nestedContainer);
 
-            fieldContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
 
             dateText = (TextView) findViewById(R.id.answer_text);
             dateText.setOnClickListener(new View.OnClickListener() {
@@ -217,100 +381,105 @@ public class NewResponseActivity extends Activity {
                 }
             });
         }
-
-
         //for radio question
-        if (ques.getType().contains("RadioQuestion")) {
-            qu = ques;
+        if (ques.getType().contains("RadioQuestion"))  if (ques.getType().contains("RadioQuestion")) {
 
 
-            radioGroup = new RadioGroup(this);
+
+            nestedQuestions.add(ques);
+
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
+
+
+            RadioGroup radioGroup = new RadioGroup(this);
             radioGroup.setOrientation(RadioGroup.VERTICAL);
+            nestedContainer.addView(radioGroup);
             for (int i = 0; i < ques.getOptions().size(); i++) {
+                final RadioButton radioButton= new RadioButton(this);
+                radioGroup.addView(radioButton);
+                radioButton.setId(ques.getOptions().get(i).getId());
+                radioButton.setText(ques.getOptions().get(i).getContent());
+                radioButton.setTag(ques.getOptions().get(i));
+                radioButton.setButtonDrawable(R.drawable.custom_radio_button);
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+                {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                button = new RadioButton(this);
-                radioGroup.addView(button);
-                button.setText(ques.getOptions().get(i).getContent());
-                button.setId(ques.getOptions().get(i).getId());
-                button.setButtonDrawable(R.drawable.custom_radio_button);
-                listOfViews.add(ques.getOptions().get(i).getId());
+                        View myView = findViewById(checkedId);
+                        RadioButton radioButton1= (RadioButton) myView;
+                        Options options= (Options) radioButton1.getTag();
+                        Toast.makeText(NewResponseActivity.this,options.getId()+"",Toast.LENGTH_SHORT).show();
+                        if(options.getQuestions().size()>0){
+                            Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
+                            for(int i=0;i<options.getQuestions().size();i++){
+                                buildLayout(options.getQuestions().get(i));
+                            }
+                        }
+                        if(options.getQuestions().size()<=0){
+                            Toast.makeText(NewResponseActivity.this,"has no options",Toast.LENGTH_SHORT).show();
+                            for(int j=0;j<idList.size();j++){
+                                if(idList.get(j)==options.getQuestionId())
+                                {
+                                    for(int k=j+1;k<idList.size();){
+                                        try{
+                                            View myView1 = findViewById(idList.get(k));
+                                            ViewGroup parent = (ViewGroup) myView1.getParent();
+                                            parent.removeView(myView1);
+                                            idList.remove(k);
+                                            nestedQuestions.remove(k);
+                                        }catch ( Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    }
+                });
+
+
+
+
+
+
 
 
 
             }
+            fieldContainer.addView(nestedContainer);
+            checkHint();
 
-            fieldContainer.addView(radioGroup);
-
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                   for(int i =0;i<qu.getOptions().size();i++){
-                       if((qu.getOptions().get(i).getId()==checkedId)&&(qu.getOptions().get(i).getQuestions()!=null)){
-                           Toast.makeText(NewResponseActivity.this,"options available",Toast.LENGTH_LONG).show();
-                           if(currentQuestionChanged){
-                               addQuestion(currentQuestions);
-                               buildLayout(currentQuestions);
-                           }
-                           if(!currentQuestionChanged){
-                               addQuestion(qu.getOptions().get(i).getQuestions());
-                               buildLayout(qu.getOptions().get(i).getQuestions());
-                               currentQuestionChanged=false;
-                           }
-
-                       }
-                       if((qu.getOptions().get(i).getId()==checkedId)&&(qu.getOptions().get(i).getQuestions()==null)){
-                           Toast.makeText(NewResponseActivity.this,"options not available",Toast.LENGTH_LONG).show();
-                       try{
-                           for(int k=0;k<nestedQuestionsList.size();k++){
-                           if(nestedQuestionsList.get(k).getId()==qu.getOptions().get(i).getQuestionId()){
-                               currentQuestions= nestedQuestionsList.get(k+1);
-                               currentQuestionChanged=true;
-                           }
-                       }}catch (Exception e) {
-                       }
-                           try{
-                           for(int ko=0;ko<listOfViews.size();ko++)
-                           {
-                               if(listOfViews.get(ko)==checkedId){
-                                   for(int ok=ko;ok<listOfViews.size();ok++)
-                                   {
-                                       View myView = findViewById(listOfViews.get(ko));
-                                       ViewGroup parent = (ViewGroup) myView.getParent();
-                                       parent.removeView(myView);
-                                   }
-                               }
-                           }
-                       }catch (Exception e){
-                       e.printStackTrace();
-                       }
-                       }
-                   }
-                             }
-
-
-
-            });
-        }
-        //for dropdown question
-        if (ques.getType().contains("DropDownQuestion")) {
-
-            fieldContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
-
-            spinner = (Spinner) findViewById(R.id.drop_down);
-            List<String> listOptions = new ArrayList<String>();
-            for (int i = 0; i < ques.getOptions().size(); i++) {
-                listOptions.add(ques.getOptions().get(i).getContent());
-            }
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_dropdown_item, listOptions);
-            spinner.setAdapter(dataAdapter);
         }
         if (ques.getType().equals("RatingQuestion")) {
-            fieldContainer.addView(questionTextSingleLine);
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(Color.BLACK);
+            questionTextSingleLine.setPadding(8, 12, 8, 20);
+            questionTextSingleLine.setText("Q" + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.setId(ques.getId());
+            nestedContainer.setTag(ques);
+            idList.add(ques.getId());
             RatingBar ratingBar = new RatingBar(this);
             ratingBar.setNumStars(5);
-            fieldContainer.addView(ratingBar);
+            nestedContainer.addView(ratingBar);
+            fieldContainer.addView(nestedContainer);
             checkHint();
         }
 
@@ -333,8 +502,6 @@ public class NewResponseActivity extends Activity {
                     startActivityForResult(cameraIntent, CAMERA_REQUEST);
                 }
             });
-
-
             deleteImageRelativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -342,44 +509,43 @@ public class NewResponseActivity extends Activity {
                 }
             });
         }
-
     }
 
     public void checkHint() {
 
-        if (hint) {
-
-            fieldContainer.addView(inflater.inflate(R.layout.hint_helper, null));
-            final RelativeLayout hintContainer = (RelativeLayout) findViewById(R.id.hint_container);
-            LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
-            final Button textHintButton = (Button) findViewById(R.id.text_hint_button);
-            final Button imageHintButton = (Button) findViewById(R.id.image_hint_button);
-            hintButtonContainer.setVisibility(View.VISIBLE);
-            textHintButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hintContainer.setVisibility(View.VISIBLE);
-                    TextView textHint = (TextView) findViewById(R.id.text_hint);
-                    ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
-                    textHint.setVisibility(View.VISIBLE);
-                    textHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
-                    imageHintButton.setBackgroundResource(R.drawable.hint_button);
-                    imageHint.setVisibility(View.GONE);
-                }
-            });
-            imageHintButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hintContainer.setVisibility(View.VISIBLE);
-                    imageHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
-                    textHintButton.setBackgroundResource(R.drawable.hint_button);
-                    TextView textHint = (TextView) findViewById(R.id.text_hint);
-                    ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
-                    textHint.setVisibility(View.GONE);
-                    imageHint.setVisibility(View.VISIBLE);
-                }
-            });
-        }
+//        if (hint) {
+//
+//            fieldContainer.addView(inflater.inflate(R.layout.hint_helper, null));
+//            final RelativeLayout hintContainer = (RelativeLayout) findViewById(R.id.hint_container);
+//            LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
+//            final Button textHintButton = (Button) findViewById(R.id.text_hint_button);
+//            final Button imageHintButton = (Button) findViewById(R.id.image_hint_button);
+//            hintButtonContainer.setVisibility(View.VISIBLE);
+//            textHintButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    hintContainer.setVisibility(View.VISIBLE);
+//                    TextView textHint = (TextView) findViewById(R.id.text_hint);
+//                    ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
+//                    textHint.setVisibility(View.VISIBLE);
+//                    textHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
+//                    imageHintButton.setBackgroundResource(R.drawable.hint_button);
+//                    imageHint.setVisibility(View.GONE);
+//                }
+//            });
+//            imageHintButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    hintContainer.setVisibility(View.VISIBLE);
+//                    imageHintButton.setBackgroundResource(R.drawable.hint_button_pressed);
+//                    textHintButton.setBackgroundResource(R.drawable.hint_button);
+//                    TextView textHint = (TextView) findViewById(R.id.text_hint);
+//                    ImageView imageHint = (ImageView) findViewById(R.id.image_hint);
+//                    textHint.setVisibility(View.GONE);
+//                    imageHint.setVisibility(View.VISIBLE);
+//                }
+//            });
+//        }
     }
 
     class mDateSetListener implements DatePickerDialog.OnDateSetListener {
@@ -401,21 +567,6 @@ public class NewResponseActivity extends Activity {
             deleteImageRelativeLayout.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(photo);
         }
-
-    }
-
-    public int addQuestion(Questions question) {
-        nestedQuestionsList.add(question);
-        TextView questionTextSingleLine = new TextView(this);
-        questionTextSingleLine.setId(question.getId());
-        questionTextSingleLine.setTextSize(20);
-        questionTextSingleLine.setTextColor(Color.BLACK);
-        questionTextSingleLine.setPadding(8, 12, 8, 20);
-        questionTextSingleLine.setText("Q" + question.getOrderNumber() + ")" + "   " + question.getContent());
-        fieldContainer.addView(questionTextSingleLine);
-        listOfViews.add(questionTextSingleLine.getId());
-        return question.getId();
     }
 
 }
-

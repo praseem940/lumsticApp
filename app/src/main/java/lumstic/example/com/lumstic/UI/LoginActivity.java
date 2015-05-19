@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
                         }
                     });
                 } else {
-                    lumsticApp.showToast("Enter Valid Email Address");
+                    lumsticApp.showToast("Enter Valid Email ");
                 }
                 Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
                 startActivity(i);

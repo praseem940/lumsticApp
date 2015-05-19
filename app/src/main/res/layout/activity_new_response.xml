@@ -21,9 +21,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/dash_board_foreground">
 
-
         <ScrollView
-
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
         <LinearLayout
@@ -55,7 +53,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="Back"
-
                 android:background="@color/back_button_background"
                 android:textColor="@color/back_button_text"
                 android:textSize="23sp"
@@ -79,6 +76,5 @@
             android:textSize="23sp"
             android:text="Next  >"/>
     </LinearLayout>
-
 
 </RelativeLayout>

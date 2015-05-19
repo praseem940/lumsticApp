@@ -2,20 +2,23 @@ package lumstic.example.com.lumstic.Models;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Options implements Serializable{
     int orderNumber;
     int id;
     int questionId;
     String content;
-    Questions questions;
+    List<Questions> questions;
 
-    public Questions getQuestions() {
+    public List<Questions> getQuestions() {
         return questions;
     }
-    public void setQuestions(Questions questions) {
+
+    public void setQuestions(List<Questions> questions) {
         this.questions = questions;
     }
+
     public int getOrderNumber() {
         return orderNumber;
     }
