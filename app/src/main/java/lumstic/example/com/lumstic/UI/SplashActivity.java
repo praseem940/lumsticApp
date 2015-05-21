@@ -29,7 +29,6 @@ public class SplashActivity extends Activity {
         };
         Timer t = new Timer();
         t.schedule(task,2000);
-        finishscreen();
     }
 
     public void finishscreen()

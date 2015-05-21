@@ -4,10 +4,10 @@
     <Spinner
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_margin="10dp"
-        android:padding="4dp"
-        android:background="@drawable/splash_screen_background"
+        android:layout_margin="8dp"
+        android:padding="2dp"
         android:id="@+id/drop_down"
+         style="@style/spinner_style"
         android:layout_height="wrap_content">
         </Spinner>
 

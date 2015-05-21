@@ -59,6 +59,7 @@
                 android:id="@+id/previous_question" />
 
         <Button
+            android:id="@+id/counter_button"
             android:layout_weight="1"
             android:background="@color/white"
             android:textColor="@color/descrioption_text_color"

@@ -21,4 +21,14 @@
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/orange_text</item>
     </style>
+
+
+    <style name="spinner_style" >
+    <item name="android:background">@drawable/spinner_bg</item>
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">24dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:paddingTop">5dp</item>
+    <item name="android:paddingBottom">5dp</item></style>
 </resources>

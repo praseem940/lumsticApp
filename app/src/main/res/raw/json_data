@@ -1,191 +1,677 @@
-[{
-    "id":64,
-    "name":"test for category",
-    "expiry_date":"2015-05-20",
-    "description":"test",
-    "published_on":"2015-05-15",
-    "questions":[
-        {
-            "id":229,
-            "identifier":false,
-            "parent_id":null,
-            "min_value":null,
-            "max_value":null,
-            "type":"MultiChoiceQuestion",
-            "content":"multi choice",
-            "image_in_base64":null,
-            "survey_id":64,
-            "max_length":null,
-            "mandatory":false,
-            "image_url":null,
-            "order_number":0,
-            "category_id":null,
-            "options":[
-                {
-                    "id":96,
-                    "order_number":0,
-                    "content":"multi choice -> First Option",
-                    "question_id":229,
-                    "questions":[
+[
+    {
+        "id":66,
+        "name":"Userworks Test Survey",
+        "expiry_date":"2015-05-25",
+        "description":"This is a survey for testing purpose.",
+        "published_on":"2015-05-20",
+        "questions":[
+            {
+                "id":235,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"SingleLineQuestion",
+                "content":"Where are you currently located?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":true,
+                "image_url":null,
+                "order_number":1,
+                "category_id":null
+            },
+            {
+                "id":236,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"NumericQuestion",
+                "content":"What is your monthly salary ?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":2,
+                "category_id":null
+            },
+            {
+                "id":237,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"MultiChoiceQuestion",
+                "content":"Which all cars do you own?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":3,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":100,
+                        "order_number":0,
+                        "content":"Swift",
+                        "question_id":237,
+                        "questions":[
+{
+                "id":236,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"NumericQuestion",
+                "content":"What is your monthly salary ?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":2,
+                "category_id":null
+            }
+                        ],
+                        "categories":[
 
-                    ],
-                    "categories":[
-                        {
-                            "id":12,
-                            "parent_id":96,
-                            "type":"MultiRecordCategory",
-                            "content":"multi choice -> First Option -> sub multi record",
-                            "survey_id":64,
-                            "order_number":4,
-                            "category_id":null,
-                            "questions":[
-                                {
-                                    "id":230,
-                                    "identifier":false,
-                                    "parent_id":null,
-                                    "min_value":null,
-                                    "max_value":null,
-                                    "type":"SingleLineQuestion",
-                                    "content":"multi choice -> First Option -> sub multi record -> Single Line",
-                                    "image_in_base64":null,
-                                    "survey_id":64,
-                                    "max_length":null,
-                                    "mandatory":false,
-                                    "image_url":null,
-                                    "order_number":2,
-                                    "category_id":12
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "id":97,
-                    "order_number":1,
-                    "content":"multi choice -> Second Option",
-                    "question_id":229,
-                    "questions":[
+                        ]
+                    },
+                    {
+                        "id":101,
+                        "order_number":1,
+                        "content":"City",
+                        "question_id":237,
+                        "questions":[
 
-                    ],
-                    "categories":[
-                        {
-                            "id":13,
-                            "parent_id":97,
-                            "type":null,
-                            "content":"multi choice -> Second Option -> Sub Category",
-                            "survey_id":64,
-                            "order_number":2,
-                            "category_id":null,
-                            "questions":[
-                                {
-                                    "id":231,
-                                    "identifier":false,
-                                    "parent_id":null,
-                                    "min_value":null,
-                                    "max_value":null,
-                                    "type":"SingleLineQuestion",
-                                    "content":"multi choice -> Second Option -> Sub Category -> Single Line",
-                                    "image_in_base64":null,
-                                    "survey_id":64,
-                                    "max_length":null,
-                                    "mandatory":false,
-                                    "image_url":null,
-                                    "order_number":2,
-                                    "category_id":13
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "id":230,
-            "identifier":false,
-            "parent_id":null,
-            "min_value":null,
-            "max_value":null,
-            "type":"SingleLineQuestion",
-            "content":"multi choice -> First Option -> sub multi record -> Single Line",
-            "image_in_base64":null,
-            "survey_id":64,
-            "max_length":null,
-            "mandatory":false,
-            "image_url":null,
-            "order_number":2,
-            "category_id":12
-        },
-        {
-            "id":231,
-            "identifier":false,
-            "parent_id":null,
-            "min_value":null,
-            "max_value":null,
-            "type":"SingleLineQuestion",
-            "content":"multi choice -> Second Option -> Sub Category -> Single Line",
-            "image_in_base64":null,
-            "survey_id":64,
-            "max_length":null,
-            "mandatory":false,
-            "image_url":null,
-            "order_number":2,
-            "category_id":13
-        }
-    ],
-    "categories":[
-        {
-            "id":12,
-            "parent_id":96,
-            "type":"MultiRecordCategory",
-            "content":"multi choice -> First Option -> sub multi record",
-            "survey_id":64,
-            "order_number":4,
-            "category_id":null,
-            "questions":[
-                {
-                    "id":230,
-                    "identifier":false,
-                    "parent_id":null,
-                    "min_value":null,
-                    "max_value":null,
-                    "type":"SingleLineQuestion",
-                    "content":"multi choice -> First Option -> sub multi record -> Single Line",
-                    "image_in_base64":null,
-                    "survey_id":64,
-                    "max_length":null,
-                    "mandatory":false,
-                    "image_url":null,
-                    "order_number":2,
-                    "category_id":12
-                }
-            ]
-        },
-        {
-            "id":13,
-            "parent_id":97,
-            "type":null,
-            "content":"multi choice -> Second Option -> Sub Category",
-            "survey_id":64,
-            "order_number":2,
-            "category_id":null,
-            "questions":[
-                {
-                    "id":231,
-                    "identifier":false,
-                    "parent_id":null,
-                    "min_value":null,
-                    "max_value":null,
-                    "type":"SingleLineQuestion",
-                    "content":"multi choice -> Second Option -> Sub Category -> Single Line",
-                    "image_in_base64":null,
-                    "survey_id":64,
-                    "max_length":null,
-                    "mandatory":false,
-                    "image_url":null,
-                    "order_number":2,
-                    "category_id":13
-                }
-            ]
-        }
-    ]
-}]
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+            {
+                "id":239,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"DateQuestion",
+                "content":"Whats your date of birth?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":4,
+                "category_id":null
+            },
+            {
+                "id":240,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"RadioQuestion",
+                "content":"Do you vote?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":5,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":102,
+                        "order_number":0,
+                        "content":"yes",
+                        "question_id":240,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":103,
+                        "order_number":1,
+                        "content":"no",
+                        "question_id":240,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+            {
+                "id":234,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"SingleLineQuestion",
+                "content":"What is your name?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":5,
+                "category_id":null
+            },
+            {
+                "id":238,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"MultiLineQuestion",
+                "content":"Describe your likes and dislikes",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":6,
+                "category_id":null
+            },
+            {
+                "id":241,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"DropDownQuestion",
+                "content":"Select your salary slab",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":7,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":104,
+                        "order_number":0,
+                        "content":"Less than 5 lakhs",
+                        "question_id":241,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":105,
+                        "order_number":1,
+                        "content":"More than 5 lakhs",
+                        "question_id":241,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "id":247,
+                "identifier":false,
+                "parent_id":119,
+                "min_value":null,
+                "max_value":null,
+                "type":"RadioQuestion",
+                "content":"Which is your favourite team?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":8,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":121,
+                        "order_number":0,
+                        "content":"India",
+                        "question_id":247,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":122,
+                        "order_number":1,
+                        "content":"Australia",
+                        "question_id":247,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "id":251,
+                "identifier":false,
+                "parent_id":126,
+                "min_value":null,
+                "max_value":null,
+                "type":"MultiLineQuestion",
+                "content":"Describe the best match you have ever watched",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":10,
+                "category_id":null
+            },
+
+            {
+                "id":253,
+                "identifier":false,
+                "parent_id":129,
+                "min_value":null,
+                "max_value":null,
+                "type":"RadioQuestion",
+                "content":"How many kids do you have?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":11,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":131,
+                        "order_number":0,
+                        "content":"Less than 2",
+                        "question_id":253,
+                        "questions":[
+                            {
+                                "id":254,
+                                "identifier":false,
+                                "parent_id":131,
+                                "min_value":null,
+                                "max_value":null,
+                                "type":"MultiChoiceQuestion",
+                                "content":"How do you take care of finances?",
+                                "image_in_base64":null,
+                                "survey_id":66,
+                                "max_length":null,
+                                "mandatory":false,
+                                "image_url":null,
+                                "order_number":2,
+                                "category_id":null,
+                                "options":[
+                                    {
+                                        "id":133,
+                                        "order_number":0,
+                                        "content":"Agriculture",
+                                        "question_id":254,
+                                        "questions":[
+                                            {
+                                                "id":255,
+                                                "identifier":false,
+                                                "parent_id":133,
+                                                "min_value":null,
+                                                "max_value":null,
+                                                "type":"RadioQuestion",
+                                                "content":"How big is your field?",
+                                                "image_in_base64":null,
+                                                "survey_id":66,
+                                                "max_length":null,
+                                                "mandatory":false,
+                                                "image_url":null,
+                                                "order_number":2,
+                                                "category_id":null,
+                                                "options":[
+                                                    {
+                                                        "id":136,
+                                                        "order_number":1,
+                                                        "content":"More than 2 acers",
+                                                        "question_id":255,
+                                                        "questions":[
+
+                                                        ],
+                                                        "categories":[
+
+                                                        ]
+                                                    },
+                                                    {
+                                                        "id":135,
+                                                        "order_number":0,
+                                                        "content":"Less than 2 acers",
+                                                        "question_id":255,
+                                                        "questions":[
+
+                                                        ],
+                                                        "categories":[
+
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    },
+                                    {
+                                        "id":134,
+                                        "order_number":1,
+                                        "content":"Other income source",
+                                        "question_id":254,
+                                        "questions":[
+
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":132,
+                        "order_number":1,
+                        "content":"More than 2",
+                        "question_id":253,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "id":255,
+                "identifier":false,
+                "parent_id":133,
+                "min_value":null,
+                "max_value":null,
+                "type":"DropDownQuestion",
+                "content":"How big is your field?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":12,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":136,
+                        "order_number":1,
+                        "content":"More than 2 acers",
+                        "question_id":255,
+                        "questions":[
+                            {
+                                "id":258,
+                                "identifier":false,
+                                "parent_id":136,
+                                "min_value":null,
+                                "max_value":null,
+                                "type":"RadioQuestion",
+                                "content":"Have you taken loan for farming?",
+                                "image_in_base64":null,
+                                "survey_id":66,
+                                "max_length":null,
+                                "mandatory":false,
+                                "image_url":null,
+                                "order_number":4,
+                                "category_id":null,
+                                "options":[
+                                    {
+                                        "id":137,
+                                        "order_number":0,
+                                        "content":"No",
+                                        "question_id":258,
+                                        "questions":[
+
+{
+                "id":235,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"SingleLineQuestion",
+                "content":"Where are you currently located?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":true,
+                "image_url":null,
+                "order_number":1,
+                "category_id":null
+            }
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    },
+                                    {
+                                        "id":138,
+                                        "order_number":1,
+                                        "content":"Yes",
+                                        "question_id":258,
+                                        "questions":[
+
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":135,
+                        "order_number":0,
+                        "content":"Less than 2 acers",
+                        "question_id":255,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+            {
+                "id":256,
+                "identifier":false,
+                "parent_id":135,
+                "min_value":null,
+                "max_value":null,
+                "type":"NumericQuestion",
+                "content":"How much was the income last year",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":13,
+                "category_id":null
+            },
+            {
+                "id":258,
+                "identifier":false,
+                "parent_id":136,
+                "min_value":null,
+                "max_value":null,
+                "type":"RadioQuestion",
+                "content":"How do you manage field?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":14,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":137,
+                        "order_number":0,
+                        "content":"By my own",
+                        "question_id":258,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":138,
+                        "order_number":1,
+                        "content":"Family helps sometimes",
+                        "question_id":258,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            },
+            {
+                "id":260,
+                "identifier":false,
+                "parent_id":null,
+                "min_value":null,
+                "max_value":null,
+                "type":"MultiChoiceQuestion",
+                "content":"Do you send kids to school?",
+                "image_in_base64":null,
+                "survey_id":66,
+                "max_length":null,
+                "mandatory":false,
+                "image_url":null,
+                "order_number":15,
+                "category_id":null,
+                "options":[
+                    {
+                        "id":139,
+                        "order_number":0,
+                        "content":"Ofcourse",
+                        "question_id":260,
+                        "questions":[
+
+                        ],
+                        "categories":[
+
+                        ]
+                    },
+                    {
+                        "id":140,
+                        "order_number":1,
+                        "content":"Cant afford",
+                        "question_id":260,
+                        "questions":[
+                            {
+                                "id":262,
+                                "identifier":false,
+                                "parent_id":140,
+                                "min_value":null,
+                                "max_value":null,
+                                "type":"MultiChoiceQuestion",
+                                "content":"Does government provide help?",
+                                "image_in_base64":null,
+                                "survey_id":66,
+                                "max_length":null,
+                                "mandatory":false,
+                                "image_url":null,
+                                "order_number":4,
+                                "category_id":null,
+                                "options":[
+                                    {
+                                        "id":143,
+                                        "order_number":0,
+                                        "content":"No",
+                                        "question_id":262,
+                                        "questions":[
+
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    },
+                                    {
+                                        "id":144,
+                                        "order_number":1,
+                                        "content":"Yes",
+                                        "question_id":262,
+                                        "questions":[
+                                            {
+                                                "id":263,
+                                                "identifier":false,
+                                                "parent_id":144,
+                                                "min_value":null,
+                                                "max_value":null,
+                                                "type":"SingleLineQuestion",
+                                                "content":"Whats the reason then?",
+                                                "image_in_base64":null,
+                                                "survey_id":66,
+                                                "max_length":null,
+                                                "mandatory":false,
+                                                "image_url":null,
+                                                "order_number":2,
+                                                "category_id":null
+                                            }
+                                        ],
+                                        "categories":[
+
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "categories":[
+
+                        ]
+                    }
+                ]
+            }
+
+        ],
+        "categories":[
+
+        ]
+    }
+]

@@ -10,9 +10,19 @@ public class Options implements Serializable{
     int questionId;
     String content;
     List<Questions> questions;
+    List<Categories> categories;
+
 
     public List<Questions> getQuestions() {
         return questions;
+    }
+
+    public List<Categories> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Categories> categories) {
+        this.categories = categories;
     }
 
     public void setQuestions(List<Questions> questions) {

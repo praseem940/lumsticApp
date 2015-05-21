@@ -4,12 +4,16 @@
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="fill_parent"
         android:layout_centerHorizontal="true"
         android:padding="6dp"
         android:layout_margin="14dp"
-        android:background="@drawable/custom_edittext"
+        android:background="@android:color/transparent"
         android:id="@+id/anser_text">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/custom_edittext"></RelativeLayout>
 
     <EditText
         android:id="@+id/answer_text"
@@ -19,7 +23,7 @@
         android:hint="type your answer here"
         android:padding="4dp"
         android:layout_margin="14dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:background="@android:color/transparent"
         android:textColor="@color/black"/>
 

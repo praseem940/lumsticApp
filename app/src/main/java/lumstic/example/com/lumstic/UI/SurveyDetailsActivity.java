@@ -42,7 +42,6 @@ public class SurveyDetailsActivity extends Activity {
         surveyTitleText.setText(surveys.getName());
         surveyDescriptionText.setText(surveys.getDescription());
         endDateText.setText(surveys.getExpiryDate());
-        Toast.makeText(SurveyDetailsActivity.this, surveys.getDescription(), Toast.LENGTH_LONG).show();
         addResponsesButton = (Button) findViewById(R.id.add_responses_button);
         incompleteResponsesLinearLayout = (LinearLayout) findViewById(R.id.incomplete_response_container);
         completeResponsesLinearLayout = (LinearLayout) findViewById(R.id.complete_response_container);

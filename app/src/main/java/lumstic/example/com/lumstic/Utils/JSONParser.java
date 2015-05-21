@@ -28,6 +28,7 @@ public class JSONParser {
 
     public Categories parseCategories(JSONObject jsonObjectCategories) {
         Categories categories = new Categories();
+        List<Questions> questionsList= new ArrayList<Questions>();
         try {
             try {
                 categories.setId(jsonObjectCategories.getInt("id"));
@@ -64,6 +65,16 @@ public class JSONParser {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            try {
+
+                for(int i=0;i<jsonObjectCategories.getJSONArray("questions").length();i++){
+                    questionsList.add(parseQuestions(jsonObjectCategories.getJSONArray("questions").getJSONObject(i)));
+                }
+                categories.setQuestionsList(questionsList);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,6 +84,7 @@ public class JSONParser {
     public Options parseOptions(JSONObject jsonObjectOptions) {
         Options options = new Options();
         List<Questions> questionsList= new ArrayList<Questions>();
+        List<Categories> categoriesList= new ArrayList<Categories>();
         try {
             options.setId(jsonObjectOptions.getInt("id"));
         } catch (JSONException e) {
@@ -103,6 +115,19 @@ public class JSONParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        try {
+
+            for(int i=0;i<jsonObjectOptions.getJSONArray("categories").length();i++){
+                categoriesList.add(parseCategories(jsonObjectOptions.getJSONArray("categories").getJSONObject(i)));
+            }
+            options.setCategories(categoriesList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
         return options;
 
     }
