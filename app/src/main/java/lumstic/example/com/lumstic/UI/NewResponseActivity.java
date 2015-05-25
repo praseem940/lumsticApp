@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,11 +54,14 @@ public class NewResponseActivity extends Activity {
     RelativeLayout deleteImageRelativeLayout;
     TextView questionTextSingleLine;
     View v, v1;
+    ViewPager viewPager;
     Questions currentQuestions;
     List<Questions> nestedQuestions;
     boolean nextLayoutCreated = false;
     EditText answer;
     Button counterButton;
+    String htmlStringWithMathSymbols = "&#60";
+
 
 
     Questions qu;
@@ -100,10 +104,17 @@ public class NewResponseActivity extends Activity {
 
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
+        previousQuestion.setText("< Back");
+
+
+
         nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-                if(questionsList.get(questionCounter).getMandatory()==1){
+
+
+
+                 if(questionsList.get(questionCounter).getMandatory()==1){
 
                     if(answer.getText().toString().equals("")){
                         final Dialog dialog = new Dialog(NewResponseActivity.this);
@@ -120,6 +131,8 @@ public class NewResponseActivity extends Activity {
                     }
                 }
                 if ((questionCounter < questionCount - 1) &&(questionsList.get(questionCounter).getMandatory()!=1)) {
+                    previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                    previousQuestion.setTextColor(getResources().getColor(R.color.white));
                     nestedQuestions.clear();
                     idList.clear();
                     fieldContainer.removeAllViews();
@@ -129,6 +142,8 @@ public class NewResponseActivity extends Activity {
                     buildLayout(currentQuestion);
                 }
                 if ((questionCounter < questionCount - 1) &&(questionsList.get(questionCounter).getMandatory()==1)&&(!answer.getText().toString().equals(""))) {
+                    previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                    previousQuestion.setTextColor(getResources().getColor(R.color.white));
                     nestedQuestions.clear();
                     idList.clear();
                     fieldContainer.removeAllViews();
@@ -262,6 +277,8 @@ public class NewResponseActivity extends Activity {
 
 
                                 removeQuestionView(ques.getOptions().get(j));
+                                    removeCategoryView(ques.getOptions().get(j));
+
                             }
 
                         }
@@ -345,9 +362,9 @@ public class NewResponseActivity extends Activity {
                                 removeQuestionView(options);
                                 }
 
-//                            if(options.getCategories().size()>0){
-//                                removeCategoryView(options);
-//                            }
+                            if(options.getCategories().size()>0){
+                                removeCategoryView(options);
+                            }
                         }
 
                     }
@@ -466,6 +483,7 @@ public class NewResponseActivity extends Activity {
 
 
                                     removeQuestionView(ques.getOptions().get(i));
+                                    removeCategoryView(ques.getOptions().get(i));
                                 }
 
                             }
@@ -474,14 +492,6 @@ public class NewResponseActivity extends Activity {
 
                     }
                 });
-
-
-
-
-
-
-
-
 
             }
             fieldContainer.addView(nestedContainer);
@@ -624,6 +634,7 @@ public class NewResponseActivity extends Activity {
 
     public void removeQuestionView(Options options){
 
+
         try {
             for (int i = 0; i < options.getQuestions().size(); i++) {
 
@@ -637,6 +648,7 @@ public class NewResponseActivity extends Activity {
 
                     for (int j = 0; j < options.getQuestions().get(i).getOptions().size(); j++) {
                         removeQuestionView(options.getQuestions().get(i).getOptions().get(j));
+                        removeCategoryView(options.getQuestions().get(i).getOptions().get(j));
                     }
                 }
             }
@@ -648,17 +660,34 @@ public class NewResponseActivity extends Activity {
 
     public void removeCategoryView(Options options){
 
-        for(int i=0;i<options.getCategories().size();i++){
+        try {
+            for (int k = 0; k < options.getCategories().size(); k++) {
 
-            View myView = findViewById(options.getCategories().get(i).getId());
-            ViewGroup parent = (ViewGroup) myView.getParent();
-            parent.removeView(myView);
-            // idList.remove(options.getQuestions().get(i).getId());
-            nestedQuestions.remove(options.getCategories().get(i));
+                View myView = findViewById(options.getCategories().get(k).getId());
+                ViewGroup parent = (ViewGroup) myView.getParent();
+                parent.removeView(myView);
 
 
+                for (int h = 0; h < options.getCategories().get(k).getQuestionsList().size(); h++) {
+                    View myView2 = findViewById(options.getCategories().get(k).getQuestionsList().get(h).getId());
+                    ViewGroup parent2 = (ViewGroup) myView2.getParent();
+                    parent2.removeView(myView2);
+
+
+                    if (options.getCategories().get(k).getQuestionsList().get(h).getOptions().size() > 0) {
+
+                        for (int j = 0; j < options.getCategories().get(k).getQuestionsList().get(h).getOptions().size(); j++) {
+                            removeQuestionView(options.getCategories().get(k).getQuestionsList().get(h).getOptions().get(j));
+                            removeCategoryView(options.getCategories().get(k).getQuestionsList().get(h).getOptions().get(j));
+                        }
+                    }
+                }
+
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
 
     }
 

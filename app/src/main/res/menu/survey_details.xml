@@ -6,7 +6,7 @@
     <item
         android:title="@string/action_help"
 
-        android:icon="@drawable/ic_menu_overflow"
+        android:icon="@drawable/ic_action_ic_menu_overflow"
         android:showAsAction="always">
         <menu>
 

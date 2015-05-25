@@ -42,7 +42,7 @@
     <LinearLayout
         android:id="@+id/controls_container"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="48dp"
         android:weightSum="3"
         android:orientation="horizontal"
         android:background="@color/black"

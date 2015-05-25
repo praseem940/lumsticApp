@@ -1,5 +1,6 @@
 package lumstic.example.com.lumstic.UI;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +12,16 @@ import lumstic.example.com.lumstic.R;
 public class ForgotPasswordActivity extends Activity {
 
     Button requestPasswordButton;
-    @Override
+ActionBar actionBar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        getActionBar().setTitle("Forgot Password");
+        actionBar= getActionBar();
+        actionBar.setTitle("Forgot Password");
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         requestPasswordButton= (Button) findViewById(R.id.request_password);
         requestPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override

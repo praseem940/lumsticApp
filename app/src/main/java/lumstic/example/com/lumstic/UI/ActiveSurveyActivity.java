@@ -60,9 +60,7 @@ public class ActiveSurveyActivity extends Activity {
             return true;
         }
         if (id == R.id.action_help) {
-            Intent i = new Intent(ActiveSurveyActivity.this, HelpActivity.class);
-            startActivity(i);
-            return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

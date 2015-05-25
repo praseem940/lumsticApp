@@ -5,7 +5,7 @@
     <color name="blue_gradient">#E9EDF3</color>.
     <color name="login_screen_background">#F9FBFD</color>
     <color name="By_ashoka_text_color">#939596</color>
-    <color name="login_button_color">#009688</color>
+    <color name="login_button_color">#FF301B</color>
     <color name="forgot_password_text">#C0C1C1</color>
     <color name="error_text_color">#F5161A</color>
     <color name="dash_board_foreground">#FBFBFB</color>
@@ -17,7 +17,7 @@
     <color name="endson_text_color">#DFDFDF</color>
     <color name="descrioption_text_color">#9C9B9A</color>
     <color name="text_color_total">#909090</color>
-    <color name="orange_text">#F87E2B</color>
+    <color name="orange_text">#F58220</color>
     <color name="edittext_background">#F2F2F2</color>
     <color name="edittext_corner">#DADADA</color>
     <color name="back_button_background">#CDCDCD</color>

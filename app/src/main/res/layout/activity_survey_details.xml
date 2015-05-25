@@ -17,12 +17,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
             android:id="@+id/survey_title_text"
             android:layout_width="wrap_content"
             android:text="Temperature Details as per city"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:padding="10dp"
+            android:textColor="#212121"
+            android:textSize="20sp"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -30,16 +31,18 @@
             android:layout_below="@+id/survey_title_text"
             android:layout_width="wrap_content"
             android:text="@string/survey_description"
-            android:textColor="@color/descrioption_text_color"
-            android:textSize="20sp"
-            android:padding="10dp"
+            android:textColor="#6c6c6c"
+            android:textSize="13sp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content" />
 
 
         <LinearLayout
             android:id="@+id/ends_date_container"
             android:layout_width="fill_parent"
-            android:paddingLeft="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
             android:layout_below="@+id/survey_description_text"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -47,20 +50,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:padding="6dp"
                 android:text="Ends on:"
-                android:textColor="@color/endson_text_color"
-                android:textSize="16sp" />
+                android:textColor="#6c6c6c"
+                android:textSize="12sp" />
 
             <TextView
+                android:layout_marginLeft="12dp"
                 android:id="@+id/end_date_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="18th Feb 2015"
-                android:textColor="@color/endson_text_color"
-                android:textSize="16sp" />
+                android:textColor="#6c6c6c"
+                android:textSize="12sp" />
 
 
         </LinearLayout>
@@ -70,17 +71,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Responses"
-            android:textColor="@color/black"
-            android:paddingLeft="12dp"
-            android:textSize="24sp"
+            android:layout_marginTop="20dp"
+            android:textColor="#212121"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
             android:layout_below="@+id/ends_date_container"/>
         <View
             android:id="@+id/divider"
             android:layout_below="@+id/response"
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginLeft="20dp"
             android:background="@color/black"></View>
 
         <RelativeLayout
@@ -92,32 +94,58 @@
             android:layout_height="wrap_content">
 
 
+            <LinearLayout
+                android:id="@+id/nestedcontainer"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/complete_response_container"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="10dp"
             android:layout_width="wrap_content"
+android:layout_gravity="center"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Complete Responses"
-                android:textSize="20sp"
-                android:textColor="@color/completed_survey_text"/>
+
+                android:textSize="19sp"
+                android:textColor="#63b436"/>
 
             <TextView
                 android:id="@+id/complete_response"
                 android:text="02"
-                android:textColor="@color/completed_survey_text"
-                android:textSize="24sp"
+                android:textColor="#63b436"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+        </LinearLayout>
+<LinearLayout
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FF301B"
+                    android:text="Upload"
 
+                    android:textSize="19sp"
+                    android:drawableLeft="@drawable/ic_complete_responces"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center|right"/>
             </LinearLayout>
-
+            </LinearLayout>
 <View
     android:id="@+id/devider2"
-    android:layout_below="@+id/complete_response_container"
+    android:layout_below="@+id/nestedcontainer"
     android:layout_width="fill_parent"
     android:layout_height="0.5dp"
     android:layout_marginLeft="30dp"
@@ -126,22 +154,24 @@
         <LinearLayout
             android:id="@+id/incomplete_response_container"
             android:orientation="vertical"
-            android:padding="10dp"
             android:layout_below="@+id/devider2"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Incomplete Responses"
-                android:textSize="20sp"
-                android:textColor="@color/incomplete_survey_text"/>
+                android:textSize="19sp"
+                android:textColor="#FDA500"/>
 
             <TextView
-                android:id="@+id/incomplete_response"
+                android:id="@+id/incompleteresponse"
                 android:text="02"
-                android:textColor="@color/incomplete_survey_text"
-                android:textSize="24sp"
+                android:textColor="#FDA500"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -158,7 +188,9 @@
         <LinearLayout
             android:id="@+id/uploaded_response_container"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="10dp"
             android:layout_below="@+id/devider3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -166,14 +198,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Uploaded Responses"
-                android:textSize="20sp"
-                android:textColor="@color/uploaded_survey_text"/>
+                android:textSize="19sp"
+                android:textColor="#64ADF4"/>
 
             <TextView
                 android:id="@+id/uploaded_response"
                 android:text="02"
-                android:textColor="@color/uploaded_survey_text"
-                android:textSize="24sp"
+                android:textColor="#64ADF4"
+                android:textSize="30sp"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -185,16 +217,15 @@
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginBottom="16dp"
             android:background="@color/black"></View>
 </RelativeLayout>
         <Button
             android:id="@+id/add_responses_button"
             android:layout_below="@+id/responses_container"
             android:layout_width="fill_parent"
-            android:layout_marginTop="20dp"
-            android:layout_margin="20dp"
+            android:layout_marginTop="12dp"
             android:padding="8dp"
+            android:layout_marginBottom="20dp"
             android:textSize="20sp"
             android:background="@color/login_button_color"
             android:textColor="@color/white"

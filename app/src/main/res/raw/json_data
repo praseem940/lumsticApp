@@ -60,22 +60,7 @@
                         "content":"Swift",
                         "question_id":237,
                         "questions":[
-{
-                "id":236,
-                "identifier":false,
-                "parent_id":null,
-                "min_value":null,
-                "max_value":null,
-                "type":"NumericQuestion",
-                "content":"What is your monthly salary ?",
-                "image_in_base64":null,
-                "survey_id":66,
-                "max_length":null,
-                "mandatory":false,
-                "image_url":null,
-                "order_number":2,
-                "category_id":null
-            }
+
                         ],
                         "categories":[
 
@@ -419,7 +404,7 @@
                 "parent_id":133,
                 "min_value":null,
                 "max_value":null,
-                "type":"DropDownQuestion",
+                "type":"RadioQuestion",
                 "content":"How big is your field?",
                 "image_in_base64":null,
                 "survey_id":66,
@@ -441,7 +426,7 @@
                                 "parent_id":136,
                                 "min_value":null,
                                 "max_value":null,
-                                "type":"RadioQuestion",
+                                "type":"DropDownQuestion",
                                 "content":"Have you taken loan for farming?",
                                 "image_in_base64":null,
                                 "survey_id":66,
@@ -458,25 +443,35 @@
                                         "question_id":258,
                                         "questions":[
 
-{
-                "id":235,
-                "identifier":false,
-                "parent_id":null,
-                "min_value":null,
-                "max_value":null,
-                "type":"SingleLineQuestion",
-                "content":"Where are you currently located?",
-                "image_in_base64":null,
-                "survey_id":66,
-                "max_length":null,
-                "mandatory":true,
-                "image_url":null,
-                "order_number":1,
-                "category_id":null
-            }
                                         ],
                                         "categories":[
-
+{
+                            "id":12,
+                            "parent_id":96,
+                            "type":"MultiRecordCategory",
+                            "content":"This is category title",
+                            "survey_id":64,
+                            "order_number":4,
+                            "category_id":null,
+                            "questions":[
+                                {
+                                    "id":230,
+                                    "identifier":false,
+                                    "parent_id":null,
+                                    "min_value":null,
+                                    "max_value":null,
+                                    "type":"SingleLineQuestion",
+                                    "content":"multi choice -> First Option -> sub multi record -> Single Line",
+                                    "image_in_base64":null,
+                                    "survey_id":64,
+                                    "max_length":null,
+                                    "mandatory":false,
+                                    "image_url":null,
+                                    "order_number":2,
+                                    "category_id":12
+                                }
+                            ]
+                        }
                                         ]
                                     },
                                     {
@@ -576,7 +571,7 @@
                 "parent_id":null,
                 "min_value":null,
                 "max_value":null,
-                "type":"MultiChoiceQuestion",
+                "type":"RadioQuestion",
                 "content":"Do you send kids to school?",
                 "image_in_base64":null,
                 "survey_id":66,
@@ -610,7 +605,7 @@
                                 "parent_id":140,
                                 "min_value":null,
                                 "max_value":null,
-                                "type":"MultiChoiceQuestion",
+                                "type":"RadioQuestion",
                                 "content":"Does government provide help?",
                                 "image_in_base64":null,
                                 "survey_id":66,

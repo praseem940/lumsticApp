@@ -1,4 +1,5 @@
 package lumstic.example.com.lumstic.UI;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class SurveyDetailsActivity extends Activity {
     LinearLayout completeResponsesLinearLayout;
     LinearLayout incompleteResponsesLinearLayout;
     Button addResponsesButton;
+    ActionBar actionBar;
     Surveys surveys;
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
@@ -33,7 +35,11 @@ public class SurveyDetailsActivity extends Activity {
             surveys = new Surveys();
             surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         }
-        getActionBar().setTitle(surveys.getName());
+        actionBar= getActionBar();
+        actionBar.setTitle(surveys.getName());
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        actionBar.setDisplayShowTitleEnabled(true);
         questionsList = new ArrayList<Questions>();
         questionsList = surveys.getQuestions();
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
@@ -52,6 +58,7 @@ public class SurveyDetailsActivity extends Activity {
                 startActivity(i);
             }
         });
+
         completeResponsesLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +66,7 @@ public class SurveyDetailsActivity extends Activity {
                 startActivity(i);
             }
         });
+
         addResponsesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +76,7 @@ public class SurveyDetailsActivity extends Activity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.survey_details, menu);
@@ -82,4 +91,5 @@ public class SurveyDetailsActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
