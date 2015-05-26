@@ -4,7 +4,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.net.HttpRetryException;
 import java.util.Map;
 import lumstic.example.com.lumstic.Utils.LumsticApp;
-import lumstic.example.com.lumstic.Models.UserDTO;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.DataMapParser;
 import lumstic.example.com.lumstic.Utils.Logger;
@@ -34,26 +33,8 @@ public class ApiRequestHelper {
     /**
      * Add all the api request's here
      */
-    public void loginUser(String email, String password, final onRequestComplete onRequestComplete) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(email);
-        userDTO.setPassword(password);
-        lumsticService.loginUser(userDTO, new Callback<ApiResponse>() {
-            @Override
-            public void success(ApiResponse apiResponse, Response response) {
-                if (apiResponse.isSuccess()) {
-                    Map<String, Object> responseMap = (Map<String, Object>) apiResponse.getData();
-                    onRequestComplete.onSuccess(DataMapParser.parseAuthToken(responseMap));
-                } else {
-                    onRequestComplete.onFailure(apiResponse);
-                }
-            }
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                onRequestComplete.onFailure(new ApiResponse().setError(ApiResponse.ApiError.COMMUNICATION_ERROR));
-            }
-        });
-    }
+
+
     /**
      * End api requests
      */
@@ -96,7 +77,7 @@ public class ApiRequestHelper {
                 //request.addHeader("api_key", application.getString(R.string.api_key));
 
                 if (application.getPreferences().addAuthInHeader()) {
-                    String authToken = application.getPreferences().getAuthToken();
+                    String authToken = application.getPreferences().getAccessToken();
                     request.addHeader("auth_token", authToken);
                 }
             }

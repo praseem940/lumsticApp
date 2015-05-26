@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lumstic.example.com.lumstic" >
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -47,6 +46,10 @@
         <activity
             android:name=".UI.HelpActivity"
             android:label="@string/title_activity_help" >
+        </activity>
+        <activity
+            android:name=".UI.TestActivity"
+            android:label="@string/title_activity_test" >
         </activity>
     </application>
 

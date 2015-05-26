@@ -15,15 +15,41 @@ import lumstic.example.com.lumstic.Models.Categories;
 import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Models.Surveys;
+import lumstic.example.com.lumstic.Models.UserModel;
 
 
 public class JSONParser {
 
     List<Questions> questionses;
     List<Surveys> surveyses;
-
+    UserModel userModel;
     List<Categories> categorieses;
 
+
+    public UserModel parseLogin(JSONObject jsonObjectLogin){
+        userModel= new UserModel();
+        try {
+            userModel.setAccess_token(jsonObjectLogin.getString("access_token"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            userModel.setOrganisation_id(jsonObjectLogin.getInt("organization_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            userModel.setUser_id(jsonObjectLogin.getInt("user_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            userModel.setUsername(jsonObjectLogin.getString("username"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  userModel;
+    }
 
 
     public Categories parseCategories(JSONObject jsonObjectCategories) {

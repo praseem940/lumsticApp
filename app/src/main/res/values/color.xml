@@ -10,7 +10,7 @@
     <color name="error_text_color">#F5161A</color>
     <color name="dash_board_foreground">#FBFBFB</color>
     <color name="dash_board_background">#D6D6D6</color>
-    <color name="text_color">#585858</color>
+    <color name="text_color">#212121</color>
     <color name="completed_survey_text">#7EC05C</color>
     <color name="incomplete_survey_text">#FFDCAD</color>
     <color name="uploaded_survey_text">#A7CEF8</color>

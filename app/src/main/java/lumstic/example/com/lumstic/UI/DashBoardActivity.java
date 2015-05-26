@@ -8,14 +8,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import lumstic.example.com.lumstic.R;
+import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 
 public class DashBoardActivity extends Activity {
 
+        LumsticApp lumsticApp;
     ActionBar actionBar ;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+        lumsticApp= (LumsticApp)getApplication();
         actionBar = getActionBar();
         actionBar.setTitle("Dashboard");
     }
@@ -30,6 +33,18 @@ public class DashBoardActivity extends Activity {
             startActivity(i);
             return true;
         }
+        if (id == R.id.action_logout) {
+
+            lumsticApp.getPreferences().setAccessToken("");
+            Intent i = new Intent(DashBoardActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        }
+
+
+
+
         return super.onOptionsItemSelected(item);
     }
 }

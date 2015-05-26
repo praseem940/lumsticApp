@@ -25,6 +25,7 @@ public class SurveyDetailsActivity extends Activity {
     Button addResponsesButton;
     ActionBar actionBar;
     Surveys surveys;
+    Button uploadButton;
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
     @Override
@@ -42,6 +43,7 @@ public class SurveyDetailsActivity extends Activity {
         actionBar.setDisplayShowTitleEnabled(true);
         questionsList = new ArrayList<Questions>();
         questionsList = surveys.getQuestions();
+        uploadButton = (Button)findViewById(R.id.upload_button);
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
         surveyDescriptionText = (TextView) findViewById(R.id.survey_description_text);
         endDateText = (TextView) findViewById(R.id.end_date_text);
@@ -75,6 +77,16 @@ public class SurveyDetailsActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SurveyDetailsActivity.this, TestActivity.class);
+                intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

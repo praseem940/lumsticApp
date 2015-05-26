@@ -22,16 +22,18 @@
         android:background="@color/dash_board_foreground">
 
         <ScrollView
+
             android:layout_width="fill_parent"
+
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:layout_height="fill_parent">
         <LinearLayout
             android:orientation="vertical"
             android:layout_below="@+id/question_text"
             android:id="@+id/field_container"
             android:layout_width="fill_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:layout_height="fill_parent">
 
             </LinearLayout>

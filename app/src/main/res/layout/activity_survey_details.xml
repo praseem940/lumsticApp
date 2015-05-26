@@ -135,7 +135,7 @@ android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:background="#FF301B"
                     android:text="Upload"
-
+                    android:id="@+id/upload_button"
                     android:textSize="19sp"
                     android:drawableLeft="@drawable/ic_complete_responces"
                     android:paddingRight="10dp"

@@ -10,31 +10,31 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import lumstic.example.com.lumstic.R;
+import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 
 public class SplashActivity extends Activity {
 
-    @Override
+    LumsticApp  lumsticApp;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        lumsticApp= (LumsticApp) getApplication();
         TimerTask task = new TimerTask() {
 
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
-                startActivity(intent);
 
-            }
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();}
+
         };
         Timer t = new Timer();
         t.schedule(task,2000);
     }
 
-    public void finishscreen()
-    {
-        finish();
-    }
+
 
 
     @Override

@@ -1,5 +1,6 @@
 package lumstic.example.com.lumstic.UI;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -61,6 +62,7 @@ public class NewResponseActivity extends Activity {
     EditText answer;
     Button counterButton;
     String htmlStringWithMathSymbols = "&#60";
+    ActionBar actionBar;
 
 
 
@@ -85,7 +87,13 @@ public class NewResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_response);
-        getActionBar().setTitle("New Response Activity");
+        actionBar=getActionBar();
+        actionBar.setTitle("New Response Activity");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+
         fieldContainer = (LinearLayout) findViewById(R.id.field_container);
         inflater = getLayoutInflater();
         nestedQuestions = new ArrayList<Questions>();
@@ -110,6 +118,7 @@ public class NewResponseActivity extends Activity {
 
         nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+
 
 
 
@@ -152,6 +161,16 @@ public class NewResponseActivity extends Activity {
                     Questions currentQuestion = questionsList.get(questionCounter);
                     buildLayout(currentQuestion);
                 }
+
+                if(questionCounter!=0){
+
+                    actionBar.setDisplayHomeAsUpEnabled(false);
+                    actionBar.setDisplayShowTitleEnabled(true);
+                    actionBar.setDisplayShowHomeEnabled(false);
+                    actionBar.setDisplayUseLogoEnabled(false);
+
+
+                }
             }
         });
 
@@ -168,6 +187,15 @@ public class NewResponseActivity extends Activity {
                     Questions currentQuestion = questionsList.get(questionCounter);
 
                     buildLayout(currentQuestion);
+                }
+                if(questionCounter==0){
+
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setDisplayShowTitleEnabled(true);
+                    actionBar.setDisplayShowHomeEnabled(true);
+                    actionBar.setDisplayUseLogoEnabled(true);
+
+
                 }
             }
         });
@@ -193,10 +221,10 @@ public class NewResponseActivity extends Activity {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
             nestedContainer.setId(ques.getId());
@@ -213,10 +241,10 @@ public class NewResponseActivity extends Activity {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
             nestedContainer.setId(ques.getId());
@@ -231,13 +259,13 @@ public class NewResponseActivity extends Activity {
         if (ques.getType().contains("DropDownQuestion")) {
 
 
-            final LinearLayout nestedContainer = new LinearLayout(this);
+            LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
             nestedContainer.setId(ques.getId());
@@ -309,13 +337,13 @@ public class NewResponseActivity extends Activity {
 
             Log.e("nestedquestionitem",nestedQuestions.size()+"");
 
-            final LinearLayout nestedContainer = new LinearLayout(this);
+            LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
@@ -382,10 +410,10 @@ public class NewResponseActivity extends Activity {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
             nestedContainer.setId(ques.getId());
@@ -402,10 +430,10 @@ public class NewResponseActivity extends Activity {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
             nestedContainer.setId(ques.getId());
@@ -435,14 +463,14 @@ public class NewResponseActivity extends Activity {
 
             nestedQuestions.add(ques);
 
-            LinearLayout nestedContainer = new LinearLayout(this);
-            nestedContainer.setOrientation(LinearLayout.VERTICAL);
-            TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
-            nestedContainer.addView(questionTextSingleLine);
+                LinearLayout nestedContainer = new LinearLayout(this);
+                nestedContainer.setOrientation(LinearLayout.VERTICAL);
+                TextView questionTextSingleLine = new TextView(this);
+                questionTextSingleLine.setTextSize(20);
+                questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+                questionTextSingleLine.setPadding(0,0,0,12);
+                questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
+                nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
@@ -502,17 +530,15 @@ public class NewResponseActivity extends Activity {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(18);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + ")" + "   " + ques.getContent());
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
             nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
-            RatingBar ratingBar = new RatingBar(this);
-            ratingBar.setNumStars(5);
-            nestedContainer.addView(ratingBar);
             fieldContainer.addView(nestedContainer);
             checkHint();
         }

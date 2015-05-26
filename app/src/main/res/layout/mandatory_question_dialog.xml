@@ -12,9 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ALERT"
-        android:textColor="@color/orange_text"
-        android:textSize="24sp"
-        android:padding="16dp"/>
+        android:textColor="#f58220"
+        android:textSize="18sp"
+        android:layout_margin="12dp"
+        />
 <View
     android:layout_width="fill_parent"
     android:layout_height="1dp"
@@ -30,13 +31,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please Answer To Proceed"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:paddingLeft="14dp"
         android:layout_centerInParent="true"
         android:textAlignment="center"
-        android:textColor="@color/text_color_total"
+        android:textColor="#212121"
         />
     <Button
 
@@ -49,6 +50,6 @@
         android:layout_centerHorizontal="true"
         android:background="@color/login_button_color"
         android:text="OK"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="@color/white" />
 </RelativeLayout>

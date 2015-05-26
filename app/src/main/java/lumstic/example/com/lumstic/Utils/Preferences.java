@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 public class Preferences {
     private static final String SERVER_URL = "SERVER_URL";
     private static final String ADD_AUTH_IN_HEADER = "ADD_AUTH_IN_HEADER";
-    private static final String AUTH_TOKEN = "AUTH_TOKEN";
+    private static final String access_token = "access_token";
     private static final String SEARCH_LOG_ID="SEARCH_LOG_ID";
     private Context context;
     public Preferences(Context context) {
@@ -44,11 +44,11 @@ public class Preferences {
     public void setAddAuthInHeader(boolean addAuthInHeader) {
         setBoolean(ADD_AUTH_IN_HEADER, addAuthInHeader);
     }
-    public String getAuthToken() {
-        return getString(AUTH_TOKEN, null);
+    public String getAccessToken() {
+        return getString(access_token, null);
     }
-    public void setAuthToken(String authToken) {
-        setString(AUTH_TOKEN, authToken);
+    public void setAccessToken(String authToken) {
+        setString(access_token, authToken);
     }
     public String getSearchLogId() {
         return getString(SEARCH_LOG_ID, null);
@@ -59,7 +59,7 @@ public class Preferences {
     }
     public void logout() {
         setAddAuthInHeader(false);
-        setAuthToken(null);
+        setAccessToken(null);
         setSearchLogId(null);
     }
 }
