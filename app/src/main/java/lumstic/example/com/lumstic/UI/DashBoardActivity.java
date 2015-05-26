@@ -41,10 +41,6 @@ public class DashBoardActivity extends Activity {
             finish();
             return true;
         }
-
-
-
-
         return super.onOptionsItemSelected(item);
     }
 }

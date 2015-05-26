@@ -149,6 +149,7 @@ public class NewResponseActivity extends Activity {
                     counterButton.setText(questionCounter+1+" out of "+questionsList.size());
                     Questions currentQuestion = questionsList.get(questionCounter);
                     buildLayout(currentQuestion);
+                    checkForAnswer(currentQuestion.getId());
                 }
                 if ((questionCounter < questionCount - 1) &&(questionsList.get(questionCounter).getMandatory()==1)&&(!answer.getText().toString().equals(""))) {
                     previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
@@ -714,6 +715,9 @@ public class NewResponseActivity extends Activity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+    }
+    public void checkForAnswer(int id){
 
     }
 

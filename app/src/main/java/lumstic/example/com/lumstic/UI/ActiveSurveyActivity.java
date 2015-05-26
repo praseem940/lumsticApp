@@ -1,6 +1,7 @@
 package lumstic.example.com.lumstic.UI;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,8 +36,9 @@ public class ActiveSurveyActivity extends Activity {
     LumsticApp lumsticApp;
     List<Surveys> surveysList;
     JsonHelper jsonHelper;
+    ProgressDialog progressDialog;
     DashBoardAdapter dashBoardAdapter;
-    String fetchUrl="http://www.lumstic.com/api/deep_surveys?access_token=";
+    String fetchUrl="http://survey-web-stgng.herokuapp.com/api/deep_surveys?access_token=";
     String jsonFetchString="";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,11 @@ public class ActiveSurveyActivity extends Activity {
 
         lumsticApp= (LumsticApp) getApplication();
 
+        progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Fetching Surveys ");
+        progressDialog.show();
         new FetchSurvey().execute();
 
 
@@ -102,6 +109,7 @@ public class ActiveSurveyActivity extends Activity {
            // surveysList = jsonHelper.tryParsing(s);
             listView = (ListView) findViewById(R.id.active_survey_list);
             dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
+            progressDialog.dismiss();
             listView.setAdapter(dashBoardAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

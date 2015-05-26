@@ -59,7 +59,6 @@ public class Preferences {
     }
     public void logout() {
         setAddAuthInHeader(false);
-        setAccessToken(null);
         setSearchLogId(null);
     }
 }
