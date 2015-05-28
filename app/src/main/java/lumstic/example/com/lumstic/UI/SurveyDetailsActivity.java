@@ -14,7 +14,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Models.Questions;
+import lumstic.example.com.lumstic.Models.Responses;
 import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
@@ -28,6 +30,8 @@ public class SurveyDetailsActivity extends Activity {
     Button uploadButton;
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
+    Responses responses;
+    DBAdapter dbAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,9 @@ public class SurveyDetailsActivity extends Activity {
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
         surveyDescriptionText = (TextView) findViewById(R.id.survey_description_text);
         endDateText = (TextView) findViewById(R.id.end_date_text);
+
+        responses = new Responses();
+        dbAdapter= new DBAdapter(SurveyDetailsActivity.this);
         surveyTitleText.setText(surveys.getName());
         surveyDescriptionText.setText(surveys.getDescription());
         endDateText.setText(surveys.getExpiryDate());
@@ -72,6 +79,12 @@ public class SurveyDetailsActivity extends Activity {
         addResponsesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                responses.setSurveyId(surveys.getId());
+                Toast.makeText(SurveyDetailsActivity.this,dbAdapter.insertDataResponsesTable(responses)+"",Toast.LENGTH_SHORT).show();
+
+
                 Intent intent = new Intent(SurveyDetailsActivity.this, NewResponseActivity.class);
                 intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
                 startActivity(intent);

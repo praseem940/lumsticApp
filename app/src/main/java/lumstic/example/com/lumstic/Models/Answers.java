@@ -1,5 +1,7 @@
 package lumstic.example.com.lumstic.Models;
 
+import java.util.ArrayList;
+
 /**
  * Created by work on 17/4/15.
  */
@@ -12,6 +14,15 @@ public class Answers {
     int questionId;
     String image;
     String content;
+    ArrayList<Integer> optionIds;
+
+    public ArrayList<Integer> getOptionIds() {
+        return optionIds;
+    }
+
+    public void setOptionIds(ArrayList<Integer> optionIds) {
+        this.optionIds = optionIds;
+    }
 
     public int getRecordId() {
         return recordId;

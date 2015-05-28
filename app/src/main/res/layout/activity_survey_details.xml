@@ -137,8 +137,10 @@ android:layout_gravity="center"
                     android:text="Upload"
                     android:id="@+id/upload_button"
                     android:textSize="19sp"
-                    android:drawableLeft="@drawable/ic_complete_responces"
+                    android:drawableLeft="@drawable/ic_upload"
                     android:paddingRight="10dp"
+                    android:paddingLeft="6dp"
+                    android:drawablePadding="10dp"
                     android:textColor="@color/white"
                     android:layout_gravity="center|right"/>
             </LinearLayout>

@@ -1,125 +1,87 @@
-[ {
-         "id":18,
-         "name":"demo Survey",
-         "expiry_date":"2015-05-31",
-         "description":"Description goes here",
-         "published_on":null,
-         "questions":[
-             {
-                 "id":67,
-                 "identifier":false,
-                 "parent_id":48,
-                 "min_value":null,
-                 "max_value":null,
-                 "type":"SingleLineQuestion",
-                 "content":"Single Second",
-                 "image_in_base64":null,
-                 "survey_id":18,
-                 "max_length":10,
-                 "mandatory":false,
-                 "image_url":null,
-                 "order_number":2,
-                 "category_id":null
-             },
-             {
-                 "id":65,
-                 "identifier":false,
-                 "parent_id":null,
-                 "min_value":null,
-                 "max_value":null,
-                 "type":"SingleLineQuestion",
-                 "content":"First ",
-                 "image_in_base64":null,
-                 "survey_id":18,
-                 "max_length":10,
-                 "mandatory":false,
-                 "image_url":null,
-                 "order_number":0,
-                 "category_id":null
-             },
-             {
-                 "id":66,
-                 "identifier":false,
-                 "parent_id":null,
-                 "min_value":null,
-                 "max_value":null,
-                 "type":"RadioQuestion",
-                 "content":"Second radio",
-                 "image_in_base64":null,
-                 "survey_id":18,
-                 "max_length":null,
-                 "mandatory":false,
-                 "image_url":null,
-                 "order_number":2,
-                 "category_id":null,
-                 "options":[
-                     {
-                         "id":48,
-                         "order_number":2,
-                         "content":"R",
-                         "question_id":66,
-                         "questions":[
-                             {
-                                 "id":67,
-                                 "identifier":false,
-                                 "parent_id":48,
-                                 "min_value":null,
-                                 "max_value":null,
-                                 "type":"SingleLineQuestion",
-                                 "content":"Single Second",
-                                 "image_in_base64":null,
-                                 "survey_id":18,
-                                 "max_length":10,
-                                 "mandatory":true,
-                                 "image_url":null,
-                                 "order_number":2,
-                                 "category_id":null
-                             }
-                         ],
-                         "categories":[
+[{
+     "id":63,
+     "name":"multi -> radio -> single line",
+     "expiry_date":"2015-05-19",
+     "description":"test case 2",
+     "published_on":"2015-05-14",
+     "questions":[
+         {
+             "id":226,
+             "identifier":false,
+             "parent_id":null,
+             "min_value":null,
+             "max_value":null,
+             "type":"MultiChoiceQuestion",
+             "content":"multi choice",
+             "image_in_base64":null,
+             "survey_id":63,
+             "max_length":null,
+             "mandatory":false,
+             "image_url":null,
+             "order_number":0,
+             "category_id":null,
+             "options":[
+                 {
+                     "id":93,
+                     "order_number":1,
+                     "content":"Second Option",
+                     "question_id":226,
+                     "questions":[
 
-                         ]
-                     },
-                     {
-                         "id":49,
-                         "order_number":3,
-                         "content":"T",
-                         "question_id":66,
-                         "questions":[
+                     ],
+                     "categories":[
 
-                         ],
-                         "categories":[
+                     ]
+                 },
+                 {
+                     "id":92,
+                     "order_number":0,
+                     "content":"multi choice -> First Option",
+                     "question_id":226,
+                     "questions":[
 
-                         ]
-                     },
-                     {
-                         "id":50,
-                         "order_number":1,
-                         "content":"E",
-                         "question_id":66,
-                         "questions":[
+                     ],
+                     "categories":[
 
-                         ],
-                         "categories":[
+                     ]
+                 }
+             ]
+         },
+         {
+             "id":227,
+             "identifier":false,
+             "parent_id":92,
+             "min_value":null,
+             "max_value":null,
+             "type":"SingleLineQuestion",
+             "content":"multi choice -> First Option -> radio",
+             "image_in_base64":null,
+             "survey_id":63,
+             "max_length":null,
+             "mandatory":false,
+             "image_url":null,
+             "order_number":2,
+             "category_id":null,
 
-                         ]
-                     },
-                     {
-                         "id":51,
-                         "order_number":0,
-                         "content":"Q",
-                         "question_id":66,
-                         "questions":[
+         },
+         {
+             "id":228,
+             "identifier":false,
+             "parent_id":94,
+             "min_value":null,
+             "max_value":null,
+             "type":"SingleLineQuestion",
+             "content":"multi choice -> First Option -> radio -> First Option -> single line",
+             "image_in_base64":null,
+             "survey_id":63,
+             "max_length":null,
+             "mandatory":false,
+             "image_url":null,
+             "order_number":2,
+             "category_id":null
+         }
+     ],
+     "categories":[
 
-                         ],
-                         "categories":[
-
-                         ]
-                     }
-                 ]
-             }
-         ],
-         "categories":[
-
-         ]
-     }]
+     ]
+ }]

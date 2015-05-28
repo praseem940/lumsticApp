@@ -40,4 +40,14 @@
     <item name="android:paddingLeft">8dp</item>
     <item name="android:paddingTop">5dp</item>
     <item name="android:paddingBottom">5dp</item></style>
+
+
+
+    <style name="customRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_custom_bar</item>
+        <item name="android:minHeight">30dip</item>
+        <item name="android:maxHeight">30dip</item>
+    </style>
+
+
 </resources>

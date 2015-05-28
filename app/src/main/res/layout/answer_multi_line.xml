@@ -2,7 +2,7 @@
 
     <EditText
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/txtContacto"
+        android:id="@+id/answer_text"
         android:layout_width="fill_parent"
     android:layout_height="300dp"
         android:gravity="top"

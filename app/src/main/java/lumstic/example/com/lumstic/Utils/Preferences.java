@@ -8,6 +8,7 @@ public class Preferences {
     private static final String ADD_AUTH_IN_HEADER = "ADD_AUTH_IN_HEADER";
     private static final String access_token = "access_token";
     private static final String SEARCH_LOG_ID="SEARCH_LOG_ID";
+    private String SURVEY_DATA ="SURVEY_DATA";
     private Context context;
     public Preferences(Context context) {
         super();
@@ -50,6 +51,16 @@ public class Preferences {
     public void setAccessToken(String authToken) {
         setString(access_token, authToken);
     }
+
+
+    public String getSurveyData() {
+        return getString(SURVEY_DATA, null);
+    }
+    public void setSurveyData(String surveyData) {
+        setString(SURVEY_DATA,surveyData );
+    }
+
+
     public String getSearchLogId() {
         return getString(SEARCH_LOG_ID, null);
     }

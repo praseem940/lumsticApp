@@ -2,10 +2,16 @@ package lumstic.example.com.lumstic.Adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import lumstic.example.com.lumstic.Models.Answers;
 import lumstic.example.com.lumstic.Models.Categories;
@@ -19,11 +25,119 @@ import lumstic.example.com.lumstic.Models.Surveys;
 public class DBAdapter {
     DBhelper dBhelper;
     SQLiteDatabase sqLiteDatabase;
+    Context context;
 
     public DBAdapter(Context context) {
         dBhelper = new DBhelper(context);
         sqLiteDatabase = dBhelper.getWritableDatabase();
+        this.context=context;
     }
+
+    public long getMaxID() {
+        long id = 0;
+        String[] coloums={DBhelper.ID};
+     Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses,coloums,null,null,null,null,null);
+while(cursor.moveToNext()){
+    int index=cursor.getColumnIndex(DBhelper.ID);
+    id=cursor.getInt(index);
+
+}
+        return id;
+    }
+
+    public long getMaxIDAnswersTabele() {
+        long id = 0;
+        String[] coloums={DBhelper.ID};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers,coloums,null,null,null,null,null);
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.ID);
+            id=cursor.getInt(index);
+
+        }
+        return id;
+    }
+
+    public long deleteOption(Options options){
+
+        int id = options.getId();
+        String[] selectionArgs={String.valueOf(options.getId())};
+       int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
+   return id1;
+    }
+
+
+
+
+
+    public String getAnswer(int responseId,int questionId)
+    {
+        String answer="";
+        String[] coloums={DBhelper.CONTENT};
+        String[] selectionArgs={String.valueOf(responseId),String.valueOf(questionId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.RESPONSE_ID + " =? AND " + DBhelper.QUESTION_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.CONTENT);
+            answer=cursor.getString(index);
+
+        }
+
+        return answer;
+    }
+
+
+    public List<Integer> getIdFromAnswerTable(int responseId,int questionId)
+    {
+        int id=0;
+
+        List<Integer> integers= new ArrayList<Integer>();
+        String[] coloums={DBhelper.ID};
+        String[] selectionArgs={String.valueOf(responseId),String.valueOf(questionId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.RESPONSE_ID + " =? AND " + DBhelper.QUESTION_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.ID);
+            id=cursor.getInt(index);
+
+            integers.add(id);
+
+
+
+        }
+        return integers;
+
+    }
+
+
+  public  List<Integer> getOptionIds(List<Integer>  ids){
+      List<Integer> integers= new ArrayList<Integer>();
+
+      int id=0;
+      String[] coloums={DBhelper.OPTION_ID};
+
+      for(int i=0;i<ids.size();i++){
+
+
+          String[] selectionArgs={String.valueOf(ids.get(i))};
+          Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+          while(cursor.moveToNext()){
+              int index=cursor.getColumnIndex(DBhelper.OPTION_ID);
+              id=cursor.getInt(index);
+              integers.add(id);
+
+          }
+      }
+
+
+      return integers;
+
+  }
+
+
+
+
+
 
     public long insertDataQuestionTable(Questions questions) {
         ContentValues contentValues = new ContentValues();
@@ -45,7 +159,6 @@ public class DBAdapter {
 
     public long insertDataChoicesTable(Choices choices) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBhelper.ID, choices.getId());
         contentValues.put(DBhelper.OPTION_ID, choices.getOptionId());
         contentValues.put(DBhelper.ANSWER_ID, choices.getAnswerId());
         return sqLiteDatabase.insert(DBhelper.TABLE_choices, null, contentValues);
@@ -84,7 +197,7 @@ public class DBAdapter {
 
     public long insertDataAnswersTable(Answers answers) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBhelper.ID, answers.getId());
+        //contentValues.put(DBhelper.ID, answers.getId());
         contentValues.put(DBhelper.RECORD_ID, answers.getRecordId());
         contentValues.put(DBhelper.IMAGE, answers.getImage());
         contentValues.put(DBhelper.WEB_ID, answers.getWebId());
@@ -106,7 +219,7 @@ public class DBAdapter {
 
     public long insertDataResponsesTable(Responses responses) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBhelper.ID, responses.getId());
+        //contentValues.put(DBhelper.ID, responses.getId());
         contentValues.put(DBhelper.STATUS, responses.getStatus());
         contentValues.put(DBhelper.ORGANISATION_ID, responses.getOrganisationId());
         contentValues.put(DBhelper.WEB_ID, responses.getWebId());
@@ -164,7 +277,7 @@ public class DBAdapter {
         private static final String STATUS = "status";
         private static final String ORGANISATION_ID = "organisation_id";
         private static final String CREATE_TABLE_choices = "CREATE TABLE "
-                + TABLE_choices + "(" + ID + " INTEGER PRIMARY KEY,"
+                + TABLE_choices + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + OPTION_ID + " INTEGER," + ANSWER_ID + " INTEGER" + ")";
         private static final String CREATE_TABLE_questions = "CREATE TABLE "
                 + TABLE_questions + "(" + ID + " INTEGER PRIMARY KEY,"
@@ -182,7 +295,7 @@ public class DBAdapter {
                 + CONTENT + " VARCHAR(255)," + TYPE + " INTEGER," + SURVEY_ID + " INTEGER," + PARENT_ID + " INTEGER," + ORDER_NUMBER + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
 
         private static final String CREATE_TABLE_answers = "CREATE TABLE "
-                + TABLE_answers + "(" + ID + " INTEGER PRIMARY KEY,"
+                + TABLE_answers + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + RECORD_ID + " INTEGER," + WEB_ID + " INTEGER," + UPDATED_AT + " INTEGER," + CONTENT + " VARCHAR(255)," + IMAGE + " VARCHAR(255)," + RESPONSE_ID + " INTEGER," + QUESTION_ID + " INTEGER" + ")";
 
         private static final String CREATE_TABLE_records = "CREATE TABLE "
@@ -190,7 +303,7 @@ public class DBAdapter {
                 + RESPONSE_ID + " INTEGER," + WEB_ID + " INTEGER," + CATEGORY_ID + " INTEGER" + ")";
 
         private static final String CREATE_TABLE_responses = "CREATE TABLE "
-                + TABLE_responses + "(" + ID + " INTEGER PRIMARY KEY,"
+                + TABLE_responses + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + MOBILE_ID + " VARCHAR(255)," + USER_ID + " INTEGER," + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + UPDATED_AT + " INTEGER," + SURVEY_ID + " INTEGER," + WEB_ID + " INTEGER," + STATUS + " VARCHAR(255)," + ORGANISATION_ID + " INTEGER" + ")";
         public DBhelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
