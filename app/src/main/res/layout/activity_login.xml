@@ -114,7 +114,7 @@ android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="60dp"
         android:layout_marginTop="20dp"
-        android:background="@color/login_button_color"
+        android:background="@drawable/custom_button"
         android:text="@string/login"
         android:textColor="@color/white" />
     <TextView

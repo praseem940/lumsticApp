@@ -4,10 +4,11 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
     android:orientation="vertical"
-    android:padding="10dp">
+>
 
-    <TextView
+    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
         android:layout_marginTop="12dp"
         android:layout_marginRight="10dp"
         android:id="@+id/survey_name_text"
@@ -24,7 +25,7 @@
         android:orientation="horizontal"
         android:weightSum="3">
 
-        <TextView
+        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/complete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +34,8 @@
             android:textColor="#6c6c6c"
             android:textSize="13sp" />
 
-        <TextView
+
+        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/incomplete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +44,7 @@
             android:textColor="#6c6c6c"
             android:textSize="13sp" />
 
-        <TextView
+        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/uploaded_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,20 +61,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <lumstic.example.com.lumstic.Views.RobotoLightTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ends on:"
             android:textColor="#6c6c6c"
             android:textSize="12sp" />
 
-        <TextView
+
+        <lumstic.example.com.lumstic.Views.RobotoLightTextView
             android:id="@+id/end_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="18th Feb 2015"
             android:textColor="#6c6c6c"
-           android:layout_marginLeft="8dp"
+           android:layout_marginLeft="4dp"
             android:textSize="12sp" />
 
 

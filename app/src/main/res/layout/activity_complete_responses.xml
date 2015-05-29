@@ -15,15 +15,16 @@
         android:background="@color/dash_board_foreground">
 
 
-
-    <TextView
+<lumstic.example.com.lumstic.Views.RobotoRegularTextView
         android:id="@+id/survey_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
+        android:paddingLeft="16dp"
         android:paddingTop="20dp"
-        android:textColor="@color/black"
-        android:paddingBottom="12dp"
+    android:paddingRight="16dp"
+
+    android:textColor="@color/black"
+        android:paddingBottom="9dp"
         android:textSize="20sp"
         android:text="Temperature Details As per the city"/>
         <LinearLayout
@@ -31,39 +32,57 @@
             android:layout_below="@+id/survey_title_text"
             android:layout_width="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
             android:layout_height="wrap_content">
-            <TextView
+            <lumstic.example.com.lumstic.Views.RobotoRegularTextView
                 android:layout_width="wrap_content"
                 android:text="Total:"
                 android:textColor="@color/text_color_total"
                 android:textSize="16sp"
-                android:paddingLeft="20dp"
                 android:layout_height="wrap_content" />
-            <TextView
+            <lumstic.example.com.lumstic.Views.RobotoRegularTextView
                 android:layout_width="wrap_content"
                 android:text="20"
                 android:textColor="@color/text_color_total"
                 android:textSize="16sp"
-                android:paddingLeft="8dp"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/upload_response_button"
-            android:layout_width="fill_parent"
+        <LinearLayout
             android:layout_below="@+id/total_survey_container"
-            android:background="@color/login_button_color"
-            android:text="Upload Completed Responses"
-            android:textColor="@color/white"
-           android:layout_margin="10dp"
-            android:layout_height="wrap_content"
-            />
+            android:id="@+id/upload_container"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="19dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/custom_button"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@drawable/ic_upload" />
+
+            <lumstic.example.com.lumstic.Views.RobotoBlackButton
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/upload_comleted_responses"
+                android:textColor="@color/white" />
+        </LinearLayout>
         <ListView
             android:id="@+id/listview"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/upload_response_button"
+            android:layout_below="@+id/upload_container"
             android:layout_height="fill_parent">
             </ListView>
 

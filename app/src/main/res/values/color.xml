@@ -19,7 +19,7 @@
     <color name="text_color_total">#909090</color>
     <color name="orange_text">#F58220</color>
     <color name="edittext_background">#F2F2F2</color>
-    <color name="edittext_corner">#DADADA</color>
+    <color name="edittext_corner">#b8b8b8</color>
     <color name="back_button_background">#CDCDCD</color>
     <color name="back_button_text">#909090</color>
     <color name="next_button_background">#009688</color>

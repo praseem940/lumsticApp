@@ -36,27 +36,34 @@ public class SurveyDetailsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_details);
+        actionBar= getActionBar();
         if (getIntent().hasExtra(IntentConstants.SURVEY)) {
             surveys = new Surveys();
             surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+            actionBar.setTitle(surveys.getName());
+            questionsList = new ArrayList<Questions>();
+            questionsList = surveys.getQuestions();
         }
-        actionBar= getActionBar();
-        actionBar.setTitle(surveys.getName());
+        else
+        actionBar.setTitle("Survey Detail");
+
+
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        //actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
-        questionsList = new ArrayList<Questions>();
-        questionsList = surveys.getQuestions();
-        uploadButton = (Button)findViewById(R.id.upload_button);
+
+//        uploadButton = (Button)findViewById(R.id.upload_button);
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
         surveyDescriptionText = (TextView) findViewById(R.id.survey_description_text);
         endDateText = (TextView) findViewById(R.id.end_date_text);
 
         responses = new Responses();
         dbAdapter= new DBAdapter(SurveyDetailsActivity.this);
-        surveyTitleText.setText(surveys.getName());
-        surveyDescriptionText.setText(surveys.getDescription());
-        endDateText.setText(surveys.getExpiryDate());
+        if(getIntent().hasExtra(IntentConstants.SURVEY)) {
+            surveyTitleText.setText(surveys.getName());
+            surveyDescriptionText.setText(surveys.getDescription());
+            endDateText.setText(surveys.getExpiryDate());
+        }
         addResponsesButton = (Button) findViewById(R.id.add_responses_button);
         incompleteResponsesLinearLayout = (LinearLayout) findViewById(R.id.incomplete_response_container);
         completeResponsesLinearLayout = (LinearLayout) findViewById(R.id.complete_response_container);
@@ -80,29 +87,31 @@ public class SurveyDetailsActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                if(getIntent().hasExtra(IntentConstants.SURVEY)) {
+                    responses.setSurveyId(surveys.getId());
+                    responses.setStatus("Incomplete");
+                    Intent intent = new Intent(SurveyDetailsActivity.this, NewResponseActivity.class);
+                    intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
+                    startActivity(intent);
+                }
+                dbAdapter.insertDataResponsesTable(responses);
+                //Toast.makeText(SurveyDetailsActivity.this,dbAdapter.insertDataResponsesTable(responses)+"",Toast.LENGTH_SHORT).show();
 
-                responses.setSurveyId(surveys.getId());
-                Toast.makeText(SurveyDetailsActivity.this,dbAdapter.insertDataResponsesTable(responses)+"",Toast.LENGTH_SHORT).show();
 
 
-                Intent intent = new Intent(SurveyDetailsActivity.this, NewResponseActivity.class);
-                intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
-                startActivity(intent);
             }
         });
 
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SurveyDetailsActivity.this, TestActivity.class);
-                intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
-                startActivity(intent);
-            }
-        });
+//        uploadButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////
+//
+//            }
+//        });
+//
+   }
 
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.survey_details, menu);
         return true;

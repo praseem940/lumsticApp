@@ -115,8 +115,11 @@ public class ActiveSurveyActivity extends Activity {
         protected void onPostExecute(String s) {
             jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
             surveysList = new ArrayList<Surveys>();
-            surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-            //surveysList = jsonHelper.tryParsing(s);
+           //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+            try{surveysList = jsonHelper.tryParsing(s);}
+            catch(Exception e){
+                e.printStackTrace();
+            }
             listView = (ListView) findViewById(R.id.active_survey_list);
             dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
             progressDialog.dismiss();
@@ -126,7 +129,7 @@ public class ActiveSurveyActivity extends Activity {
 
                 Surveys surveys = surveysList.get(i);
                 long value = dbAdapter.insertDataSurveysTable(surveys);
-                Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
                 if (surveys.getCategories().size() > 0)
                     addCategories(surveys);
                 if (surveys.getQuestions().size() > 0)

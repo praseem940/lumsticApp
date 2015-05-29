@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="lumstic.example.com.lumstic.UI.SurveyDetailsActivity">
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -11,229 +12,255 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <RelativeLayout
-        android:background="@color/white"
-        android:layout_margin="10dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/survey_title_text"
-            android:layout_width="wrap_content"
-            android:text="Temperature Details as per city"
-            android:textColor="#212121"
-            android:textSize="20sp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/survey_description_text"
-            android:layout_below="@+id/survey_title_text"
-            android:layout_width="wrap_content"
-            android:text="@string/survey_description"
-            android:textColor="#6c6c6c"
-            android:textSize="13sp"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="20dp"
-            android:layout_height="wrap_content" />
-
-
-        <LinearLayout
-            android:id="@+id/ends_date_container"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/survey_description_text"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ends on:"
-                android:textColor="#6c6c6c"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_marginLeft="12dp"
-                android:id="@+id/end_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="18th Feb 2015"
-                android:textColor="#6c6c6c"
-                android:textSize="12sp" />
-
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/response"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Responses"
-            android:layout_marginTop="20dp"
-            android:textColor="#212121"
-            android:layout_marginLeft="20dp"
-            android:textSize="18sp"
-            android:layout_below="@+id/ends_date_container"/>
-        <View
-            android:id="@+id/divider"
-            android:layout_below="@+id/response"
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="20dp"
-            android:background="@color/black"></View>
 
         <RelativeLayout
-
-            android:id="@+id/responses_container"
-            android:layout_below="@+id/response"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            android:layout_margin="10dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
+
+            <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/survey_title_text"
+                android:layout_width="wrap_content"
+                android:text="Temperature Details as per city"
+                android:textColor="#212121"
+                android:textSize="20sp"
+                android:layout_height="wrap_content" />
+
+            <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                android:id="@+id/survey_description_text"
+                android:layout_below="@+id/survey_title_text"
+                android:layout_width="wrap_content"
+                android:text="@string/survey_description"
+                android:textColor="#6c6c6c"
+                android:textSize="13sp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content" />
 
 
             <LinearLayout
-                android:id="@+id/nestedcontainer"
-                android:orientation="horizontal"
+                android:id="@+id/ends_date_container"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/complete_response_container"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:layout_width="wrap_content"
-android:layout_gravity="center"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_below="@+id/survey_description_text"
                 android:layout_height="wrap_content"
-                android:text="Complete Responses"
+                android:orientation="horizontal">
 
-                android:textSize="19sp"
-                android:textColor="#63b436"/>
-
-            <TextView
-                android:id="@+id/complete_response"
-                android:text="02"
-                android:textColor="#63b436"
-                android:textSize="30sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-<LinearLayout
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-                <Button
+                <lumstic.example.com.lumstic.Views.RobotoLightTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#FF301B"
-                    android:text="Upload"
-                    android:id="@+id/upload_button"
-                    android:textSize="19sp"
-                    android:drawableLeft="@drawable/ic_upload"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="6dp"
-                    android:drawablePadding="10dp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center|right"/>
-            </LinearLayout>
-            </LinearLayout>
-<View
-    android:id="@+id/devider2"
-    android:layout_below="@+id/nestedcontainer"
-    android:layout_width="fill_parent"
-    android:layout_height="0.5dp"
-    android:layout_marginLeft="30dp"
-    android:background="@color/black"></View>
+                    android:text="Ends on:"
+                    android:textColor="#6c6c6c"
+                    android:textSize="12sp" />
 
-        <LinearLayout
-            android:id="@+id/incomplete_response_container"
-            android:orientation="vertical"
-            android:layout_below="@+id/devider2"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
+                <lumstic.example.com.lumstic.Views.RobotoLightTextView
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/end_date_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="18th Feb 2015"
+                    android:textColor="#6c6c6c"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+            <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                android:id="@+id/response"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Incomplete Responses"
-                android:textSize="19sp"
-                android:textColor="#FDA500"/>
+                android:text="Responses"
+                android:layout_marginTop="12dp"
+                android:textColor="#212121"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_below="@+id/ends_date_container" />
 
-            <TextView
-                android:id="@+id/incompleteresponse"
-                android:text="02"
-                android:textColor="#FDA500"
-                android:textSize="30sp"
+            <View
+                android:id="@+id/divider"
+                android:layout_below="@+id/response"
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="12dp"
+                android:alpha=".4"
+
+                android:layout_marginLeft="20dp"
+                android:background="#999999"></View>
+
+            <RelativeLayout
+
+                android:id="@+id/responses_container"
+                android:layout_below="@+id/response"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content">
 
-        </LinearLayout>
 
-        <View
-            android:id="@+id/devider3"
-            android:layout_below="@+id/incomplete_response_container"
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="30dp"
-            android:background="@color/black"></View>
+                <LinearLayout
+                    android:id="@+id/nestedcontainer"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/uploaded_response_container"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:layout_below="@+id/devider3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/complete_response_container"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content">
+
+                        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Complete Responses"
+
+                            android:textSize="19sp"
+                            android:textColor="#63b436" />
+
+                        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                            android:id="@+id/complete_response"
+                            android:text="02"
+                            android:textColor="#63b436"
+                            android:textSize="30sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="right"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginRight="16dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:background="@drawable/custom_button"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp">
+                            <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/custom_button"
+
+                                android:layout_centerInParent="true"
+                            android:src="@drawable/ic_upload"
+                            android:id="@+id/upload_button"
+
+                            android:textColor="@color/white"
+                            android:layout_gravity="center" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/devider2"
+                    android:layout_below="@+id/nestedcontainer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:alpha=".4"
+
+                    android:layout_marginLeft="20dp"
+                    android:background="#999999"></View>
+
+
+                <LinearLayout
+                    android:id="@+id/incomplete_response_container"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/devider2"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Incomplete Responses"
+                        android:textSize="19sp"
+                        android:textColor="#FDA500" />
+
+                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                        android:id="@+id/incompleteresponse"
+                        android:text="02"
+                        android:textColor="#FDA500"
+                        android:textSize="30sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/devider3"
+                    android:layout_below="@+id/incomplete_response_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:alpha=".4"
+
+                    android:layout_marginLeft="20dp"
+                    android:background="#999999"></View>
+
+                <LinearLayout
+                    android:id="@+id/uploaded_response_container"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="10dp"
+                    android:layout_below="@+id/devider3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Uploaded Responses"
+                        android:textSize="19sp"
+                        android:textColor="#64ADF4" />
+
+                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+                        android:id="@+id/uploaded_response"
+                        android:text="02"
+                        android:textColor="#64ADF4"
+                        android:textSize="30sp"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/main_devider"
+                    android:layout_below="@+id/uploaded_response_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:alpha=".4"
+                    android:layout_marginLeft="20dp"
+                    android:background="#999999"></View>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/add_responses_button"
+                android:layout_below="@+id/responses_container"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="12dp"
+    android:layout_marginRight="30dp"
+                android:layout_marginBottom="30dp"
+                android:textSize="16sp"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
-                android:text="Uploaded Responses"
-                android:textSize="19sp"
-                android:textColor="#64ADF4"/>
-
-            <TextView
-                android:id="@+id/uploaded_response"
-                android:text="02"
-                android:textColor="#64ADF4"
-                android:textSize="30sp"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-        <View
-            android:id="@+id/main_devider"
-            android:layout_below="@+id/uploaded_response_container"
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="30dp"
-            android:background="@color/black"></View>
-</RelativeLayout>
-        <Button
-            android:id="@+id/add_responses_button"
-            android:layout_below="@+id/responses_container"
-            android:layout_width="fill_parent"
-            android:layout_marginTop="12dp"
-            android:padding="8dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="20sp"
-            android:background="@color/login_button_color"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
-            android:text="+  Add Response"/>
-    </RelativeLayout>
+                android:text="+  ADD RESPONSE" />
+        </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

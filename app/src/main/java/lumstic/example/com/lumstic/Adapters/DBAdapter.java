@@ -5,11 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,8 +132,30 @@ while(cursor.moveToNext()){
 
   }
 
+    public int deleteFromChoicesTableWhereOptionId(int optionId){
 
 
+
+            int id = optionId;
+            String[] selectionArgs={String.valueOf(id)};
+            int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
+            return id1;
+
+
+    }
+
+
+
+    public long InsertCompletedResponse(int responseId, int surveyId)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.STATUS,"Complete");
+        //contentValues.put(DBhelper.RESPONSE_ID,responseId);
+        contentValues.put(DBhelper.SURVEY_ID,surveyId);
+        return sqLiteDatabase.insert(DBhelper.TABLE_responses, null, contentValues);
+
+
+    }
 
 
 
@@ -309,7 +329,7 @@ while(cursor.moveToNext()){
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             Log.e("contructor", "called");
             mcontext = context;
-            Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -325,7 +345,7 @@ while(cursor.moveToNext()){
             sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             Log.e("success", "success");
 
-            Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
+           // Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
         }
 
         @Override

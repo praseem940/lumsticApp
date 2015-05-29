@@ -8,6 +8,8 @@
         android:gravity="top"
     android:padding="14dp"
     android:singleLine="false"
+
+    android:textColorHint="#bcbcbc"
     android:lines="14"
     android:layout_gravity="left|top"
     android:hint="type your answer here"

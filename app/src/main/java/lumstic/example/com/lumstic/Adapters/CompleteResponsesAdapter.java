@@ -48,7 +48,7 @@ public class CompleteResponsesAdapter extends BaseAdapter {
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.responseNumber.setText("Response: " + completeResponses.getResponseNumber());
         viewHolder.responseText.setText(completeResponses.getResponseText());
-        viewHolder.responseText.setTextSize(2.4f);
+
         viewHolder.responseNumber.setTextIsSelectable(true);
         return view;
     }

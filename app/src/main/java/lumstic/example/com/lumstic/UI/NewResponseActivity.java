@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,7 +43,6 @@ import lumstic.example.com.lumstic.Models.Categories;
 import lumstic.example.com.lumstic.Models.Choices;
 import lumstic.example.com.lumstic.Models.Options;
 import lumstic.example.com.lumstic.Models.Questions;
-import lumstic.example.com.lumstic.Models.Responses;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
 
@@ -64,7 +61,7 @@ public class NewResponseActivity extends Activity {
     List<Questions> nestedQuestions;
     boolean nextLayoutCreated = false;
     EditText answer;
-    Button counterButton;
+    Button counterButton,markAsComplete;
     String htmlStringWithMathSymbols = "&#60";
     ActionBar actionBar;
     DBAdapter dbAdapter;
@@ -98,7 +95,7 @@ public class NewResponseActivity extends Activity {
         actionBar=getActionBar();
         actionBar.setTitle("New Response Activity");
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
 
 
@@ -114,7 +111,8 @@ public class NewResponseActivity extends Activity {
         dbAdapter= new DBAdapter(NewResponseActivity.this);
         currentResponseId=(int)dbAdapter.getMaxID();
 
-        Questions currentQuestion = questionsList.get(0);
+
+        final Questions currentQuestion = questionsList.get(0);
 
 
         counterButton.setText("1 out of "+questionsList.size());
@@ -122,9 +120,23 @@ public class NewResponseActivity extends Activity {
         boolean nextLayoutPresent = false;
 
 
+
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
-        previousQuestion.setText("< Back");
+        markAsComplete=(Button)findViewById(R.id.mark_as_complete);
+        previousQuestion.setText("BACK");
+
+        markAsComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+           Toast.makeText(NewResponseActivity.this,"Response saved with ID"+dbAdapter.InsertCompletedResponse(currentResponseId,questionsList.get(0).getSurveyId())+"",Toast.LENGTH_SHORT).show();
+//                Intent intent= new Intent(NewResponseActivity.this,SurveyDetailsActivity.class);
+//                startActivity(intent);
+            }
+        });
+
+
 
 
         nextQuestion.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +165,8 @@ public class NewResponseActivity extends Activity {
                 if ((questionCounter < questionCount  - 1) &&(questionsList.get(questionCounter).getMandatory()!=1)) {
                     previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
                     previousQuestion.setTextColor(getResources().getColor(R.color.white));
+                    previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back,0,0,0);
+
                     nestedQuestions.clear();
                     idList.clear();
                     fieldContainer.removeAllViews();
@@ -165,8 +179,12 @@ public class NewResponseActivity extends Activity {
                     checkForAnswer(currentQuestion,currentResponseId);
                     if(questionCounter+1==questionCount){
 
+                        markAsComplete.setVisibility(View.VISIBLE);
+
                         nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                        nextQuestion.setText("Save");
+                        nextQuestion.setText("NEXT");
+                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_arrow_next_disable,0);
+
                         nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
                     }
 
@@ -174,6 +192,9 @@ public class NewResponseActivity extends Activity {
                 if ((questionCounter < questionCount - 1) &&(questionsList.get(questionCounter).getMandatory()==1)&&(!answer.getText().toString().equals(""))) {
                     previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
                     previousQuestion.setTextColor(getResources().getColor(R.color.white));
+
+                    previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back,0,0,0);
+
                     nestedQuestions.clear();
                     idList.clear();
                     fieldContainer.removeAllViews();
@@ -187,8 +208,12 @@ public class NewResponseActivity extends Activity {
 
                     checkForAnswer(currentQuestion,currentResponseId);
                     if(questionCounter+1==questionCount){
+                        markAsComplete.setVisibility(View.VISIBLE);
+
+
                         nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                        nextQuestion.setText("Save");
+                        nextQuestion.setText("NEXT");
+                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_arrow_next_disable,0);
                         nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
                     }
 
@@ -213,12 +238,15 @@ public class NewResponseActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                markAsComplete.setVisibility(View.GONE);
+
+
                 if (questionCounter != 0) {
                     nestedQuestions.clear();
                     idList.clear();
                     fieldContainer.removeAllViews();
 
-                    //addAnswer(questionsList.get(questionCounter));
+                    addAnswer(questionsList.get(questionCounter));
 
 
                     questionCounter--;
@@ -231,6 +259,7 @@ public class NewResponseActivity extends Activity {
                     buildLayout(currentQuestion);
                     checkForAnswer(currentQuestion,currentResponseId);
                     if(questionCounter==0){
+                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable,0,0,0);
                         previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
                         previousQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
                     }
@@ -239,7 +268,8 @@ public class NewResponseActivity extends Activity {
                     if(questionCounter+1!=questionCount){
 
                         nextQuestion.setTextColor(getResources().getColor(R.color.white));
-                        nextQuestion.setText("Next >");
+                        nextQuestion.setText("NEXT");
+                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_arrow_next,0);
                         nextQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
                     }
 
@@ -288,7 +318,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
@@ -308,7 +338,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
@@ -329,7 +359,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
@@ -338,7 +368,7 @@ public class NewResponseActivity extends Activity {
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
 
-            final Spinner spinner = (Spinner) findViewById(R.id.drop_down);
+            spinner = (Spinner) findViewById(R.id.drop_down);
             List<String> listOptions = new ArrayList<String>();
             for (int i = 0; i < ques.getOptions().size(); i++) {
                 listOptions.add(ques.getOptions().get(i).getContent());
@@ -352,6 +382,9 @@ public class NewResponseActivity extends Activity {
 
                     //Toast.makeText(NewResponseActivity.this,""+i,Toast.LENGTH_SHORT).show();
                     Options options= ques.getOptions().get(i);
+                    addOptionToDataBase(options,ques);
+                    removeOthersFromDataBase(options,ques);
+
                     if(options.getQuestions().size()>0){
                       //  Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
                         for(int j=0;j<options.getQuestions().size();j++){
@@ -407,7 +440,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
@@ -422,7 +455,7 @@ public class NewResponseActivity extends Activity {
                 ll.addView(checkBox);
                 checkBox.setId(ques.getOptions().get(i).getId());
                 checkBox.setText(ques.getOptions().get(i).getContent());
-                checkBox.setTextSize(18);
+                checkBox.setTextSize(16);
                 checkBox.setTextColor(getResources().getColor(R.color.text_color));
                 checkBox.setTag(ques.getOptions().get(i));
                 checkBox.setButtonDrawable(R.drawable.custom_checkbox);
@@ -485,7 +518,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
@@ -500,13 +533,12 @@ public class NewResponseActivity extends Activity {
 
 
         if (ques.getType().contains("DateQuestion")) {
-            dateText.setText("dd.yy.mm");
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
@@ -517,6 +549,7 @@ public class NewResponseActivity extends Activity {
 
 
             dateText = (TextView) findViewById(R.id.answer_text);
+            dateText.setText("dd.yy.mm");
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -549,7 +582,7 @@ public class NewResponseActivity extends Activity {
                 TextView questionTextSingleLine = new TextView(this);
                 questionTextSingleLine.setTextSize(20);
                 questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-                questionTextSingleLine.setPadding(0,0,0,12);
+                questionTextSingleLine.setPadding(0,0,0,16);
                 questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
                 nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
@@ -564,7 +597,7 @@ public class NewResponseActivity extends Activity {
                 final RadioButton radioButton= new RadioButton(this);
                 radioGroup.addView(radioButton);
                 radioButton.setId(ques.getOptions().get(i).getId());
-                radioButton.setTextSize(18);
+                radioButton.setTextSize(16);
                 radioButton.setTextColor(getResources().getColor(R.color.text_color));
                 radioButton.setText(ques.getOptions().get(i).getContent());
                 radioButton.setTag(ques.getOptions().get(i));
@@ -577,6 +610,12 @@ public class NewResponseActivity extends Activity {
                         View myView = findViewById(checkedId);
                         RadioButton radioButton1= (RadioButton) myView;
                         Options options= (Options) radioButton1.getTag();
+
+
+                        addOptionToDataBase(options,ques);
+                        removeOthersFromDataBase(options,ques);
+
+
                         //Toast.makeText(NewResponseActivity.this,options.getId()+"",Toast.LENGTH_SHORT).show();
                         if(options.getQuestions().size()>0){
                           //  Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
@@ -613,7 +652,7 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
-            questionTextSingleLine.setPadding(0,0,0,12);
+            questionTextSingleLine.setPadding(0,0,0,16);
             questionTextSingleLine.setText("Q. " + ques.getOrderNumber() + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
@@ -811,7 +850,7 @@ public class NewResponseActivity extends Activity {
             answers.setResponseId(currentResponseId);
             answers.setContent(answer.getText().toString());
             long x=dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,currentResponseId+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(NewResponseActivity.this,currentResponseId+"",Toast.LENGTH_SHORT).show();
         }
 
         if(questions.getType().equals("MultiLineQuestion"))
@@ -821,7 +860,7 @@ public class NewResponseActivity extends Activity {
             answers.setResponseId((int)dbAdapter.getMaxID());
             answers.setContent(answer.getText().toString());
             long x=dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
 
         if(questions.getType().equals("NumericQuestion"))
@@ -831,7 +870,7 @@ public class NewResponseActivity extends Activity {
             answers.setQuestionId(questions.getId());
             answers.setContent(answer.getText().toString());
             long x=dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -842,7 +881,7 @@ public class NewResponseActivity extends Activity {
             answers.setQuestionId(questions.getId());
             answers.setContent(dateText.getText().toString());
             long x=dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -854,7 +893,7 @@ public class NewResponseActivity extends Activity {
             answers.setQuestionId(questions.getId());
             answers.setContent(String.valueOf(ratingBar.getNumStars()));
             long x=dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -889,6 +928,7 @@ public class NewResponseActivity extends Activity {
         }
 
 
+        //to remake multi choice view
         if(qu.getType().equals("MultiChoiceQuestion")){
             List<Options> options= new ArrayList<Options>();
             options=qu.getOptions();
@@ -912,16 +952,78 @@ public class NewResponseActivity extends Activity {
                 checkBox.setChecked(true);
             }
 
+        }
 
 
+
+
+        // to remake radio button view
+        if(qu.getType().equals("RadioQuestion")){
+            List<Options> options= new ArrayList<Options>();
+            options=qu.getOptions();
+            for(int i=0;i<options.size();i++){
+                options.get(i).getId();
+            }
+
+            List<Integer> integers= new ArrayList<Integer>();
+            integers=dbAdapter.getIdFromAnswerTable(responseId,qu.getId());
+
+
+            List<Integer> list2=
+                    dbAdapter.getOptionIds(integers);
+
+            for(int i=0;i<list2.size();i++){
+                list2.get(i);
+                try {
+                    RadioButton radioButton = (RadioButton) findViewById(list2.get(i));
+                    radioButton.setChecked(true);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
         }
+
+
+        // to remake dropdown view
+//        if(qu.getType().equals("DropDownQuestion")){
+//            List<Options> options= new ArrayList<Options>();
+//            options=qu.getOptions();
+//            for(int i=0;i<options.size();i++){
+//                options.get(i).getId();
+//            }
+//
+//            List<Integer> integers= new ArrayList<Integer>();
+//            integers=dbAdapter.getIdFromAnswerTable(responseId,qu.getId());
+//
+//
+//            List<Integer> list2=
+//                    dbAdapter.getOptionIds(integers);
+//
+//            int counter=0;
+//            for(int i=0;i<list2.size();i++){
+//
+//               for(int j=0;j<qu.getOptions().size();j++){
+//                   if(qu.getOptions().get(j).getId()==list2.get(i)){
+//                       counter++;
+//                       Toast.makeText(NewResponseActivity.this,list2.get(i)+"idid",Toast.LENGTH_LONG).show();
+//                       spinner.setSelection(counter+1);
+//                   };
+//
+//               }
+//                counter=0;
+//
+//            }
+//
+//        }
 
 
     }
 
 
 
+    //add record to database in case of selectedlement
     public void addOptionToDataBase(Options options,Questions qu){
 
         Answers answers= new Answers();
@@ -934,15 +1036,28 @@ public class NewResponseActivity extends Activity {
         Choices choices= new Choices();
         choices.setAnswerId((int)dbAdapter.getMaxIDAnswersTabele());
         choices.setOptionId(options.getId());
-        Toast.makeText(NewResponseActivity.this,dbAdapter.insertDataChoicesTable(choices)+"add",Toast.LENGTH_LONG).show();
+        dbAdapter.insertDataChoicesTable(choices);
+        //Toast.makeText(NewResponseActivity.this,dbAdapter.insertDataChoicesTable(choices)+"add",Toast.LENGTH_LONG).show();
     }
 
 
+    //this is remove option from table in case of multichoice
     public  void removeOptionFromDataBase(Options options,Questions qu){
-//        Toast.makeText(NewResponseActivity.this,dbAdapter.deleteOption(options)
-//        +"delete",Toast.LENGTH_LONG).show();
-//
-//        dbAdapter.deleteOption(options);
+        dbAdapter.deleteOption(options);
+        //Toast.makeText(NewResponseActivity.this,dbAdapter.deleteOption(options)
+        //+"delete",Toast.LENGTH_LONG).show();
+
     }
+
+
+    //this is for not selected elements of radio
+    public void removeOthersFromDataBase(Options options,Questions qu){
+        for(int i=0;i<qu.getOptions().size();i++){
+            if(options.getId()!=qu.getOptions().get(i).getId()){
+                dbAdapter.deleteFromChoicesTableWhereOptionId(qu.getOptions().get(i).getId());
+            }
+        }
+    }
+
 
 }
