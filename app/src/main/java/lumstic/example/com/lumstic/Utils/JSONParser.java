@@ -235,21 +235,34 @@ public class JSONParser {
         }
         if (jsonObjectQuestions.has("options"))
         {
-        try {
+            try {
 
-            JSONArray jsonArrayOptions = jsonObjectQuestions.getJSONArray("options");
-            for (int k = 0; k < jsonArrayOptions.length(); k++) {
+                JSONArray jsonArrayOptions = jsonObjectQuestions.getJSONArray("options");
+                for (int k = 0; k < jsonArrayOptions.length(); k++) {
 
-                JSONObject jsonObjectOptions = jsonArrayOptions.getJSONObject(k);
-                Options options = parseOptions(jsonObjectOptions);
-                optionses.add(k, options);
+                    JSONObject jsonObjectOptions = jsonArrayOptions.getJSONObject(k);
+                    Options options = parseOptions(jsonObjectOptions);
+                    optionses.add(k, options);
 
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }}
+        }
+
         questions.setOptions(optionses);
+
+        try {
+
+            if((!jsonObjectQuestions.has("options"))&&(jsonObjectQuestions.getInt("parent_id")>=0)){
+                Log.e("workingwork","abc");
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         return questions;
@@ -277,8 +290,9 @@ public class JSONParser {
                 for (int j = 0; j < jsonArray.length(); j++) {
                     JSONObject jsonObjectQuestion = jsonArray.getJSONObject(j);
                     Questions questions = parseQuestions(jsonObjectQuestion);
+                    if(questions!=null){
                     questionses.add(j, questions);
-                }
+                }}
                 surveys.setQuestions(questionses);
 
 

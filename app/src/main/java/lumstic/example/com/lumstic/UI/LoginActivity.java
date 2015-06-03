@@ -76,6 +76,7 @@ public class LoginActivity extends Activity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
+        lumsticApp.getPreferences().setSurveyData("");
 
         emailEditText = (EditText) findViewById(R.id.email_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
@@ -175,9 +176,13 @@ public class LoginActivity extends Activity {
 
                 progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this,"Logged In ",Toast.LENGTH_LONG).show();
+
+
                 Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
                 startActivity(intent);
                 finish();
+
+
             }
 
 

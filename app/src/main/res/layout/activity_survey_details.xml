@@ -81,16 +81,7 @@
                 android:textSize="18sp"
                 android:layout_below="@+id/ends_date_container" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_below="@+id/response"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="12dp"
-                android:alpha=".4"
 
-                android:layout_marginLeft="20dp"
-                android:background="#999999"></View>
 
             <RelativeLayout
 
@@ -191,7 +182,7 @@
                         android:textColor="#FDA500" />
 
                     <lumstic.example.com.lumstic.Views.RobotoRegularTextView
-                        android:id="@+id/incompleteresponse"
+                        android:id="@+id/incomplete_response"
                         android:text="02"
                         android:textColor="#FDA500"
                         android:textSize="30sp"
@@ -210,37 +201,11 @@
                     android:layout_marginLeft="20dp"
                     android:background="#999999"></View>
 
-                <LinearLayout
-                    android:id="@+id/uploaded_response_container"
-                    android:orientation="vertical"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="20dp"
-                    android:paddingBottom="10dp"
-                    android:layout_below="@+id/devider3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
-                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Uploaded Responses"
-                        android:textSize="19sp"
-                        android:textColor="#64ADF4" />
-
-                    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
-                        android:id="@+id/uploaded_response"
-                        android:text="02"
-                        android:textColor="#64ADF4"
-                        android:textSize="30sp"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
 
                 <View
                     android:id="@+id/main_devider"
-                    android:layout_below="@+id/uploaded_response_container"
+                    android:layout_below="@+id/incomplete_response_container"
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dp"
                     android:alpha=".4"

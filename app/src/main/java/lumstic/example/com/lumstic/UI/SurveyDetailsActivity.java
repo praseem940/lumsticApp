@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,16 +28,19 @@ public class SurveyDetailsActivity extends Activity {
     Button addResponsesButton;
     ActionBar actionBar;
     Surveys surveys;
-    Button uploadButton;
+    ImageView uploadButton;
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
     Responses responses;
+    int completeCount=0,incompleteCount=0;
     DBAdapter dbAdapter;
+    TextView completeTv,incompleteTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_details);
         actionBar= getActionBar();
+
         if (getIntent().hasExtra(IntentConstants.SURVEY)) {
             surveys = new Surveys();
             surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
@@ -48,18 +52,23 @@ public class SurveyDetailsActivity extends Activity {
         actionBar.setTitle("Survey Detail");
 
 
+
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
 
-//        uploadButton = (Button)findViewById(R.id.upload_button);
+        uploadButton = (ImageView)findViewById(R.id.upload_button);
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
         surveyDescriptionText = (TextView) findViewById(R.id.survey_description_text);
         endDateText = (TextView) findViewById(R.id.end_date_text);
+        completeTv=(TextView)findViewById(R.id.complete_response);
+        incompleteTv=(TextView)findViewById(R.id.incomplete_response);
+
 
         responses = new Responses();
         dbAdapter= new DBAdapter(SurveyDetailsActivity.this);
         if(getIntent().hasExtra(IntentConstants.SURVEY)) {
+
             surveyTitleText.setText(surveys.getName());
             surveyDescriptionText.setText(surveys.getDescription());
             endDateText.setText(surveys.getExpiryDate());
@@ -70,8 +79,10 @@ public class SurveyDetailsActivity extends Activity {
         incompleteResponsesLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SurveyDetailsActivity.this, IncompleteResponseActivity.class);
-                startActivity(i);
+
+                Intent intent = new Intent(SurveyDetailsActivity.this, IncompleteResponseActivity.class);
+                intent.putExtra(IntentConstants.SURVEY, surveys);
+                startActivity(intent);
             }
         });
 
@@ -79,9 +90,18 @@ public class SurveyDetailsActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SurveyDetailsActivity.this, CompleteResponsesActivity.class);
+                i.putExtra(IntentConstants.SURVEY, surveys);
                 startActivity(i);
             }
         });
+
+        incompleteCount=dbAdapter.getIncompleteResponse(surveys.getId());
+        completeCount=dbAdapter.getCompleteResponse(surveys.getId());
+
+
+
+        incompleteTv.setText(incompleteCount+"");
+        completeTv.setText(completeCount+"");
 
         addResponsesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,27 +109,25 @@ public class SurveyDetailsActivity extends Activity {
 
                 if(getIntent().hasExtra(IntentConstants.SURVEY)) {
                     responses.setSurveyId(surveys.getId());
-                    responses.setStatus("Incomplete");
+                    responses.setStatus("incomplete");
                     Intent intent = new Intent(SurveyDetailsActivity.this, NewResponseActivity.class);
-                    intent.putExtra(IntentConstants.QUESTIONS, (java.io.Serializable) questionsList);
+                    intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
                     startActivity(intent);
                 }
-                dbAdapter.insertDataResponsesTable(responses);
-                //Toast.makeText(SurveyDetailsActivity.this,dbAdapter.insertDataResponsesTable(responses)+"",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SurveyDetailsActivity.this,dbAdapter.insertDataResponsesTable(responses)+"",Toast.LENGTH_SHORT).show();
 
 
 
             }
         });
 
-//        uploadButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////
-//
-//            }
-//        });
-//
+
+
+
+
+
+
+
    }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -13,7 +13,7 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class DashBoardActivity extends Activity {
 
-        LumsticApp lumsticApp;
+    LumsticApp lumsticApp;
     ActionBar actionBar ;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

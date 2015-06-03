@@ -7,31 +7,74 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
+
+import lumstic.example.com.lumstic.Adapters.CompleteResponsesAdapter;
+import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Adapters.IncompleteResponsesAdapter;
+import lumstic.example.com.lumstic.Models.CompleteResponses;
 import lumstic.example.com.lumstic.Models.IncompleteResponses;
+import lumstic.example.com.lumstic.Models.Questions;
+import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.R;
+import lumstic.example.com.lumstic.Utils.IntentConstants;
 
 public class IncompleteResponseActivity extends Activity {
 
+
+
     ListView listView;
+    DBAdapter dbAdapter;
+    Surveys surveys;
+    int incompleteResponseCount=0;
     List<IncompleteResponses> incompleteResponseses;
+    Questions identifierQuestion;
+    int identifierQuestionId=0;
+    List<Integer> incompleteResponsesId;
+
+    List<String> identifierQuestionAnswers;
+
+
     IncompleteResponsesAdapter incompleteResponsesAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomplete_response);
-        getActionBar().setTitle("Completed Responses");
-        listView = (ListView) findViewById(R.id.listview);
+        getActionBar().setTitle("Incompleted Responses");
+
+        dbAdapter= new DBAdapter(IncompleteResponseActivity.this);
         incompleteResponseses = new ArrayList<IncompleteResponses>();
-        incompleteResponseses.add(0, new IncompleteResponses("1", "Name of the city: Pune"));
-        incompleteResponseses.add(1, new IncompleteResponses("2", "Name of the city: Pune"));
-        incompleteResponseses.add(2, new IncompleteResponses("3", "Name of the city: Pune"));
-        incompleteResponseses.add(3, new IncompleteResponses("4", "Name of the city: Pune"));
-        incompleteResponseses.add(4, new IncompleteResponses("5", "Name of the city: Pune"));
-        incompleteResponseses.add(5, new IncompleteResponses("6", "Name of the city: Pune"));
-        incompleteResponsesAdapter= new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses);
+        incompleteResponsesId= new ArrayList<Integer>();
+        identifierQuestionAnswers= new ArrayList<String>();
+
+
+        surveys = new Surveys();
+        surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+        incompleteResponseCount=dbAdapter.getIncompleteResponse(surveys.getId());
+        incompleteResponsesId=dbAdapter.getIncompleteResponsesIds(surveys.getId());
+
+        for(int j=0;j<surveys.getQuestions().size();j++){
+            if(surveys.getQuestions().get(j).getIdentifier()==1){
+                identifierQuestion=surveys.getQuestions().get(j);
+                identifierQuestionId=surveys.getQuestions().get(j).getId();
+            }
+        }
+
+        for(int i=0;i<incompleteResponseCount;i++){
+
+            identifierQuestionAnswers.add(dbAdapter.getAnswer(incompleteResponsesId.get(i), identifierQuestionId));
+
+            incompleteResponseses.add(i, new IncompleteResponses(String.valueOf(incompleteResponsesId.get(i)), identifierQuestion.getContent() + " :" + "  " + identifierQuestionAnswers.get(i)));
+        }
+
+
+
+        listView = (ListView) findViewById(R.id.listview);
+
+        incompleteResponsesAdapter = new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses,surveys);
         listView.setAdapter(incompleteResponsesAdapter);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

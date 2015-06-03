@@ -45,6 +45,10 @@ public class Preferences {
     public void setAddAuthInHeader(boolean addAuthInHeader) {
         setBoolean(ADD_AUTH_IN_HEADER, addAuthInHeader);
     }
+
+
+
+
     public String getAccessToken() {
         return getString(access_token, null);
     }

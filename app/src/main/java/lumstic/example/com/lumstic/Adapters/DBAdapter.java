@@ -34,12 +34,12 @@ public class DBAdapter {
     public long getMaxID() {
         long id = 0;
         String[] coloums={DBhelper.ID};
-     Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses,coloums,null,null,null,null,null);
-while(cursor.moveToNext()){
-    int index=cursor.getColumnIndex(DBhelper.ID);
-    id=cursor.getInt(index);
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses,coloums,null,null,null,null,null);
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.ID);
+            id=cursor.getInt(index);
 
-}
+        }
         return id;
     }
 
@@ -59,8 +59,8 @@ while(cursor.moveToNext()){
 
         int id = options.getId();
         String[] selectionArgs={String.valueOf(options.getId())};
-       int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
-   return id1;
+        int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
+        return id1;
     }
 
 
@@ -107,56 +107,131 @@ while(cursor.moveToNext()){
     }
 
 
-  public  List<Integer> getOptionIds(List<Integer>  ids){
-      List<Integer> integers= new ArrayList<Integer>();
+    public  List<Integer> getOptionIds(List<Integer>  ids){
+        List<Integer> integers= new ArrayList<Integer>();
 
-      int id=0;
-      String[] coloums={DBhelper.OPTION_ID};
+        int id=0;
+        String[] coloums={DBhelper.OPTION_ID};
 
-      for(int i=0;i<ids.size();i++){
-
-
-          String[] selectionArgs={String.valueOf(ids.get(i))};
-          Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
-
-          while(cursor.moveToNext()){
-              int index=cursor.getColumnIndex(DBhelper.OPTION_ID);
-              id=cursor.getInt(index);
-              integers.add(id);
-
-          }
-      }
+        for(int i=0;i<ids.size();i++){
 
 
-      return integers;
+            String[] selectionArgs={String.valueOf(ids.get(i))};
+            Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
 
-  }
+            while(cursor.moveToNext()){
+                int index=cursor.getColumnIndex(DBhelper.OPTION_ID);
+                id=cursor.getInt(index);
+                integers.add(id);
+
+            }
+        }
+
+
+        return integers;
+
+    }
 
     public int deleteFromChoicesTableWhereOptionId(int optionId){
 
 
 
-            int id = optionId;
-            String[] selectionArgs={String.valueOf(id)};
-            int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
-            return id1;
+        int id = optionId;
+        String[] selectionArgs={String.valueOf(id)};
+        int id1= sqLiteDatabase.delete(DBhelper.TABLE_choices, DBhelper.OPTION_ID+ "=?",selectionArgs);
+        return id1;
 
 
     }
 
 
 
-    public long InsertCompletedResponse(int responseId, int surveyId)
+    public int UpldateCompleteResponse(int responseId, int surveyId)
     {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DBhelper.STATUS,"Complete");
-        //contentValues.put(DBhelper.RESPONSE_ID,responseId);
-        contentValues.put(DBhelper.SURVEY_ID,surveyId);
-        return sqLiteDatabase.insert(DBhelper.TABLE_responses, null, contentValues);
 
+ContentValues contentValues = new ContentValues();
+        contentValues.put(DBhelper.STATUS,"complete");
+        String[] args={String.valueOf(responseId),String.valueOf(surveyId)};
+        int x=sqLiteDatabase.update(DBhelper.TABLE_responses,contentValues, DBhelper.ID + " =? AND " + DBhelper.SURVEY_ID + " =?",args);
+        return x;
 
     }
 
+
+
+    public int getIncompleteResponse(int surveyId){
+        int value=0;
+        String[] coloums={DBhelper.STATUS};
+        String[] selectionArgs={String.valueOf(surveyId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("incomplete")){
+                value++;
+            }
+
+        }
+
+        return value;
+    }
+
+    public int getCompleteResponse(int surveyId){
+        int value=0;
+        String[] coloums={DBhelper.STATUS};
+        String[] selectionArgs={String.valueOf(surveyId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("complete")){
+                value++;
+            }
+
+        }
+
+        return value;
+    }
+
+    public List<Integer> getCompleteResponsesIds(int surveyId){
+        List<Integer> ids;
+        ids= new ArrayList<Integer>();
+        String[] coloums={DBhelper.STATUS,DBhelper.ID};
+        String[] selectionArgs={String.valueOf(surveyId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("complete")){
+
+                int index2=cursor.getColumnIndex(DBhelper.ID);
+                ids.add(cursor.getInt(index2));
+            }
+
+        }
+
+        return ids;
+    }
+
+    public List<Integer> getIncompleteResponsesIds(int surveyId){
+        List<Integer> ids;
+        ids= new ArrayList<Integer>();
+        String[] coloums={DBhelper.STATUS,DBhelper.ID};
+        String[] selectionArgs={String.valueOf(surveyId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("incomplete")){
+
+                int index2=cursor.getColumnIndex(DBhelper.ID);
+                ids.add(cursor.getInt(index2));
+            }
+
+        }
+
+        return ids;
+    }
 
 
     public long insertDataQuestionTable(Questions questions) {
@@ -329,7 +404,7 @@ while(cursor.moveToNext()){
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             Log.e("contructor", "called");
             mcontext = context;
-           // Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
+            // Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -345,7 +420,7 @@ while(cursor.moveToNext()){
             sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             Log.e("success", "success");
 
-           // Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
+            // Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
         }
 
         @Override

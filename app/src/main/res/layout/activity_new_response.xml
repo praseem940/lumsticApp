@@ -46,7 +46,21 @@
 
                 </LinearLayout>
 
-
+                <Button
+                    android:id="@+id/mark_as_complete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mark As Complete"
+                    android:paddingLeft="30dp"
+                    android:visibility="invisible"
+                    android:paddingRight="30dp"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="170dp"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/custom_button"
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
 
@@ -57,20 +71,7 @@
     </RelativeLayout>
 
 
-    <Button
-        android:id="@+id/mark_as_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mark As Complete"
-        android:paddingLeft="30dp"
-        android:visibility="invisible"
-        android:paddingRight="30dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="16sp"
-        android:textColor="#ffffff"
-        android:background="@drawable/custom_button"
-        android:layout_alignBottom="@+id/question_container"
-        android:layout_centerHorizontal="true" />
+
     <LinearLayout
         android:id="@+id/controls_container"
         android:layout_width="fill_parent"
@@ -92,7 +93,7 @@
                 android:layout_height="fill_parent"
                 android:text="BACK"
                 android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_arrow_back"
+                android:drawableLeft="@drawable/ic_arrow_back_enable"
                 android:background="@color/back_button_background"
                 android:textColor="#727272"
                 android:textSize="14sp"

@@ -57,12 +57,13 @@ public class ActiveSurveyActivity extends Activity {
 
         lumsticApp = (LumsticApp) getApplication();
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
-        progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Fetching Surveys ");
-        progressDialog.show();
-        new FetchSurvey().execute();
+
+            progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Fetching Surveys ");
+            progressDialog.show();
+            new FetchSurvey().execute();
 
 
     }
@@ -115,8 +116,14 @@ public class ActiveSurveyActivity extends Activity {
         protected void onPostExecute(String s) {
             jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
             surveysList = new ArrayList<Surveys>();
-           //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-            try{surveysList = jsonHelper.tryParsing(s);}
+            //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+            try{
+
+                    surveysList = jsonHelper.tryParsing(s);
+                    lumsticApp.getPreferences().setSurveyData(s);
+                //lumsticApp.showToast(lumsticApp.getPreferences().getSurveyData());
+
+            }
             catch(Exception e){
                 e.printStackTrace();
             }
@@ -125,18 +132,22 @@ public class ActiveSurveyActivity extends Activity {
             progressDialog.dismiss();
 
 
-            for (int i = 0; i < surveysList.size(); i++) {
+try {
+    for (int i = 0; i < surveysList.size(); i++) {
 
-                Surveys surveys = surveysList.get(i);
-                long value = dbAdapter.insertDataSurveysTable(surveys);
-                //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
-                if (surveys.getCategories().size() > 0)
-                    addCategories(surveys);
-                if (surveys.getQuestions().size() > 0)
-                    addQuestions(surveys);
+        Surveys surveys = surveysList.get(i);
+        long value = dbAdapter.insertDataSurveysTable(surveys);
+        //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
+        if (surveys.getCategories().size() > 0)
+            addCategories(surveys);
+        if (surveys.getQuestions().size() > 0)
+            addQuestions(surveys);
 
-            }
-
+    }
+}
+catch (Exception e){
+    e.printStackTrace();
+}
 
             listView.setAdapter(dashBoardAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -150,6 +161,7 @@ public class ActiveSurveyActivity extends Activity {
             });
         }
     }
+
 
 
     public void addCategories(Surveys surveys) {
