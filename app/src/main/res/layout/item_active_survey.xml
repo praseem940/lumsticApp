@@ -23,13 +23,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3">
-
+        >
         <lumstic.example.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/complete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
+            android:layout_gravity="center"
             android:text="complete  00"
             android:textColor="#6c6c6c"
             android:textSize="13sp" />
@@ -39,19 +39,13 @@
             android:id="@+id/incomplete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_gravity="center"
             android:text="Incomplete  00"
+            android:layout_marginLeft="20dp"
             android:textColor="#6c6c6c"
             android:textSize="13sp" />
 
-        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
-            android:id="@+id/uploaded_survey_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Uploaded  00"
-            android:textColor="#6c6c6c"
-            android:textSize="13sp" />
+
 
     </LinearLayout>
 

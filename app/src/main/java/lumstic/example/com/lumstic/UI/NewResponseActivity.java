@@ -7,9 +7,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,9 +37,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Models.Answers;
@@ -55,6 +61,7 @@ public class NewResponseActivity extends Activity {
 
     final int PIC_CROP = 2;
     List<Questions> questionsList;
+    List<Categories> categoriesList;
     boolean hint = true;
     TextView dateText;
     Spinner spinner;
@@ -74,14 +81,19 @@ public class NewResponseActivity extends Activity {
     DBAdapter dbAdapter;
     int currentResponseId = 0;
     Questions universalQuestion;
+    String fname = "";
     Questions qu;
+    int categoryAndQuestionCount = 0;
+
+
     int questionCount = 0;
+    int categoryCount = 0;
     LinearLayout fieldContainer;
     LayoutInflater inflater;
     TextView answerText;
     int CAMERA_REQUEST = 1;
     RelativeLayout imageContainer;
-    ImageView imageView;
+    ImageView imageViewPhotoQuestion;
     Uri picUri;
     Bitmap photo = null;
     int PICK_FROM_CAMERA = 1;
@@ -98,211 +110,245 @@ public class NewResponseActivity extends Activity {
         actionBar = getActionBar();
         actionBar.setTitle("New Response Activity");
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+//      actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
-
-
-
         fieldContainer = (LinearLayout) findViewById(R.id.field_container);
         inflater = getLayoutInflater();
         nestedQuestions = new ArrayList<Questions>();
         idList = new ArrayList<Integer>();
         counterButton = (Button) findViewById(R.id.counter_button);
 
-        questionsList = new ArrayList<Questions>();
-
-        surveys= (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
-        questionsList = surveys.getQuestions();
-        questionCount = questionsList.size();
         dbAdapter = new DBAdapter(NewResponseActivity.this);
+        questionsList = new ArrayList<Questions>();
+        categoriesList = new ArrayList<Categories>();
+
+        surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
 
 
-        if(getIntent().hasExtra(IntentConstants.RESPONSE_ID)){
-            currentResponseId=getIntent().getIntExtra(IntentConstants.RESPONSE_ID,0);
+        if (getIntent().hasExtra(IntentConstants.RESPONSE_ID)) {
+            currentResponseId = getIntent().getIntExtra(IntentConstants.RESPONSE_ID, 0);
         }
-        if(!getIntent().hasExtra(IntentConstants.RESPONSE_ID)){
-        currentResponseId = (int) dbAdapter.getMaxID();}
+        if (!getIntent().hasExtra(IntentConstants.RESPONSE_ID)) {
+            currentResponseId = (int) dbAdapter.getMaxID();
+        }
+
+        if (surveys.getQuestions().size() > 0) {
+            questionsList = surveys.getQuestions();
+            questionCount = questionsList.size();
+        }
+
+        categoryAndQuestionCount = questionCount + categoryCount;
+
+        if (surveys.getCategories().size() > 0) {
+            categoriesList = surveys.getCategories();
+            categoryCount = categoriesList.size();
+        }
+
+//
+//        if (surveys.getCategories().size() > 0) {
+//
+//            for (int i = 0; i < surveys.getCategories().size(); i++) {
+//                Categories currentCategory = categoriesList.get(i);
+//                counterButton.setText("1 out of " + categoryCount);
+//                buildCategoryLayout(currentCategory);
+//            }
+//
+//
+//        }
 
 
-        final Questions currentQuestion = questionsList.get(0);
+        if (surveys.getQuestions().size() > 0) {
+
+            final Questions currentQuestion = questionsList.get(0);
+            counterButton.setText("1 out of " + questionsList.size());
+            buildLayout(currentQuestion);
+            checkForAnswer(currentQuestion, currentResponseId);
+            boolean nextLayoutPresent = false;
+            nextQuestion = (Button) findViewById(R.id.next_queation);
+            previousQuestion = (Button) findViewById(R.id.previous_question);
+            markAsComplete = (Button) findViewById(R.id.mark_as_complete);
+            previousQuestion.setText("BACK");
+            markAsComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
-        counterButton.setText("1 out of " + questionsList.size());
-        buildLayout(currentQuestion);
-        checkForAnswer(currentQuestion, currentResponseId);
-        boolean nextLayoutPresent = false;
-
-
-        nextQuestion = (Button) findViewById(R.id.next_queation);
-        previousQuestion = (Button) findViewById(R.id.previous_question);
-        markAsComplete = (Button) findViewById(R.id.mark_as_complete);
-        previousQuestion.setText("BACK");
-
-        markAsComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
-                Intent intent= new Intent(NewResponseActivity.this,SurveyDetailsActivity.class);
-                intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
-                startActivity(intent);
-            }
-        });
-
-
-        nextQuestion.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-//txtName is a reference of an EditText Field
-                imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
-
-
-
-
-                if (questionsList.get(questionCounter).getMandatory() == 1) {
-
-                    if (answer.getText().toString().equals("")) {
-                        final Dialog dialog = new Dialog(NewResponseActivity.this);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
-                        dialog.setContentView(R.layout.mandatory_question_dialog);
-                        dialog.show();
-                        Button button = (Button) dialog.findViewById(R.id.okay);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog.dismiss();
-                            }
-                        });
-                    }
+                    if (!universalQuestion.getType().equals("PhotoQuestion"))
+                        addAnswer(universalQuestion);
+                    Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
+                    intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
+                    startActivity(intent);
+                    finish();
                 }
-                if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() != 1)) {
-                    previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                    previousQuestion.setTextColor(getResources().getColor(R.color.white));
-                    previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+            });
 
-                    nestedQuestions.clear();
-                    idList.clear();
-                    fieldContainer.removeAllViews();
-                    addAnswer(universalQuestion);
-                    questionCounter++;
-                    counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                    Questions currentQuestion = questionsList.get(questionCounter);
-                    buildLayout(currentQuestion);
+            nextQuestion.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
 
-                    checkForAnswer(currentQuestion, currentResponseId);
-                    if (questionCounter + 1 == questionCount) {
-
-                        markAsComplete.setVisibility(View.VISIBLE);
-
-                        nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                        nextQuestion.setText("NEXT");
-                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-
-                        nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                }
-                if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() == 1) && (!answer.getText().toString().equals(""))) {
-                    previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                    previousQuestion.setTextColor(getResources().getColor(R.color.white));
 
-                    previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+                    if (questionsList.get(questionCounter).getMandatory() == 1) {
 
-                    nestedQuestions.clear();
-                    idList.clear();
-                    fieldContainer.removeAllViews();
+                        if (answer.getText().toString().equals("")) {
+                            final Dialog dialog = new Dialog(NewResponseActivity.this);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+                            dialog.setContentView(R.layout.mandatory_question_dialog);
+                            dialog.show();
+                            Button button = (Button) dialog.findViewById(R.id.okay);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    }
+                    if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() != 1)) {
+                        previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                        previousQuestion.setTextColor(getResources().getColor(R.color.white));
+                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+
+                        nestedQuestions.clear();
+                        idList.clear();
+                        fieldContainer.removeAllViews();
+
+                        if (!universalQuestion.getType().equals("PhotoQuestion"))
+                            addAnswer(universalQuestion);
+                        questionCounter++;
+                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
+                        Questions currentQuestion = questionsList.get(questionCounter);
+                        buildLayout(currentQuestion);
+
+                        checkForAnswer(currentQuestion, currentResponseId);
+                        if (questionCounter + 1 == questionCount) {
+
+                            markAsComplete.setVisibility(View.VISIBLE);
+
+                            nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                            nextQuestion.setText("NEXT");
+                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+
+                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                        }
+
+                    }
+                    if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() == 1) && (!answer.getText().toString().equals(""))) {
+                        previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                        previousQuestion.setTextColor(getResources().getColor(R.color.white));
+
+                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+
+                        nestedQuestions.clear();
+                        idList.clear();
+                        fieldContainer.removeAllViews();
 
 
-                    addAnswer(universalQuestion);
-                    questionCounter++;
-                    counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                    Questions currentQuestion = questionsList.get(questionCounter);
-                    buildLayout(currentQuestion);
+                        if (!universalQuestion.getType().equals("PhotoQuestion"))
+                            addAnswer(universalQuestion);
+                        questionCounter++;
+                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
+                        Questions currentQuestion = questionsList.get(questionCounter);
+                        buildLayout(currentQuestion);
 
-                    checkForAnswer(currentQuestion, currentResponseId);
-                    if (questionCounter + 1 == questionCount) {
-                        markAsComplete.setVisibility(View.VISIBLE);
+                        checkForAnswer(currentQuestion, currentResponseId);
+                        if (questionCounter + 1 == questionCount) {
+                            markAsComplete.setVisibility(View.VISIBLE);
 
 
-                        nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                        nextQuestion.setText("NEXT");
-                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-                        nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                            nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                            nextQuestion.setText("NEXT");
+                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                        }
+
                     }
 
+                    if (questionCounter != 0) {
+
+                        actionBar.setDisplayHomeAsUpEnabled(false);
+                        actionBar.setDisplayShowTitleEnabled(true);
+                        actionBar.setDisplayShowHomeEnabled(false);
+                        actionBar.setDisplayUseLogoEnabled(false);
+
+
+                    }
+
+
                 }
+            });
 
-                if (questionCounter != 0) {
+            previousQuestion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                    actionBar.setDisplayHomeAsUpEnabled(false);
-                    actionBar.setDisplayShowTitleEnabled(true);
-                    actionBar.setDisplayShowHomeEnabled(false);
-                    actionBar.setDisplayUseLogoEnabled(false);
+                    markAsComplete.setVisibility(View.GONE);
 
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (questionCounter != 0) {
+                        nestedQuestions.clear();
+                        idList.clear();
+                        fieldContainer.removeAllViews();
 
-                }
-
-
-            }
-        });
-
-        previousQuestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                markAsComplete.setVisibility(View.GONE);
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-//txtName is a reference of an EditText Field
-                imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
-
-                if (questionCounter != 0) {
-                    nestedQuestions.clear();
-                    idList.clear();
-                    fieldContainer.removeAllViews();
-
-                    addAnswer(universalQuestion);
+                        if (!universalQuestion.getType().equals("PhotoQuestion"))
+                            addAnswer(universalQuestion);
 
 
-                    questionCounter--;
-                    counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                    Questions currentQuestion = questionsList.get(questionCounter);
+                        questionCounter--;
+                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
+                        Questions currentQuestion = questionsList.get(questionCounter);
 
 
-                    buildLayout(currentQuestion);
-                    checkForAnswer(currentQuestion, currentResponseId);
+                        buildLayout(currentQuestion);
+                        checkForAnswer(currentQuestion, currentResponseId);
+                        if (questionCounter == 0) {
+                            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable, 0, 0, 0);
+                            previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                            previousQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                        }
+
+
+                        if (questionCounter + 1 != questionCount) {
+
+                            nextQuestion.setTextColor(getResources().getColor(R.color.white));
+                            nextQuestion.setText("NEXT");
+                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next, 0);
+                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                        }
+
+
+                    }
                     if (questionCounter == 0) {
-                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable, 0, 0, 0);
-                        previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                        previousQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+
+                        actionBar.setDisplayHomeAsUpEnabled(true);
+                        actionBar.setDisplayShowTitleEnabled(true);
+                        actionBar.setDisplayShowHomeEnabled(true);
+                        actionBar.setDisplayUseLogoEnabled(true);
+
+
                     }
-
-
-                    if (questionCounter + 1 != questionCount) {
-
-                        nextQuestion.setTextColor(getResources().getColor(R.color.white));
-                        nextQuestion.setText("NEXT");
-                        nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next, 0);
-                        nextQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                    }
-
-
                 }
-                if (questionCounter == 0) {
+            });
+        }
 
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setDisplayShowTitleEnabled(true);
-                    actionBar.setDisplayShowHomeEnabled(true);
-                    actionBar.setDisplayUseLogoEnabled(true);
+    }
 
 
-                }
-            }
-        });
-
+    public void buildCategoryLayout(Categories categories) {
+        setCategoryTitle(categories);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -317,6 +363,13 @@ public class NewResponseActivity extends Activity {
         }
         if (id == R.id.save) {
 
+
+            return true;
+
+        }
+        if (id == android.R.id.home) {
+
+            finish();
 
             return true;
 
@@ -344,7 +397,7 @@ public class NewResponseActivity extends Activity {
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            InputMethodManager imm = (InputMethodManager)getSystemService(
+            InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
 
@@ -602,7 +655,7 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(nestedContainer);
 
 
-            dateText = (TextView) findViewById(R.id.answer_text);
+            dateText = (TextView) findViewById(R.id.answer_text_date);
             dateText.setText("dd.yy.mm");
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -714,25 +767,39 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
+
             nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-            ratingBar.setNumStars(5);
+
 
             checkHint();
         }
 
         //for image question
         if (ques.getType().equals("PhotoQuestion")) {
-            fieldContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
+            LinearLayout nestedContainer = new LinearLayout(this);
+            nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            TextView questionTextSingleLine = new TextView(this);
+            questionTextSingleLine.setTextSize(20);
+            questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
+            questionTextSingleLine.setPadding(0, 0, 0, 16);
+            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+            if (ques.getParentId() > 0)
+                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+            nestedContainer.addView(questionTextSingleLine);
+
+
+            nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
+            fieldContainer.addView(nestedContainer);
 
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text);
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
-            imageView = (ImageView) findViewById(R.id.image);
+            imageViewPhotoQuestion = (ImageView) findViewById(R.id.image);
             imageContainer = (RelativeLayout) findViewById(R.id.image_container);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -747,6 +814,8 @@ public class NewResponseActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     imageContainer.setVisibility(View.GONE);
+                    dbAdapter.deleteImagePath(currentResponseId, ques.getId());
+
                 }
             });
         }
@@ -796,9 +865,50 @@ public class NewResponseActivity extends Activity {
             photo = (Bitmap) data.getExtras().get("data");
 
             deleteImageRelativeLayout.setVisibility(View.VISIBLE);
-            imageView.setImageBitmap(photo);
+            imageViewPhotoQuestion.setImageBitmap(photo);
+            SaveImage(photo);
+            addAnswer(universalQuestion);
+
         }
     }
+
+    private void SaveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void loadImageFromStorage(String path, String fileName) {
+
+        try {
+            File f = new File(path, fileName);
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+
+            imageViewPhotoQuestion.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void setCategoryTitle(Options options) {
 
@@ -818,12 +928,36 @@ public class NewResponseActivity extends Activity {
             idList.add(categories.getId());
             fieldContainer.addView(nestedContainer);
 
-            for (int j = 0; j < categories.getQuestionsList().size(); j++) {
+            for (int j = 0; j < 1; j++) {
 
-                buildLayout(categories.getQuestionsList().get(j));
+                buildLayout(categories.getQuestionsList().get(0));
             }
 
         }
+
+    }
+
+    public void setCategoryTitle(Categories categories) {
+
+
+        LinearLayout nestedContainer = new LinearLayout(this);
+        nestedContainer.setOrientation(LinearLayout.VERTICAL);
+        TextView questionTextSingleLine = new TextView(this);
+        questionTextSingleLine.setTextSize(20);
+        questionTextSingleLine.setTextColor(Color.BLACK);
+        questionTextSingleLine.setPadding(8, 12, 8, 20);
+        questionTextSingleLine.setText("" + categories.getContent());
+        nestedContainer.addView(questionTextSingleLine);
+        nestedContainer.setId(categories.getId());
+        nestedContainer.setTag(categories);
+        idList.add(categories.getId());
+        fieldContainer.addView(nestedContainer);
+
+        for (int j = 0; j < categories.getQuestionsList().size(); j++) {
+
+            buildLayout(categories.getQuestionsList().get(j));
+        }
+
 
     }
 
@@ -931,14 +1065,20 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestionId(questions.getId());
-            answers.setContent(String.valueOf(ratingBar.getNumStars()));
+            answers.setContent(String.valueOf(ratingBar.getRating()));
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
 
 
-        if (questions.getType().equals("MultiChoiceQuestion")) {
+        if (questions.getType().equals("PhotoQuestion")) {
 
+            Answers answers = new Answers();
+            answers.setResponseId((int) dbAdapter.getMaxID());
+            answers.setQuestionId(questions.getId());
+            answers.setContent(fname);
+            long x = dbAdapter.insertDataAnswersTable(answers);
+            Toast.makeText(NewResponseActivity.this, x + "", Toast.LENGTH_LONG).show();
         }
 
 
@@ -964,7 +1104,26 @@ public class NewResponseActivity extends Activity {
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
         if (qu.getType().equals("RatingQuestion")) {
-            ratingBar.setNumStars(Integer.parseInt(dbAdapter.getAnswer(responseId, qu.getId())));
+
+
+            dbAdapter.getAnswer(responseId, qu.getId());
+            //Integer.parseInt(dbAdapter.getAnswer(responseId, qu.getId()));
+            try {
+                float f = Float.parseFloat((dbAdapter.getAnswer(responseId, qu.getId())));
+                ratingBar.setRating(f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        if (qu.getType().equals("PhotoQuestion")) {
+            //Toast.makeText(NewResponseActivity.this,"this is a photoquestion",Toast.LENGTH_LONG).show();
+
+            if (!dbAdapter.getAnswer(responseId, qu.getId()).equals("")) {
+                deleteImageRelativeLayout.setVisibility(View.VISIBLE);
+                loadImageFromStorage(Environment.getExternalStorageDirectory().toString() + "/saved_images", dbAdapter.getAnswer(responseId, qu.getId()));
+            }
         }
 
 
@@ -1058,7 +1217,7 @@ public class NewResponseActivity extends Activity {
                 for (int j = 0; j < qu.getOptions().size(); j++) {
                     if (qu.getOptions().get(j).getId() == list2.get(i)) {
 
-                       // Toast.makeText(NewResponseActivity.this, list2.get(i) + "idid", Toast.LENGTH_LONG).show();
+                        // Toast.makeText(NewResponseActivity.this, list2.get(i) + "idid", Toast.LENGTH_LONG).show();
                         spinner.setSelection(j);
 
                     }

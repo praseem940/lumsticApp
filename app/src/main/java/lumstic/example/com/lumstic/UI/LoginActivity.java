@@ -60,6 +60,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         lumsticApp = (LumsticApp) getApplication();
 
+
         try{
         if(!lumsticApp.getPreferences().getAccessToken().equals(""))
         {
@@ -76,7 +77,7 @@ public class LoginActivity extends Activity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
-        lumsticApp.getPreferences().setSurveyData("");
+
 
         emailEditText = (EditText) findViewById(R.id.email_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
@@ -85,6 +86,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 email = emailEditText.getText().toString();
                 password = passwordEditText.getText().toString();
                 progressDialog = new ProgressDialog(LoginActivity.this);
@@ -93,6 +95,7 @@ public class LoginActivity extends Activity {
                 progressDialog.setMessage("Logging in");
                 progressDialog.show();
                 if (!TextUtils.isEmpty(email) && CommonUtil.validateEmail(email)) {
+                    lumsticApp.getPreferences().setSurveyData("");
                     new Login().execute();
 
 

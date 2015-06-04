@@ -1,5 +1,6 @@
 package lumstic.example.com.lumstic.UI;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class CompleteResponsesActivity extends Activity {
     List<CompleteResponses> completeResponseses;
     Questions identifierQuestion;
     int identifierQuestionId=0;
+    ActionBar actionBar;
     List<Integer> completeResponsesId;
 
     List<String> identifierQuestionAnswers;
@@ -41,7 +43,12 @@ public class CompleteResponsesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_responses);
-        getActionBar().setTitle("Completed Responses");
+        actionBar= getActionBar();
+        actionBar.setTitle("Completed Responses");
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        actionBar.setDisplayShowTitleEnabled(true);
         dbAdapter= new DBAdapter(CompleteResponsesActivity.this);
         completeResponseses = new ArrayList<CompleteResponses>();
         completeResponsesId= new ArrayList<Integer>();
@@ -89,6 +96,10 @@ public class CompleteResponsesActivity extends Activity {
         }
 
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == android.R.id.home) {
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(menuItem);

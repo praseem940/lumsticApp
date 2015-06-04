@@ -145,6 +145,13 @@ public class DBAdapter {
     }
 
 
+    public int deleteImagePath(int responseId, int questionId){
+        int id = 0;
+        String[] selectionArgs={String.valueOf(responseId),String.valueOf(questionId)};
+        int id1= sqLiteDatabase.delete(DBhelper.TABLE_answers, DBhelper.RESPONSE_ID + " =? AND " + DBhelper.QUESTION_ID + " =?",selectionArgs);
+        return id1;
+    }
+
 
     public int UpldateCompleteResponse(int responseId, int surveyId)
     {

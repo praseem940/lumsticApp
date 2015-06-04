@@ -75,17 +75,16 @@ public class ActiveSurveyActivity extends Activity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
             return true;
         }
         if (id == R.id.action_logout) {
+            lumsticApp.getPreferences().setAccessToken("");
             Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
             startActivity(i);
             return true;
         }
-        if (id == R.id.action_help) {
 
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,21 +115,27 @@ public class ActiveSurveyActivity extends Activity {
         protected void onPostExecute(String s) {
             jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
             surveysList = new ArrayList<Surveys>();
-            //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
             try{
 
-                    surveysList = jsonHelper.tryParsing(s);
-                    lumsticApp.getPreferences().setSurveyData(s);
-                //lumsticApp.showToast(lumsticApp.getPreferences().getSurveyData());
+                lumsticApp.getPreferences().setSurveyData(s);
+
+                surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
+                  //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+
 
             }
             catch(Exception e){
                 e.printStackTrace();
             }
             listView = (ListView) findViewById(R.id.active_survey_list);
-            dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
-            progressDialog.dismiss();
-
+            if(surveysList!=null) {
+                dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
+                progressDialog.dismiss();
+            }
+            if(surveysList==null){
+                progressDialog.dismiss();
+                Toast.makeText(ActiveSurveyActivity.this,"Please check your wifi or network settings",Toast.LENGTH_SHORT).show();
+            }
 
 try {
     for (int i = 0; i < surveysList.size(); i++) {

@@ -9,7 +9,7 @@ android:gravity="center"
     android:layout_margin="14dp"
     android:background="@drawable/edittext_modified_state"
 android:textSize="18sp"
-android:id="@+id/answer_text"
+android:id="@+id/answer_text_date"
 xmlns:android="http://schemas.android.com/apk/res/android" />
 
 

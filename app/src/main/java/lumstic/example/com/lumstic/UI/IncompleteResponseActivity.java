@@ -1,10 +1,12 @@
 package lumstic.example.com.lumstic.UI;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +23,14 @@ import lumstic.example.com.lumstic.Utils.IntentConstants;
 public class IncompleteResponseActivity extends Activity {
 
 
-
     ListView listView;
     DBAdapter dbAdapter;
     Surveys surveys;
-    int incompleteResponseCount=0;
+    int incompleteResponseCount = 0;
     List<IncompleteResponses> incompleteResponseses;
     Questions identifierQuestion;
-    int identifierQuestionId=0;
+    int identifierQuestionId = 0;
+    ActionBar actionBar;
     List<Integer> incompleteResponsesId;
 
     List<String> identifierQuestionAnswers;
@@ -41,27 +43,31 @@ public class IncompleteResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomplete_response);
-        getActionBar().setTitle("Incompleted Responses");
+        actionBar = getActionBar();
+        actionBar.setTitle("Incompleted Responses");
 
-        dbAdapter= new DBAdapter(IncompleteResponseActivity.this);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        actionBar.setDisplayShowTitleEnabled(true);
+        dbAdapter = new DBAdapter(IncompleteResponseActivity.this);
         incompleteResponseses = new ArrayList<IncompleteResponses>();
-        incompleteResponsesId= new ArrayList<Integer>();
-        identifierQuestionAnswers= new ArrayList<String>();
+        incompleteResponsesId = new ArrayList<Integer>();
+        identifierQuestionAnswers = new ArrayList<String>();
 
 
         surveys = new Surveys();
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
-        incompleteResponseCount=dbAdapter.getIncompleteResponse(surveys.getId());
-        incompleteResponsesId=dbAdapter.getIncompleteResponsesIds(surveys.getId());
+        incompleteResponseCount = dbAdapter.getIncompleteResponse(surveys.getId());
+        incompleteResponsesId = dbAdapter.getIncompleteResponsesIds(surveys.getId());
 
-        for(int j=0;j<surveys.getQuestions().size();j++){
-            if(surveys.getQuestions().get(j).getIdentifier()==1){
-                identifierQuestion=surveys.getQuestions().get(j);
-                identifierQuestionId=surveys.getQuestions().get(j).getId();
+        for (int j = 0; j < surveys.getQuestions().size(); j++) {
+            if (surveys.getQuestions().get(j).getIdentifier() == 1) {
+                identifierQuestion = surveys.getQuestions().get(j);
+                identifierQuestionId = surveys.getQuestions().get(j).getId();
             }
         }
 
-        for(int i=0;i<incompleteResponseCount;i++){
+        for (int i = 0; i < incompleteResponseCount; i++) {
 
             identifierQuestionAnswers.add(dbAdapter.getAnswer(incompleteResponsesId.get(i), identifierQuestionId));
 
@@ -69,23 +75,27 @@ public class IncompleteResponseActivity extends Activity {
         }
 
 
-
         listView = (ListView) findViewById(R.id.listview);
 
-        incompleteResponsesAdapter = new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses,surveys);
+        incompleteResponsesAdapter = new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses, surveys);
         listView.setAdapter(incompleteResponsesAdapter);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.incomplete_response, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == android.R.id.home) {
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
