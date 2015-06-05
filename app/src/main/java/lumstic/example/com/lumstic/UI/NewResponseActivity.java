@@ -84,6 +84,7 @@ public class NewResponseActivity extends Activity {
     String fname = "";
     Questions qu;
     int categoryAndQuestionCount = 0;
+    int totalQuestionCount = 0;
 
 
     int questionCount = 0;
@@ -100,6 +101,12 @@ public class NewResponseActivity extends Activity {
     int questionCounter = 0;
     List<Integer> idList;
     RatingBar ratingBar;
+    int questionOrderCounter = 0;
+    List<Object> objects;
+
+    ArrayList<Integer> types = null;
+
+    ArrayList<String> stringTypes = null;
 
     Button nextQuestion, previousQuestion;
 
@@ -121,6 +128,7 @@ public class NewResponseActivity extends Activity {
         dbAdapter = new DBAdapter(NewResponseActivity.this);
         questionsList = new ArrayList<Questions>();
         categoriesList = new ArrayList<Categories>();
+        objects = new ArrayList<Object>();
 
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
 
@@ -144,205 +152,104 @@ public class NewResponseActivity extends Activity {
             categoryCount = categoriesList.size();
         }
 
-//
-//        if (surveys.getCategories().size() > 0) {
-//
-//            for (int i = 0; i < surveys.getCategories().size(); i++) {
-//                Categories currentCategory = categoriesList.get(i);
-//                counterButton.setText("1 out of " + categoryCount);
-//                buildCategoryLayout(currentCategory);
-//            }
-//
-//
-//        }
+
+        totalQuestionCount = categoryCount + questionCount;
 
 
-        if (surveys.getQuestions().size() > 0) {
-
-            final Questions currentQuestion = questionsList.get(0);
-            counterButton.setText("1 out of " + questionsList.size());
-            buildLayout(currentQuestion);
-            checkForAnswer(currentQuestion, currentResponseId);
-            boolean nextLayoutPresent = false;
-            nextQuestion = (Button) findViewById(R.id.next_queation);
-            previousQuestion = (Button) findViewById(R.id.previous_question);
-            markAsComplete = (Button) findViewById(R.id.mark_as_complete);
-            previousQuestion.setText("BACK");
-            markAsComplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        boolean questionPresent = false;
+        stringTypes = new ArrayList<String>();
+        types = new ArrayList<Integer>();
 
 
-                    if (!universalQuestion.getType().equals("PhotoQuestion"))
-                        addAnswer(universalQuestion);
-                    Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
-                    intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
-                    startActivity(intent);
-                    finish();
+        questionOrderCounter = 0;
+        int i = 0;
+        for (int count = 0; count < 100; count++) {
+            for (i = 0; i < questionsList.size(); i++) {
+                if (questionsList.get(i).getOrderNumber() == count) {
+                    types.add(count);
+                    stringTypes.add("question");
                 }
-            });
-
-            nextQuestion.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(
-                                Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
 
-                    if (questionsList.get(questionCounter).getMandatory() == 1) {
-
-                        if (answer.getText().toString().equals("")) {
-                            final Dialog dialog = new Dialog(NewResponseActivity.this);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
-                            dialog.setContentView(R.layout.mandatory_question_dialog);
-                            dialog.show();
-                            Button button = (Button) dialog.findViewById(R.id.okay);
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.dismiss();
-                                }
-                            });
-                        }
-                    }
-                    if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() != 1)) {
-                        previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                        previousQuestion.setTextColor(getResources().getColor(R.color.white));
-                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
-
-                        nestedQuestions.clear();
-                        idList.clear();
-                        fieldContainer.removeAllViews();
-
-                        if (!universalQuestion.getType().equals("PhotoQuestion"))
-                            addAnswer(universalQuestion);
-                        questionCounter++;
-                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                        Questions currentQuestion = questionsList.get(questionCounter);
-                        buildLayout(currentQuestion);
-
-                        checkForAnswer(currentQuestion, currentResponseId);
-                        if (questionCounter + 1 == questionCount) {
-
-                            markAsComplete.setVisibility(View.VISIBLE);
-
-                            nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                            nextQuestion.setText("NEXT");
-                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-
-                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-                        }
-
-                    }
-                    if ((questionCounter < questionCount - 1) && (questionsList.get(questionCounter).getMandatory() == 1) && (!answer.getText().toString().equals(""))) {
-                        previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                        previousQuestion.setTextColor(getResources().getColor(R.color.white));
-
-                        previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
-
-                        nestedQuestions.clear();
-                        idList.clear();
-                        fieldContainer.removeAllViews();
-
-
-                        if (!universalQuestion.getType().equals("PhotoQuestion"))
-                            addAnswer(universalQuestion);
-                        questionCounter++;
-                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                        Questions currentQuestion = questionsList.get(questionCounter);
-                        buildLayout(currentQuestion);
-
-                        checkForAnswer(currentQuestion, currentResponseId);
-                        if (questionCounter + 1 == questionCount) {
-                            markAsComplete.setVisibility(View.VISIBLE);
-
-
-                            nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                            nextQuestion.setText("NEXT");
-                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-                        }
-
-                    }
-
-                    if (questionCounter != 0) {
-
-                        actionBar.setDisplayHomeAsUpEnabled(false);
-                        actionBar.setDisplayShowTitleEnabled(true);
-                        actionBar.setDisplayShowHomeEnabled(false);
-                        actionBar.setDisplayUseLogoEnabled(false);
-
-
-                    }
-
-
+            }
+            for (i = 0; i < categoriesList.size(); i++) {
+                if (categoriesList.get(i).getOrderNumber() == count) {
+                    types.add(count);
+                    stringTypes.add("category");
                 }
-            });
-
-            previousQuestion.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    markAsComplete.setVisibility(View.GONE);
-
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(
-                                Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (questionCounter != 0) {
-                        nestedQuestions.clear();
-                        idList.clear();
-                        fieldContainer.removeAllViews();
-
-                        if (!universalQuestion.getType().equals("PhotoQuestion"))
-                            addAnswer(universalQuestion);
 
 
-                        questionCounter--;
-                        counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-                        Questions currentQuestion = questionsList.get(questionCounter);
-
-
-                        buildLayout(currentQuestion);
-                        checkForAnswer(currentQuestion, currentResponseId);
-                        if (questionCounter == 0) {
-                            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable, 0, 0, 0);
-                            previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                            previousQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-                        }
-
-
-                        if (questionCounter + 1 != questionCount) {
-
-                            nextQuestion.setTextColor(getResources().getColor(R.color.white));
-                            nextQuestion.setText("NEXT");
-                            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next, 0);
-                            nextQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-                        }
-
-
-                    }
-                    if (questionCounter == 0) {
-
-                        actionBar.setDisplayHomeAsUpEnabled(true);
-                        actionBar.setDisplayShowTitleEnabled(true);
-                        actionBar.setDisplayShowHomeEnabled(true);
-                        actionBar.setDisplayUseLogoEnabled(true);
-
-
-                    }
-                }
-            });
+            }
         }
+
+
+        int size = types.size();
+
+        for (int j = 0; j < questionsList.size(); j++) {
+            if (questionsList.get(j).getOrderNumber() == types.get(0)) {
+                Questions cq = questionsList.get(j);
+//                questionCounter++;
+                counterButton.setText("1 out of " + totalQuestionCount);
+                buildLayout(cq);
+                checkForAnswer(cq, currentResponseId);
+                break;
+            }
+        }
+        for (int j = 0; j < categoriesList.size(); j++) {
+            if (categoriesList.get(j).getOrderNumber() == types.get(0)) {
+
+                counterButton.setText("1 out of " + totalQuestionCount);
+//                questionCounter++;
+                Categories currentCategory = categoriesList.get(j);
+                buildCategoryLayout(currentCategory);
+
+
+                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                    checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+
+                }
+                break;
+            }
+        }
+
+        nextQuestion = (Button) findViewById(R.id.next_queation);
+        previousQuestion = (Button) findViewById(R.id.previous_question);
+        markAsComplete = (Button) findViewById(R.id.mark_as_complete);
+        previousQuestion.setText("BACK");
+
+
+//        markAsComplete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//
+//                if (!universalQuestion.getType().equals("PhotoQuestion"))
+//                    addAnswer(universalQuestion);
+//                Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
+//                intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+
+        nextQuestion.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                onNextClick();
+
+
+            }
+        });
+
+        previousQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onBackClicked();
+            }
+        });
+
 
     }
 
@@ -795,7 +702,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
             fieldContainer.addView(nestedContainer);
 
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text);
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text_image);
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
@@ -856,6 +763,205 @@ public class NewResponseActivity extends Activity {
 //                }
 //            });
 //        }
+    }
+
+
+    public void onNextClick() {
+
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+//        if (questionsList.get(questionCounter).getMandatory() == 1) {
+//
+//            if (answer.getText().toString().equals("")) {
+//                final Dialog dialog = new Dialog(NewResponseActivity.this);
+//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+//                dialog.setContentView(R.layout.mandatory_question_dialog);
+//                dialog.show();
+//                Button button = (Button) dialog.findViewById(R.id.okay);
+//                button.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//            }
+//        }
+
+
+        if ((questionCounter < totalQuestionCount - 1) && (questionsList.get(questionCounter).getMandatory() != 1)) {
+            previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+            previousQuestion.setTextColor(getResources().getColor(R.color.white));
+            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+            nestedQuestions.clear();
+            nestedQuestions.clear();
+            idList.clear();
+            fieldContainer.removeAllViews();
+
+            if (!universalQuestion.getType().equals("PhotoQuestion"))
+                addAnswer(universalQuestion);
+            questionCounter++;
+            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+
+
+
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                    Questions cq = questionsList.get(j);
+                     buildLayout(cq);
+                    checkForAnswer(cq, currentResponseId);
+                    break;
+                }
+            }
+            for (int j = 0; j < categoriesList.size(); j++) {
+                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
+
+
+                    Categories currentCategory = categoriesList.get(j);
+                    buildCategoryLayout(currentCategory);
+                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+
+                    }
+                    break;
+                }
+            }
+            if (questionCounter + 1 == totalQuestionCount) {
+
+                markAsComplete.setVisibility(View.VISIBLE);
+
+                nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                nextQuestion.setText("NEXT");
+                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+
+                nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+            }
+
+        }
+        if ((questionCounter < totalQuestionCount - 1) && (questionsList.get(questionCounter).getMandatory() == 1) && (!answer.getText().toString().equals(""))) {
+            previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+            previousQuestion.setTextColor(getResources().getColor(R.color.white));
+
+            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+
+            nestedQuestions.clear();
+            idList.clear();
+            fieldContainer.removeAllViews();
+
+
+            if (!universalQuestion.getType().equals("PhotoQuestion"))
+                addAnswer(universalQuestion);
+            questionCounter++;
+            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+
+
+
+
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                    Questions cq = questionsList.get(j);
+                    buildLayout(cq);
+                    checkForAnswer(cq, currentResponseId);
+                    break;
+                }
+            }
+            for (int j = 0; j < categoriesList.size(); j++) {
+                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
+
+
+                    Categories currentCategory = categoriesList.get(j);
+                    buildCategoryLayout(currentCategory);
+                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+
+                    }
+                    break;
+                }
+            }
+
+
+            if (questionCounter + 1 == totalQuestionCount) {
+                markAsComplete.setVisibility(View.VISIBLE);
+
+
+                nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                nextQuestion.setText("NEXT");
+                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+                nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+            }
+
+        }
+
+        if (questionCounter != 0) {
+
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+
+
+        }
+    }
+
+
+    public void onBackClicked() {
+        markAsComplete.setVisibility(View.GONE);
+
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (questionCounter != 0) {
+            nestedQuestions.clear();
+            idList.clear();
+            fieldContainer.removeAllViews();
+
+            if (!universalQuestion.getType().equals("PhotoQuestion"))
+                addAnswer(universalQuestion);
+
+
+            questionCounter--;
+            counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
+            Questions currentQuestion = questionsList.get(questionCounter);
+
+
+            buildLayout(currentQuestion);
+            checkForAnswer(currentQuestion, currentResponseId);
+            if (questionCounter == 0) {
+                previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable, 0, 0, 0);
+                previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                previousQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+            }
+
+
+            if (questionCounter + 1 != totalQuestionCount) {
+
+                nextQuestion.setTextColor(getResources().getColor(R.color.white));
+                nextQuestion.setText("NEXT");
+                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next, 0);
+                nextQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+            }
+
+
+        }
+        if (questionCounter == 0) {
+
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayUseLogoEnabled(true);
+
+
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1266,15 +1372,15 @@ public class NewResponseActivity extends Activity {
         }
     }
 
-    class mDateSetListener implements DatePickerDialog.OnDateSetListener {
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            int mYear = year;
-            int mMonth = monthOfYear;
-            int mDay = dayOfMonth;
-            dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
-        }
+class mDateSetListener implements DatePickerDialog.OnDateSetListener {
+    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                          int dayOfMonth) {
+        int mYear = year;
+        int mMonth = monthOfYear;
+        int mDay = dayOfMonth;
+        dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
     }
+}
 
 
 }
