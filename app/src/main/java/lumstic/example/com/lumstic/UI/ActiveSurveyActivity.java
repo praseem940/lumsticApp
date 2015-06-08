@@ -58,12 +58,12 @@ public class ActiveSurveyActivity extends Activity {
         lumsticApp = (LumsticApp) getApplication();
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
 
-            progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
-            progressDialog.setCancelable(false);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Fetching Surveys ");
-            progressDialog.show();
-            new FetchSurvey().execute();
+        progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Fetching Surveys ");
+        progressDialog.show();
+        new FetchSurvey().execute();
 
 
     }
@@ -115,44 +115,42 @@ public class ActiveSurveyActivity extends Activity {
         protected void onPostExecute(String s) {
             jsonHelper = new JsonHelper(ActiveSurveyActivity.this);
             surveysList = new ArrayList<Surveys>();
-            try{
+            try {
 
-                lumsticApp.getPreferences().setSurveyData(s);
+//                lumsticApp.getPreferences().setSurveyData(s);
 
-                surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
-                  //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+                //       surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
+                surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             listView = (ListView) findViewById(R.id.active_survey_list);
-            if(surveysList!=null) {
+            if (surveysList != null) {
                 dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
                 progressDialog.dismiss();
             }
-            if(surveysList==null){
+            if (surveysList == null) {
                 progressDialog.dismiss();
-                Toast.makeText(ActiveSurveyActivity.this,"Please check your wifi or network settings",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActiveSurveyActivity.this, "Please check your wifi or network settings", Toast.LENGTH_SHORT).show();
             }
 
-try {
-    for (int i = 0; i < surveysList.size(); i++) {
+            try {
+                for (int i = 0; i < surveysList.size(); i++) {
 
-        Surveys surveys = surveysList.get(i);
-        long value = dbAdapter.insertDataSurveysTable(surveys);
-        //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
-        if (surveys.getCategories().size() > 0)
-            addCategories(surveys);
-        if (surveys.getQuestions().size() > 0)
-            addQuestions(surveys);
+                    Surveys surveys = surveysList.get(i);
+                    long value = dbAdapter.insertDataSurveysTable(surveys);
+                    //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
+                    if (surveys.getCategories().size() > 0)
+                        addCategories(surveys);
+                    if (surveys.getQuestions().size() > 0)
+                        addQuestions(surveys);
 
-    }
-}
-catch (Exception e){
-    e.printStackTrace();
-}
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             listView.setAdapter(dashBoardAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -168,13 +166,12 @@ catch (Exception e){
     }
 
 
-
     public void addCategories(Surveys surveys) {
 
         for (int h = 0; h < surveys.getCategories().size(); h++) {
-            Categories categories= surveys.getCategories().get(h);
+            Categories categories = surveys.getCategories().get(h);
             long value1 = dbAdapter.insertDataCategoriesTable(categories);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
             if (categories.getQuestionsList().size() > 0)
                 addQuestionFromCategories(categories);
         }
@@ -185,18 +182,18 @@ catch (Exception e){
         for (int j = 0; j < surveys.getQuestions().size(); j++) {
             Questions question = surveys.getQuestions().get(j);
             long value1 = dbAdapter.insertDataQuestionTable(question);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
             if (question.getOptions().size() > 0)
                 addOptions(question);
         }
     }
 
 
-    public  void addQuestionFromCategories(Categories categories){
+    public void addQuestionFromCategories(Categories categories) {
         for (int m = 0; m < categories.getQuestionsList().size(); m++) {
             Questions question = categories.getQuestionsList().get(m);
             long value1 = dbAdapter.insertDataQuestionTable(question);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
 
             if (question.getOptions().size() > 0)
                 addOptions(question);
@@ -209,7 +206,7 @@ catch (Exception e){
         for (int k = 0; k < questions.getOptions().size(); k++) {
             Options options = questions.getOptions().get(k);
             long value1 = dbAdapter.insertDataOptionsTable(options);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
             if (options.getQuestions().size() > 0)
                 addNestedQuestions(options);
 
@@ -228,7 +225,7 @@ catch (Exception e){
         for (int d = 0; d < options.getCategories().size(); d++) {
             Categories categories = options.getCategories().get(d);
             long value1 = dbAdapter.insertDataCategoriesTable(categories);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
             if (categories.getQuestionsList().size() > 0)
                 addQuestionFromCategories(categories);
         }
@@ -241,7 +238,7 @@ catch (Exception e){
         for (int l = 0; l < options.getQuestions().size(); l++) {
             Questions question = options.getQuestions().get(l);
             long value1 = dbAdapter.insertDataQuestionTable(question);
-            Log.e("value",value1 + "");
+            Log.e("value", value1 + "");
             if (question.getOptions().size() > 0)
                 addOptions(question);
         }

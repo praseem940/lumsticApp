@@ -43,6 +43,8 @@
             <lumstic.example.com.lumstic.Views.RobotoRegularTextView
                 android:layout_width="wrap_content"
                 android:text="20"
+
+                android:id="@+id/incomplete_response_count"
                 android:textColor="@color/text_color_total"
                 android:textSize="16sp"
                 android:layout_height="wrap_content" />

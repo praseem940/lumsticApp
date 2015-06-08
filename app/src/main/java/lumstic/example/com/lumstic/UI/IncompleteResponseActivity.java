@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class IncompleteResponseActivity extends Activity {
     ListView listView;
     DBAdapter dbAdapter;
     Surveys surveys;
+    TextView responseCount;
     int incompleteResponseCount = 0;
     List<IncompleteResponses> incompleteResponseses;
     Questions identifierQuestion;
@@ -54,12 +56,15 @@ public class IncompleteResponseActivity extends Activity {
         incompleteResponsesId = new ArrayList<Integer>();
         identifierQuestionAnswers = new ArrayList<String>();
 
+        responseCount=(TextView)findViewById(R.id.incomplete_response_count);
+
 
         surveys = new Surveys();
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         incompleteResponseCount = dbAdapter.getIncompleteResponse(surveys.getId());
         incompleteResponsesId = dbAdapter.getIncompleteResponsesIds(surveys.getId());
 
+        responseCount.setText(incompleteResponseCount+"");
         for (int j = 0; j < surveys.getQuestions().size(); j++) {
             if (surveys.getQuestions().get(j).getIdentifier() == 1) {
                 identifierQuestion = surveys.getQuestions().get(j);

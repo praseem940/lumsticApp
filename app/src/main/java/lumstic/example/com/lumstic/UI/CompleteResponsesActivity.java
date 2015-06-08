@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import lumstic.example.com.lumstic.Utils.IntentConstants;
 public class CompleteResponsesActivity extends Activity {
     ListView listView;
     DBAdapter dbAdapter;
+    TextView responseCount;
     Surveys surveys;
     int completeResponseCount=0;
     List<CompleteResponses> completeResponseses;
@@ -32,10 +34,7 @@ public class CompleteResponsesActivity extends Activity {
     int identifierQuestionId=0;
     ActionBar actionBar;
     List<Integer> completeResponsesId;
-
     List<String> identifierQuestionAnswers;
-
-
     CompleteResponsesAdapter completeResponsesAdapter;
 
 
@@ -53,13 +52,12 @@ public class CompleteResponsesActivity extends Activity {
         completeResponseses = new ArrayList<CompleteResponses>();
         completeResponsesId= new ArrayList<Integer>();
         identifierQuestionAnswers= new ArrayList<String>();
-
-
+        responseCount= (TextView)findViewById(R.id.complete_response_count);
         surveys = new Surveys();
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         completeResponseCount=dbAdapter.getCompleteResponse(surveys.getId());
         completeResponsesId=dbAdapter.getCompleteResponsesIds(surveys.getId());
-
+        responseCount.setText(completeResponseCount+"");
         for(int j=0;j<surveys.getQuestions().size();j++){
             if(surveys.getQuestions().get(j).getIdentifier()==1){
                 identifierQuestion=surveys.getQuestions().get(j);
@@ -68,16 +66,11 @@ public class CompleteResponsesActivity extends Activity {
         }
 
         for(int i=0;i<completeResponseCount;i++){
-
             identifierQuestionAnswers.add(dbAdapter.getAnswer(completeResponsesId.get(i), identifierQuestionId));
-
             completeResponseses.add(i,new CompleteResponses(String.valueOf(completeResponsesId.get(i)),identifierQuestion.getContent()+" :"+"  "+identifierQuestionAnswers.get(i)));
         }
 
-
-
         listView = (ListView) findViewById(R.id.listview);
-
         completeResponsesAdapter = new CompleteResponsesAdapter(getApplicationContext(), completeResponseses,surveys);
         listView.setAdapter(completeResponsesAdapter);
 

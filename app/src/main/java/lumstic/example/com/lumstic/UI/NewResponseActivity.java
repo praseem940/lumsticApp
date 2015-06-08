@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,6 +76,7 @@ public class NewResponseActivity extends Activity {
     List<Questions> nestedQuestions;
     boolean nextLayoutCreated = false;
     EditText answer;
+    Categories currentCategory;
     Button counterButton, markAsComplete;
     String htmlStringWithMathSymbols = "&#60";
     ActionBar actionBar;
@@ -129,6 +131,7 @@ public class NewResponseActivity extends Activity {
         questionsList = new ArrayList<Questions>();
         categoriesList = new ArrayList<Categories>();
         objects = new ArrayList<Object>();
+        markAsComplete = new Button(this);
 
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
 
@@ -200,7 +203,11 @@ public class NewResponseActivity extends Activity {
 
                 counterButton.setText("1 out of " + totalQuestionCount);
 //                questionCounter++;
+
+
                 Categories currentCategory = categoriesList.get(j);
+
+
                 buildCategoryLayout(currentCategory);
 
 
@@ -214,24 +221,35 @@ public class NewResponseActivity extends Activity {
 
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
-        markAsComplete = (Button) findViewById(R.id.mark_as_complete);
         previousQuestion.setText("BACK");
 
+        if (questionCounter + 1 == totalQuestionCount) {
 
-//        markAsComplete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//                if (!universalQuestion.getType().equals("PhotoQuestion"))
-//                    addAnswer(universalQuestion);
-//                Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
-//                intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
+            createMarkAsComplete();
+            fieldContainer.addView(markAsComplete);
+
+
+            nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+            nextQuestion.setText("NEXT");
+            nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+
+            nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+        }
+
+        markAsComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (!universalQuestion.getType().equals("PhotoQuestion"))
+                    addAnswer(universalQuestion);
+                Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
+                intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -299,14 +317,26 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
+            answer.setId(ques.getId());
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+            answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    Answers answers = new Answers();
+                    answers.setQuestionId(ques.getId());
+                    answers.setResponseId(currentResponseId);
+                    answers.setContent(answer.getText().toString());
+                   long x = dbAdapter.insertDataAnswersTable(answers);
+                    Toast.makeText(NewResponseActivity.this,x+"answer is saved",Toast.LENGTH_LONG).show();
+                }
+            });
 
 
             try {
@@ -331,12 +361,22 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-
+            answer.setId(ques.getId());
+            answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    Answers answers = new Answers();
+                    answers.setQuestionId(ques.getId());
+                    answers.setResponseId(currentResponseId);
+                    answers.setContent(answer.getText().toString());
+                    long x = dbAdapter.insertDataAnswersTable(answers);
+                }
+            });
             try {
                 checkForAnswer(ques, currentResponseId);
             } catch (Exception e) {
@@ -361,7 +401,7 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -443,7 +483,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -525,12 +565,22 @@ public class NewResponseActivity extends Activity {
 
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-
+            answer.setId(ques.getId());
+            answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    Answers answers = new Answers();
+                    answers.setQuestionId(ques.getId());
+                    answers.setResponseId(currentResponseId);
+                    answers.setContent(answer.getText().toString());
+                    long x = dbAdapter.insertDataAnswersTable(answers);
+                }
+            });
             try {
                 checkForAnswer(ques, currentResponseId);
             } catch (Exception e) {
@@ -556,13 +606,14 @@ public class NewResponseActivity extends Activity {
 
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
 
 
             dateText = (TextView) findViewById(R.id.answer_text_date);
+            dateText.setId(ques.getId());
             dateText.setText("dd.yy.mm");
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -601,7 +652,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -640,12 +691,8 @@ public class NewResponseActivity extends Activity {
                             }
                         }
                         if (options.getQuestions().size() <= 0) {
-
                             for (int i = 0; i < ques.getOptions().size(); i++) {
-
                                 if (!ques.getOptions().get(i).getContent().equals(options.getContent())) {
-
-
                                     removeQuestionView(ques.getOptions().get(i));
                                     removeCategoryView(ques.getOptions().get(i));
                                 }
@@ -675,11 +722,12 @@ public class NewResponseActivity extends Activity {
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
 
-            nestedContainer.setId(ques.getId());
+
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+            ratingBar.setId(ques.getId());
 
 
             checkHint();
@@ -795,7 +843,7 @@ public class NewResponseActivity extends Activity {
 //        }
 
 
-        if ((questionCounter < totalQuestionCount - 1) && (questionsList.get(questionCounter).getMandatory() != 1)) {
+        if (questionCounter < totalQuestionCount - 1) {
             previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
             previousQuestion.setTextColor(getResources().getColor(R.color.white));
             previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
@@ -809,59 +857,37 @@ public class NewResponseActivity extends Activity {
             questionCounter++;
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
 
-
-
-            for (int j = 0; j < questionsList.size(); j++) {
-                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
-                    Questions cq = questionsList.get(j);
-                     buildLayout(cq);
-                    checkForAnswer(cq, currentResponseId);
-                    break;
-                }
-            }
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
 
 
-                    Categories currentCategory = categoriesList.get(j);
+                    currentCategory = categoriesList.get(j);
+
+
+                    if (currentCategory.getType().equals("MultiRecordCategory")) {
+                        Button addRecord = new Button(this);
+                        addRecord.setBackgroundResource(R.drawable.custom_button);
+                        addRecord.setText("+  Add Record");
+                        addRecord.setTextColor(getResources().getColor(R.color.white));
+                        fieldContainer.addView(addRecord);
+                        addRecord.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                buildCategoryLayout(currentCategory);
+                                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                                    checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+                                }
+                            }
+                        });
+                    }
                     buildCategoryLayout(currentCategory);
                     for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
                         checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
 
                     }
-                    break;
+
                 }
             }
-            if (questionCounter + 1 == totalQuestionCount) {
-
-                markAsComplete.setVisibility(View.VISIBLE);
-
-                nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                nextQuestion.setText("NEXT");
-                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-
-                nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-            }
-
-        }
-        if ((questionCounter < totalQuestionCount - 1) && (questionsList.get(questionCounter).getMandatory() == 1) && (!answer.getText().toString().equals(""))) {
-            previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-            previousQuestion.setTextColor(getResources().getColor(R.color.white));
-
-            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
-
-            nestedQuestions.clear();
-            idList.clear();
-            fieldContainer.removeAllViews();
-
-
-            if (!universalQuestion.getType().equals("PhotoQuestion"))
-                addAnswer(universalQuestion);
-            questionCounter++;
-            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
-
-
-
 
             for (int j = 0; j < questionsList.size(); j++) {
                 if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
@@ -871,42 +897,42 @@ public class NewResponseActivity extends Activity {
                     break;
                 }
             }
-            for (int j = 0; j < categoriesList.size(); j++) {
-                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
-
-
-                    Categories currentCategory = categoriesList.get(j);
-                    buildCategoryLayout(currentCategory);
-                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-
-                    }
-                    break;
-                }
-            }
-
 
             if (questionCounter + 1 == totalQuestionCount) {
+
+                createMarkAsComplete();
                 markAsComplete.setVisibility(View.VISIBLE);
-
-
                 nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
                 nextQuestion.setText("NEXT");
                 nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
                 nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                fieldContainer.addView(markAsComplete);
             }
-
         }
 
         if (questionCounter != 0) {
-
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayUseLogoEnabled(false);
-
-
         }
+    }
+
+
+    public void createMarkAsComplete() {
+
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = 5;
+        params.topMargin = 10;
+
+
+        markAsComplete.setBackgroundResource(R.drawable.custom_button);
+        markAsComplete.setText("mark as complete");
+        markAsComplete.setGravity(Gravity.CENTER_HORIZONTAL);
+        markAsComplete.setTextColor(getResources().getColor(R.color.white));
+        markAsComplete.setLayoutParams(params);
+
     }
 
 
@@ -930,12 +956,30 @@ public class NewResponseActivity extends Activity {
 
 
             questionCounter--;
-            counterButton.setText(questionCounter + 1 + " out of " + questionsList.size());
-            Questions currentQuestion = questionsList.get(questionCounter);
+            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+            for (int j = 0; j < categoriesList.size(); j++) {
+                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
 
 
-            buildLayout(currentQuestion);
-            checkForAnswer(currentQuestion, currentResponseId);
+                    Categories currentCategory = categoriesList.get(j);
+                    buildCategoryLayout(currentCategory);
+                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+
+                    }
+                    break;
+                }
+            }
+
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                    Questions cq = questionsList.get(j);
+                    buildLayout(cq);
+                    checkForAnswer(cq, currentResponseId);
+                    break;
+                }
+            }
+
             if (questionCounter == 0) {
                 previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back_enable, 0, 0, 0);
                 previousQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
@@ -1033,7 +1077,6 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(categories);
             idList.add(categories.getId());
             fieldContainer.addView(nestedContainer);
-
             for (int j = 0; j < 1; j++) {
 
                 buildLayout(categories.getQuestionsList().get(0));
@@ -1193,25 +1236,29 @@ public class NewResponseActivity extends Activity {
     public void checkForAnswer(Questions qu, int responseId) {
 
         if (qu.getType().equals("SingleLineQuestion")) {
+            answer= (EditText) findViewById(qu.getId());
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("MultiLineQuestion")) {
+            answer= (EditText) findViewById(qu.getId());
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("DateQuestion")) {
+            dateText= (TextView) findViewById(qu.getId());
             dateText.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
         if (qu.getType().equals("NumericQuestion")) {
+            answer= (EditText) findViewById(qu.getId());
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
         if (qu.getType().equals("RatingQuestion")) {
 
-
+            ratingBar= (RatingBar) findViewById(qu.getId());
             dbAdapter.getAnswer(responseId, qu.getId());
             //Integer.parseInt(dbAdapter.getAnswer(responseId, qu.getId()));
             try {
@@ -1224,8 +1271,6 @@ public class NewResponseActivity extends Activity {
 
 
         if (qu.getType().equals("PhotoQuestion")) {
-            //Toast.makeText(NewResponseActivity.this,"this is a photoquestion",Toast.LENGTH_LONG).show();
-
             if (!dbAdapter.getAnswer(responseId, qu.getId()).equals("")) {
                 deleteImageRelativeLayout.setVisibility(View.VISIBLE);
                 loadImageFromStorage(Environment.getExternalStorageDirectory().toString() + "/saved_images", dbAdapter.getAnswer(responseId, qu.getId()));
@@ -1327,12 +1372,9 @@ public class NewResponseActivity extends Activity {
                         spinner.setSelection(j);
 
                     }
-                    ;
 
                 }
-
             }
-
         }
 
 
@@ -1346,8 +1388,6 @@ public class NewResponseActivity extends Activity {
         answers.setResponseId(currentResponseId);
         answers.setContent("");
         long x = dbAdapter.insertDataAnswersTable(answers);
-
-
         Choices choices = new Choices();
         choices.setAnswerId((int) dbAdapter.getMaxIDAnswersTabele());
         choices.setOptionId(options.getId());
@@ -1372,15 +1412,15 @@ public class NewResponseActivity extends Activity {
         }
     }
 
-class mDateSetListener implements DatePickerDialog.OnDateSetListener {
-    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                          int dayOfMonth) {
-        int mYear = year;
-        int mMonth = monthOfYear;
-        int mDay = dayOfMonth;
-        dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
+    class mDateSetListener implements DatePickerDialog.OnDateSetListener {
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            int mYear = year;
+            int mMonth = monthOfYear;
+            int mDay = dayOfMonth;
+            dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
+        }
     }
-}
 
 
 }
