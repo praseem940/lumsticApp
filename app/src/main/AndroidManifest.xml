@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lumstic.example.com.lumstic" >
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Utils.LumsticApp"
@@ -51,6 +52,10 @@
         <activity
             android:name=".UI.TestActivity"
             android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name=".UI.Sample"
+            android:label="@string/title_activity_sample" >
         </activity>
     </application>
 

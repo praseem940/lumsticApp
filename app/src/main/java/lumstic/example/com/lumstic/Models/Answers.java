@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Answers {
     int recordId;
     int webId;
-    int updatedAt;
+    int updated_at;
     int id;
     int responseId;
-    int questionId;
+    int question_id;
     String image;
     String content;
     ArrayList<Integer> optionIds;
@@ -40,12 +40,12 @@ public class Answers {
         this.webId = webId;
     }
 
-    public int getUpdatedAt() {
-        return updatedAt;
+    public int getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(int updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(int updated_at) {
+        this.updated_at = updated_at;
     }
 
     public int getId() {
@@ -64,12 +64,12 @@ public class Answers {
         this.responseId = responseId;
     }
 
-    public int getQuestionId() {
-        return questionId;
+    public int getQuestion_id() {
+        return question_id;
     }
 
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
+    public void setQuestion_id(int question_id) {
+        this.question_id = question_id;
     }
 
     public String getImage() {

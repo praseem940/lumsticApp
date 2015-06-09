@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +75,22 @@ public class DBAdapter {
 
         while(cursor.moveToNext()){
             int index=cursor.getColumnIndex(DBhelper.CONTENT);
+            answer=cursor.getString(index);
+
+        }
+
+        return answer;
+    }
+
+    public String getImage(int responseId,int questionId)
+    {
+        String answer="";
+        String[] coloums={DBhelper.IMAGE};
+        String[] selectionArgs={String.valueOf(responseId),String.valueOf(questionId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.RESPONSE_ID + " =? AND " + DBhelper.QUESTION_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.IMAGE);
             answer=cursor.getString(index);
 
         }
@@ -241,6 +256,27 @@ ContentValues contentValues = new ContentValues();
     }
 
 
+    public Answers getAnswerByResponseId(int responseId){
+        Answers answers= new Answers();
+        String[] coloums={DBhelper.QUESTION_ID,DBhelper.CONTENT,DBhelper.IMAGE,DBhelper.UPDATED_AT};
+        String[] selectionArgs={String.valueOf(responseId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index1=cursor.getColumnIndex(DBhelper.QUESTION_ID);
+            int index2=cursor.getColumnIndex(DBhelper.CONTENT);
+            int index3=cursor.getColumnIndex(DBhelper.IMAGE);
+            int index4=cursor.getColumnIndex(DBhelper.UPDATED_AT);
+
+            answers.setQuestion_id(cursor.getInt(index1));
+            answers.setContent(cursor.getString(index2));
+            answers.setImage(cursor.getString(index3));
+
+        }
+
+        return answers;
+    }
+
     public long insertDataQuestionTable(Questions questions) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBhelper.IDENTIFIER, questions.getIdentifier());
@@ -303,10 +339,10 @@ ContentValues contentValues = new ContentValues();
         contentValues.put(DBhelper.RECORD_ID, answers.getRecordId());
         contentValues.put(DBhelper.IMAGE, answers.getImage());
         contentValues.put(DBhelper.WEB_ID, answers.getWebId());
-        contentValues.put(DBhelper.UPDATED_AT, answers.getUpdatedAt());
+        contentValues.put(DBhelper.UPDATED_AT, answers.getUpdated_at());
         contentValues.put(DBhelper.CONTENT, answers.getContent());
         contentValues.put(DBhelper.RESPONSE_ID, answers.getResponseId());
-        contentValues.put(DBhelper.QUESTION_ID, answers.getQuestionId());
+        contentValues.put(DBhelper.QUESTION_ID, answers.getQuestion_id());
         return sqLiteDatabase.insert(DBhelper.TABLE_answers, null, contentValues);
     }
 

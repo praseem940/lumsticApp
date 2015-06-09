@@ -3,16 +3,13 @@ package lumstic.example.com.lumstic.UI;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -68,13 +64,9 @@ public class NewResponseActivity extends Activity {
     Spinner spinner;
     Surveys surveys;
     RelativeLayout deleteImageRelativeLayout;
-    TextView questionTextSingleLine;
-    View v, v1;
-    ViewPager viewPager;
-    Questions currentQuestions;
-    int questionCount1 = 0;
+
     List<Questions> nestedQuestions;
-    boolean nextLayoutCreated = false;
+
     EditText answer;
     Categories currentCategory;
     Button counterButton, markAsComplete;
@@ -84,7 +76,6 @@ public class NewResponseActivity extends Activity {
     int currentResponseId = 0;
     Questions universalQuestion;
     String fname = "";
-    Questions qu;
     int categoryAndQuestionCount = 0;
     int totalQuestionCount = 0;
 
@@ -93,11 +84,10 @@ public class NewResponseActivity extends Activity {
     int categoryCount = 0;
     LinearLayout fieldContainer;
     LayoutInflater inflater;
-    TextView answerText;
     int CAMERA_REQUEST = 1;
     RelativeLayout imageContainer;
     ImageView imageViewPhotoQuestion;
-    Uri picUri;
+
     Bitmap photo = null;
     int PICK_FROM_CAMERA = 1;
     int questionCounter = 0;
@@ -158,13 +148,11 @@ public class NewResponseActivity extends Activity {
 
         totalQuestionCount = categoryCount + questionCount;
 
-
-        boolean questionPresent = false;
         stringTypes = new ArrayList<String>();
         types = new ArrayList<Integer>();
 
 
-        questionOrderCounter = 0;
+
         int i = 0;
         for (int count = 0; count < 100; count++) {
             for (i = 0; i < questionsList.size(); i++) {
@@ -186,7 +174,6 @@ public class NewResponseActivity extends Activity {
         }
 
 
-        int size = types.size();
 
         for (int j = 0; j < questionsList.size(); j++) {
             if (questionsList.get(j).getOrderNumber() == types.get(0)) {
@@ -329,13 +316,17 @@ public class NewResponseActivity extends Activity {
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    Answers answers = new Answers();
-                    answers.setQuestionId(ques.getId());
-                    answers.setResponseId(currentResponseId);
-                    answers.setContent(answer.getText().toString());
-                   long x = dbAdapter.insertDataAnswersTable(answers);
-                    Toast.makeText(NewResponseActivity.this,x+"answer is saved",Toast.LENGTH_LONG).show();
-                }
+
+                    if (!b) {
+
+                        Answers answers = new Answers();
+                        answers.setQuestion_id(ques.getId());
+                        answers.setResponseId(currentResponseId);
+                        answers.setContent(answer.getText().toString());
+                        long x = dbAdapter.insertDataAnswersTable(answers);
+                        Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
+
+                }}
             });
 
 
@@ -367,16 +358,24 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
             answer.setId(ques.getId());
+
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    Answers answers = new Answers();
-                    answers.setQuestionId(ques.getId());
-                    answers.setResponseId(currentResponseId);
-                    answers.setContent(answer.getText().toString());
-                    long x = dbAdapter.insertDataAnswersTable(answers);
-                }
+
+                    if (!b) {
+
+                        Answers answers = new Answers();
+                        answers.setQuestion_id(ques.getId());
+                        answers.setResponseId(currentResponseId);
+                        answers.setContent(answer.getText().toString());
+                        long x = dbAdapter.insertDataAnswersTable(answers);
+                        Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
+
+                    }}
             });
+
+
             try {
                 checkForAnswer(ques, currentResponseId);
             } catch (Exception e) {
@@ -574,12 +573,17 @@ public class NewResponseActivity extends Activity {
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    Answers answers = new Answers();
-                    answers.setQuestionId(ques.getId());
-                    answers.setResponseId(currentResponseId);
-                    answers.setContent(answer.getText().toString());
-                    long x = dbAdapter.insertDataAnswersTable(answers);
-                }
+
+                    if (!b) {
+
+                        Answers answers = new Answers();
+                        answers.setQuestion_id(ques.getId());
+                        answers.setResponseId(currentResponseId);
+                        answers.setContent(answer.getText().toString());
+                        long x = dbAdapter.insertDataAnswersTable(answers);
+                        Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
+
+                    }}
             });
             try {
                 checkForAnswer(ques, currentResponseId);
@@ -627,6 +631,9 @@ public class NewResponseActivity extends Activity {
                     dialog.show();
                 }
             });
+
+
+
             try {
                 checkForAnswer(ques, currentResponseId);
             } catch (Exception e) {
@@ -864,27 +871,27 @@ public class NewResponseActivity extends Activity {
                     currentCategory = categoriesList.get(j);
 
 
-                    if (currentCategory.getType().equals("MultiRecordCategory")) {
-                        Button addRecord = new Button(this);
-                        addRecord.setBackgroundResource(R.drawable.custom_button);
-                        addRecord.setText("+  Add Record");
-                        addRecord.setTextColor(getResources().getColor(R.color.white));
-                        fieldContainer.addView(addRecord);
-                        addRecord.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                buildCategoryLayout(currentCategory);
-                                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-                                    checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-                                }
-                            }
-                        });
-                    }
+//                    if (currentCategory.getType().equals("MultiRecordCategory")) {
+//                        Button addRecord = new Button(this);
+//                        addRecord.setBackgroundResource(R.drawable.custom_button);
+//                        addRecord.setText("+  Add Record");
+//                        addRecord.setTextColor(getResources().getColor(R.color.white));
+//                        fieldContainer.addView(addRecord);
+//                        addRecord.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                buildCategoryLayout(currentCategory);
+//                                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+//                                    checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+//                                }
+//                            }
+//                        });
+//                    }
                     buildCategoryLayout(currentCategory);
-                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-
-                    }
+//                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+//                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+//
+//                    }
 
                 }
             }
@@ -963,10 +970,10 @@ public class NewResponseActivity extends Activity {
 
                     Categories currentCategory = categoriesList.get(j);
                     buildCategoryLayout(currentCategory);
-                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-
-                    }
+//                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+//                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
+//
+//                    }
                     break;
                 }
             }
@@ -1080,6 +1087,7 @@ public class NewResponseActivity extends Activity {
             for (int j = 0; j < 1; j++) {
 
                 buildLayout(categories.getQuestionsList().get(0));
+                checkForAnswer(categories.getQuestionsList().get(0),currentResponseId);
             }
 
         }
@@ -1105,6 +1113,7 @@ public class NewResponseActivity extends Activity {
         for (int j = 0; j < categories.getQuestionsList().size(); j++) {
 
             buildLayout(categories.getQuestionsList().get(j));
+            checkForAnswer(categories.getQuestionsList().get(j),currentResponseId);
         }
 
 
@@ -1174,7 +1183,7 @@ public class NewResponseActivity extends Activity {
 
         if (questions.getType().equals("SingleLineQuestion")) {
             Answers answers = new Answers();
-            answers.setQuestionId(questions.getId());
+            answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);
             answers.setContent(answer.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
@@ -1183,7 +1192,7 @@ public class NewResponseActivity extends Activity {
 
         if (questions.getType().equals("MultiLineQuestion")) {
             Answers answers = new Answers();
-            answers.setQuestionId(questions.getId());
+            answers.setQuestion_id(questions.getId());
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setContent(answer.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
@@ -1193,7 +1202,7 @@ public class NewResponseActivity extends Activity {
         if (questions.getType().equals("NumericQuestion")) {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
-            answers.setQuestionId(questions.getId());
+            answers.setQuestion_id(questions.getId());
             answers.setContent(answer.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1203,7 +1212,7 @@ public class NewResponseActivity extends Activity {
         if (questions.getType().equals("DateQuestion")) {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
-            answers.setQuestionId(questions.getId());
+            answers.setQuestion_id(questions.getId());
             answers.setContent(dateText.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1213,7 +1222,7 @@ public class NewResponseActivity extends Activity {
         if (questions.getType().equals("RatingQuestion")) {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
-            answers.setQuestionId(questions.getId());
+            answers.setQuestion_id(questions.getId());
             answers.setContent(String.valueOf(ratingBar.getRating()));
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1224,8 +1233,8 @@ public class NewResponseActivity extends Activity {
 
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
-            answers.setQuestionId(questions.getId());
-            answers.setContent(fname);
+            answers.setQuestion_id(questions.getId());
+            answers.setImage(fname);
             long x = dbAdapter.insertDataAnswersTable(answers);
             Toast.makeText(NewResponseActivity.this, x + "", Toast.LENGTH_LONG).show();
         }
@@ -1271,9 +1280,9 @@ public class NewResponseActivity extends Activity {
 
 
         if (qu.getType().equals("PhotoQuestion")) {
-            if (!dbAdapter.getAnswer(responseId, qu.getId()).equals("")) {
+            if (!dbAdapter.getImage(responseId, qu.getId()).equals("")) {
                 deleteImageRelativeLayout.setVisibility(View.VISIBLE);
-                loadImageFromStorage(Environment.getExternalStorageDirectory().toString() + "/saved_images", dbAdapter.getAnswer(responseId, qu.getId()));
+                loadImageFromStorage(Environment.getExternalStorageDirectory().toString() + "/saved_images", dbAdapter.getImage(responseId, qu.getId()));
             }
         }
 
@@ -1384,7 +1393,7 @@ public class NewResponseActivity extends Activity {
     public void addOptionToDataBase(Options options, Questions qu) {
 
         Answers answers = new Answers();
-        answers.setQuestionId(qu.getId());
+        answers.setQuestion_id(qu.getId());
         answers.setResponseId(currentResponseId);
         answers.setContent("");
         long x = dbAdapter.insertDataAnswersTable(answers);
