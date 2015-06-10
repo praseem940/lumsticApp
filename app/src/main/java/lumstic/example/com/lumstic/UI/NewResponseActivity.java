@@ -78,6 +78,7 @@ public class NewResponseActivity extends Activity {
     String fname = "";
     int categoryAndQuestionCount = 0;
     int totalQuestionCount = 0;
+    Questions dateQuestion;
 
 
     int questionCount = 0;
@@ -229,7 +230,12 @@ public class NewResponseActivity extends Activity {
 
 
                 if (!universalQuestion.getType().equals("PhotoQuestion"))
-                    addAnswer(universalQuestion);
+
+                    if (!universalQuestion.getType().equals("PhotoQuestion")) {
+                        if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
+                        }}
+
+
                 Toast.makeText(NewResponseActivity.this, "Response saved with ID" + dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId()) + "", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
                 intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
@@ -598,6 +604,7 @@ public class NewResponseActivity extends Activity {
 
 
         if (ques.getType().contains("DateQuestion")) {
+            dateQuestion=ques;
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
@@ -631,6 +638,7 @@ public class NewResponseActivity extends Activity {
                     dialog.show();
                 }
             });
+
 
 
 
@@ -735,6 +743,16 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(nestedContainer);
             ratingBar = (RatingBar) findViewById(R.id.ratingBar);
             ratingBar.setId(ques.getId());
+            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                    Answers answers = new Answers();
+                    answers.setResponseId((int) dbAdapter.getMaxID());
+                    answers.setQuestion_id(ques.getId());
+                    answers.setContent(String.valueOf(v));
+                    long x = dbAdapter.insertDataAnswersTable(answers);
+                }
+            });
 
 
             checkHint();
@@ -859,8 +877,11 @@ public class NewResponseActivity extends Activity {
             idList.clear();
             fieldContainer.removeAllViews();
 
-            if (!universalQuestion.getType().equals("PhotoQuestion"))
-                addAnswer(universalQuestion);
+
+            if (!universalQuestion.getType().equals("PhotoQuestion")) {
+                if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
+                }}
+
             questionCounter++;
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
 
@@ -958,9 +979,9 @@ public class NewResponseActivity extends Activity {
             idList.clear();
             fieldContainer.removeAllViews();
 
-            if (!universalQuestion.getType().equals("PhotoQuestion"))
-                addAnswer(universalQuestion);
-
+            if (!universalQuestion.getType().equals("PhotoQuestion")) {
+             if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
+            }}
 
             questionCounter--;
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
@@ -1428,6 +1449,15 @@ public class NewResponseActivity extends Activity {
             int mMonth = monthOfYear;
             int mDay = dayOfMonth;
             dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
+
+
+                Answers answers = new Answers();
+                answers.setResponseId((int) dbAdapter.getMaxID());
+                answers.setQuestion_id(dateQuestion.getId());
+                answers.setContent(dateText.getText().toString());
+                long x = dbAdapter.insertDataAnswersTable(answers);
+                //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+
         }
     }
 

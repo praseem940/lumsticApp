@@ -117,10 +117,10 @@ public class ActiveSurveyActivity extends Activity {
             surveysList = new ArrayList<Surveys>();
             try {
 
-//                lumsticApp.getPreferences().setSurveyData(s);
+lumsticApp.getPreferences().setSurveyData(s);
 
-                //       surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
-                surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+                     surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
+                //  surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
             } catch (Exception e) {

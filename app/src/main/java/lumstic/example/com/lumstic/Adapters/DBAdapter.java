@@ -215,25 +215,7 @@ ContentValues contentValues = new ContentValues();
         return value;
     }
 
-    public List<Integer> getCompleteResponsesIds(int surveyId){
-        List<Integer> ids;
-        ids= new ArrayList<Integer>();
-        String[] coloums={DBhelper.STATUS,DBhelper.ID};
-        String[] selectionArgs={String.valueOf(surveyId)};
-        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
 
-        while(cursor.moveToNext()){
-            int index=cursor.getColumnIndex(DBhelper.STATUS);
-            if(cursor.getString(index).equals("complete")){
-
-                int index2=cursor.getColumnIndex(DBhelper.ID);
-                ids.add(cursor.getInt(index2));
-            }
-
-        }
-
-        return ids;
-    }
 
     public List<Integer> getIncompleteResponsesIds(int surveyId){
         List<Integer> ids;
@@ -255,9 +237,30 @@ ContentValues contentValues = new ContentValues();
         return ids;
     }
 
+    public List<Integer> getCompleteResponsesIds(int surveyId){
+        List<Integer> ids;
+        ids= new ArrayList<Integer>();
+        String[] coloums={DBhelper.STATUS,DBhelper.ID};
+        String[] selectionArgs={String.valueOf(surveyId)};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, DBhelper.SURVEY_ID + " =?", selectionArgs, null, null, null);
 
-    public Answers getAnswerByResponseId(int responseId){
-        Answers answers= new Answers();
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("complete")){
+
+                int index2=cursor.getColumnIndex(DBhelper.ID);
+                ids.add(cursor.getInt(index2));
+            }
+
+        }
+
+        return ids;
+    }
+
+    public List<Answers> getAnswerByResponseId(int responseId){
+        List<Answers> answersList;
+        answersList= new ArrayList<Answers>();
+
         String[] coloums={DBhelper.QUESTION_ID,DBhelper.CONTENT,DBhelper.IMAGE,DBhelper.UPDATED_AT};
         String[] selectionArgs={String.valueOf(responseId)};
         Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
@@ -267,14 +270,15 @@ ContentValues contentValues = new ContentValues();
             int index2=cursor.getColumnIndex(DBhelper.CONTENT);
             int index3=cursor.getColumnIndex(DBhelper.IMAGE);
             int index4=cursor.getColumnIndex(DBhelper.UPDATED_AT);
-
+            Answers answers= new Answers();
             answers.setQuestion_id(cursor.getInt(index1));
             answers.setContent(cursor.getString(index2));
             answers.setImage(cursor.getString(index3));
-
+            answersList.add(answers);
         }
 
-        return answers;
+
+        return answersList;
     }
 
     public long insertDataQuestionTable(Questions questions) {
