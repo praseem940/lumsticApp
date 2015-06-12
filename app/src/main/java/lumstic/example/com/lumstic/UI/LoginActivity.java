@@ -49,7 +49,9 @@ public class LoginActivity extends Activity {
     private String accessToken="";
 
 
-    private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
+   private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
+    //  private static String url = "http://192.168.2.16:3000/api/login";
+
     private EditText emailEditText, passwordEditText;
     private ProgressDialog progressDialog;
     private String email = null, password = null;
@@ -155,6 +157,7 @@ public class LoginActivity extends Activity {
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 jsonLoginString = EntityUtils.toString(httpEntity);
+                Log.e("datainfo",jsonLoginString);
             } catch (ClientProtocolException e) {
             } catch (IOException e) {
             }
@@ -171,6 +174,8 @@ public class LoginActivity extends Activity {
                 JSONParser jsonParser = new JSONParser();
                 userModel=jsonParser.parseLogin(jsonObjectLogin);
                 lumsticApp.getPreferences().setAccessToken(userModel.getAccess_token());
+                lumsticApp.getPreferences().setUserId(String.valueOf(userModel.getUser_id()));
+                lumsticApp.getPreferences().setOrganizationId(String.valueOf(userModel.getOrganisation_id()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

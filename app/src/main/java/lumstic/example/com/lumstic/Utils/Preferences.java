@@ -7,6 +7,9 @@ public class Preferences {
     private static final String SERVER_URL = "SERVER_URL";
     private static final String ADD_AUTH_IN_HEADER = "ADD_AUTH_IN_HEADER";
     private static final String access_token = "access_token";
+    private static final String user_id= "user_id";
+    private static final String organization_id = "organization_id";
+
     private static final String SEARCH_LOG_ID="SEARCH_LOG_ID";
     private String SURVEY_DATA ="SURVEY_DATA";
     private Context context;
@@ -54,6 +57,19 @@ public class Preferences {
     }
     public void setAccessToken(String authToken) {
         setString(access_token, authToken);
+    }
+    public String getUserId() {
+        return getString(user_id, null);
+    }
+    public void setUserId(String userId) {
+        setString(user_id, userId);
+    }
+
+    public String getOrganizationId() {
+        return getString(organization_id, null);
+    }
+    public void setOrganizationId(String organizationId) {
+        setString(organization_id, organizationId);
     }
 
 

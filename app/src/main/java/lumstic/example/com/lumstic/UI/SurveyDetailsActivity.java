@@ -2,9 +2,12 @@ package lumstic.example.com.lumstic.UI;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
@@ -17,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -43,6 +45,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Models.Answers;
@@ -64,17 +67,25 @@ public class SurveyDetailsActivity extends Activity {
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
     Responses responses;
+    String timestamp = "";
+    String mobilId;
     List<Answers> answerses;
     int completeCount = 0, incompleteCount = 0;
     DBAdapter dbAdapter;
     TextView completeTv, incompleteTv;
     List<Integer> completedResponseIds;
     LumsticApp lumsticApp;
-    String jsonStr=null;
+    String jsonStr = null;
+    private LocationManager locationManager;
+    boolean gps_enabled = false;
+    boolean network_enabled = false;
+    double lat = 0, lon = 0;
     Answers ans;
 
     int surveyId = 0;
     String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +94,7 @@ public class SurveyDetailsActivity extends Activity {
         actionBar = getActionBar();
         completedResponseIds = new ArrayList<Integer>();
         lumsticApp = (LumsticApp) getApplication();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (getIntent().hasExtra(IntentConstants.SURVEY)) {
             surveys = new Surveys();
@@ -134,7 +146,21 @@ public class SurveyDetailsActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                //Toast.makeText(SurveyDetailsActivity.this, "hcbxsduhcbduhcd", Toast.LENGTH_LONG).show();
+                mobilId=UUID.randomUUID().toString();
+                if (checkLocationOn()) {
+                    Location location = getLocation();
+                    if (null != location) {
+                        lat = location.getLatitude();
+                        lon = location.getLongitude();
+                    }
+                } else {
+                    lat = 18.54194666666656;
+                    lon = 73.8291466666657;
+                }
+
+
+                Long tsLong = System.currentTimeMillis() / 1000;
+                timestamp = tsLong.toString();
                 new uploadResponse().execute();
 
             }
@@ -211,38 +237,40 @@ public class SurveyDetailsActivity extends Activity {
                 answerses = null;
 
                 answerses = dbAdapter.getAnswerByResponseId(completedResponseIds.get(i));
-                JSONArray jsonArray= new JSONArray() ;
-                for(int j=0;j<answerses.size();j++){
-                    JSONObject jsonObject= new JSONObject();
+                JSONArray jsonArray = new JSONArray();
+                for (int j = 0; j < answerses.size(); j++) {
+                    JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
+try{
+                        if (answerses.get(j).getImage().equals(null)) {
+                            Log.e("answers", "dex");
+                            String path ="Environment.getExternalStorageDirectory().toString() + \"/saved_images\"";
+                            Bitmap b = null;
+                            String fileName=answerses.get(j).getImage();
+                                try {
+                                    File f = new File(path, fileName);
+                                     b= BitmapFactory.decodeStream(new FileInputStream(f));
 
-//                        if(!answerses.get(j).getImage().equals(null)){
-//
-//
-//                            String path ="Environment.getExternalStorageDirectory().toString() + \"/saved_images\"";
-//                            Bitmap b = null;
-//                            String fileName=answerses.get(j).getImage();
-//                                try {
-//                                    File f = new File(path, fileName);
-//                                     b= BitmapFactory.decodeStream(new FileInputStream(f));
-//
-//
-//                                } catch (FileNotFoundException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                            b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-//                            byte[] byteArray = byteArrayOutputStream .toByteArray();
-//                            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-//                            jsonObject.put("image", encoded);
-//
-//                        }
 
-                    }catch (JSONException e){
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                            byte[] byteArray = byteArrayOutputStream .toByteArray();
+                            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                            jsonObject.put("image", encoded);
+                        }}catch (Exception e){
+    e.printStackTrace();
+                        }
+
+
+
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     jsonArray.put(jsonObject);
@@ -250,57 +278,58 @@ public class SurveyDetailsActivity extends Activity {
 
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("answers_attributes", jsonArray);
-                    obj.put("status","complete");
-                    obj.put("survey_id",surveys.getId());
-                    obj.put("updated_at",1433848151);
-                    obj.put("longitude",73.8291466666657);
-                    obj.put("latitude",18.54194666666656);
-                    obj.put("user_id",158);
-                    obj.put("organization_id",23);
                     obj.put("access_token",lumsticApp.getPreferences().getAccessToken());
-                    obj.put("mobile_id","17fc567e-0fc7-444f-a0f9-201d966779b9");
-                    JSONObject responseObj= new JSONObject();
-                    obj.put("response",responseObj);
+                    obj.put("answers_attributes", jsonArray);
+                    obj.put("status", "complete");
+                    obj.put("survey_id", surveys.getId());
+                    obj.put("updated_at", timestamp);
+                    obj.put("longitude", lon);
+                    obj.put("latitude", lat);
+                    obj.put("user_id", lumsticApp.getPreferences().getUserId());
+                    obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
+                    obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
+                    obj.put("mobile_id", mobilId);
+                    JSONObject responseObj = new JSONObject();
+                    obj.put("response", responseObj);
                     responseObj.put("answers_attributes", jsonArray);
                     responseObj.put("status", "complete");
-                    responseObj.put("survey_id",surveys.getId());
-                    responseObj.put("updated_at",1433848151);
-                    responseObj.put("longitude",73.8291466666657);
-                    responseObj.put("latitude",18.54194666666656);
-                    responseObj.put("user_id",158);
-                    responseObj.put("organization_id",23);
+                    responseObj.put("survey_id", surveys.getId());
+                    responseObj.put("updated_at", timestamp);
+                    responseObj.put("longitude", lon);
+                    responseObj.put("latitude", lat);
+                    responseObj.put("user_id", lumsticApp.getPreferences().getUserId());
+                    responseObj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
 
-                    responseObj.put("mobile_id","17fc567e-0fc7-444f-a0f9-201d966779b9");
+                    responseObj.put("mobile_id", mobilId);
 
 
-                     jsonStr = obj.toString();
+                    jsonStr = obj.toString();
 
-                   Log.e("jsonString", jsonStr);
+                    Log.e("jsonString", jsonStr);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
 
-
             }
 
-
-
+            UUID.randomUUID().toString();
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(uploadUrl);
-//            List nameValuePairs = new ArrayList();
-//            nameValuePairs.add(new BasicNameValuePair("answer_attribute", jsonStr));
             List nameValuePairs = new ArrayList();
-           nameValuePairs.add(new BasicNameValuePair("answer_attribute", ""));
+            nameValuePairs.add(new BasicNameValuePair("answer_attribute", jsonStr));
+            // nameValuePairs.add(new BasicNameValuePair("access_token",  lumsticApp.getPreferences().getAccessToken()));
+
+            // List nameValuePairs = new ArrayList();
+            //nameValuePairs.add(new BasicNameValuePair("answer_attribute", ""));
             try {
-                httppost.setHeader("Content-type", "application/json");
+                httppost.addHeader( "access_token" , lumsticApp.getPreferences().getAccessToken());
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 String jsonLoginString = EntityUtils.toString(httpEntity);
-                Log.e("jsonsyncresponse",jsonLoginString);
+                Log.e("jsonsyncresponse", jsonLoginString);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -308,11 +337,6 @@ public class SurveyDetailsActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-
-
-
 
 
             return null;
@@ -324,4 +348,29 @@ public class SurveyDetailsActivity extends Activity {
         }
     }
 
+    public Location getLocation() {
+        if (null != locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)) {
+            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } else if (null != locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)) {
+            return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+    }
+
+    public boolean checkLocationOn() {
+//
+        try {
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+        try {
+            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        } catch (Exception ex) {
+        }
+        if (!gps_enabled && !network_enabled) {
+            return false;
+        } else
+            return true;
+    }
 }
