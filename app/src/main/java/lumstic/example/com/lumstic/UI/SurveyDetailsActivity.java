@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -83,7 +84,7 @@ public class SurveyDetailsActivity extends Activity {
     Answers ans;
 
     int surveyId = 0;
-    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    String uploadUrl = "https://lumstic.com/api/responses.json?";
     // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
 
 
@@ -146,7 +147,7 @@ public class SurveyDetailsActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                mobilId=UUID.randomUUID().toString();
+                mobilId = UUID.randomUUID().toString();
                 if (checkLocationOn()) {
                     Location location = getLocation();
                     if (null != location) {
@@ -244,30 +245,30 @@ public class SurveyDetailsActivity extends Activity {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
-try{
-                        if (answerses.get(j).getImage().equals(null)) {
-                            Log.e("answers", "dex");
-                            String path ="Environment.getExternalStorageDirectory().toString() + \"/saved_images\"";
-                            Bitmap b = null;
-                            String fileName=answerses.get(j).getImage();
+                        try {
+                            if (answerses.get(j).getImage().equals(null)) {
+                                Log.e("answers", "dex");
+                                String path = "Environment.getExternalStorageDirectory().toString() + \"/saved_images\"";
+                                Bitmap b = null;
+                                String fileName = answerses.get(j).getImage();
                                 try {
                                     File f = new File(path, fileName);
-                                     b= BitmapFactory.decodeStream(new FileInputStream(f));
+                                    b = BitmapFactory.decodeStream(new FileInputStream(f));
 
 
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
                                 }
 
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                            byte[] byteArray = byteArrayOutputStream .toByteArray();
-                            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                            jsonObject.put("image", encoded);
-                        }}catch (Exception e){
-    e.printStackTrace();
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                                jsonObject.put("image", encoded);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
 
 
                     } catch (JSONException e) {
@@ -278,7 +279,7 @@ try{
 
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("access_token",lumsticApp.getPreferences().getAccessToken());
+                    obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
                     obj.put("answers_attributes", jsonArray);
                     obj.put("status", "complete");
                     obj.put("survey_id", surveys.getId());
@@ -324,7 +325,7 @@ try{
             // List nameValuePairs = new ArrayList();
             //nameValuePairs.add(new BasicNameValuePair("answer_attribute", ""));
             try {
-                httppost.addHeader( "access_token" , lumsticApp.getPreferences().getAccessToken());
+                httppost.addHeader("access_token", lumsticApp.getPreferences().getAccessToken());
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();

@@ -49,7 +49,7 @@ public class LoginActivity extends Activity {
     private String accessToken="";
 
 
-   private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
+   private static String url = "https://lumstic.com/api/login";
     //  private static String url = "http://192.168.2.16:3000/api/login";
 
     private EditText emailEditText, passwordEditText;
