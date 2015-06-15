@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Answers {
     int recordId;
     int webId;
-    int updated_at;
+    long updated_at;
     int id;
     int responseId;
     int question_id;
@@ -40,11 +40,11 @@ public class Answers {
         this.webId = webId;
     }
 
-    public int getUpdated_at() {
+    public long getUpdated_at() {
         return updated_at;
     }
 
-    public void setUpdated_at(int updated_at) {
+    public void setUpdated_at(long updated_at) {
         this.updated_at = updated_at;
     }
 

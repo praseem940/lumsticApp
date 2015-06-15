@@ -313,4 +313,18 @@ public class JSONParser {
 
         return surveyses;
     }
+    public boolean parseSyncResult(String syncResponse) {
+        try {
+            JSONObject jsonObject = new JSONObject(syncResponse);
+            if ((jsonObject.getString("state").equals("clean")) && (jsonObject.getString("status").equals("complete"))) {
+
+                return true;
+            } else return false;
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -63,6 +63,7 @@ public class NewResponseActivity extends Activity {
     TextView dateText;
     Spinner spinner;
     Surveys surveys;
+    Long tsLong =null;
     RelativeLayout deleteImageRelativeLayout;
 
     List<Questions> nestedQuestions;
@@ -328,6 +329,9 @@ public class NewResponseActivity extends Activity {
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
+                        tsLong= System.currentTimeMillis() / 1000;
+
+                        answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
                         long x = dbAdapter.insertDataAnswersTable(answers);
                         Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
@@ -374,6 +378,8 @@ public class NewResponseActivity extends Activity {
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
+                        tsLong= System.currentTimeMillis() / 1000;
+                        answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
                         long x = dbAdapter.insertDataAnswersTable(answers);
                         Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
@@ -584,6 +590,8 @@ public class NewResponseActivity extends Activity {
 
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
+                        tsLong= System.currentTimeMillis() / 1000;
+                        answers.setUpdated_at(tsLong);
                         answers.setResponseId(currentResponseId);
                         answers.setContent(answer.getText().toString());
                         long x = dbAdapter.insertDataAnswersTable(answers);
@@ -749,6 +757,8 @@ public class NewResponseActivity extends Activity {
                     Answers answers = new Answers();
                     answers.setResponseId((int) dbAdapter.getMaxID());
                     answers.setQuestion_id(ques.getId());
+                    tsLong= System.currentTimeMillis() / 1000;
+                    answers.setUpdated_at(tsLong);
                     answers.setContent(String.valueOf(v));
                     long x = dbAdapter.insertDataAnswersTable(answers);
                 }
@@ -1207,6 +1217,8 @@ public class NewResponseActivity extends Activity {
             answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);
             answers.setContent(answer.getText().toString());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,currentResponseId+"",Toast.LENGTH_SHORT).show();
         }
@@ -1216,6 +1228,8 @@ public class NewResponseActivity extends Activity {
             answers.setQuestion_id(questions.getId());
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setContent(answer.getText().toString());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
         }
@@ -1224,6 +1238,8 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             answers.setContent(answer.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1234,6 +1250,8 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             answers.setContent(dateText.getText().toString());
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1244,6 +1262,8 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             answers.setContent(String.valueOf(ratingBar.getRating()));
             long x = dbAdapter.insertDataAnswersTable(answers);
             //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
@@ -1256,6 +1276,8 @@ public class NewResponseActivity extends Activity {
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
             answers.setImage(fname);
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
             long x = dbAdapter.insertDataAnswersTable(answers);
             Toast.makeText(NewResponseActivity.this, x + "", Toast.LENGTH_LONG).show();
         }
@@ -1421,6 +1443,7 @@ public class NewResponseActivity extends Activity {
         Choices choices = new Choices();
         choices.setAnswerId((int) dbAdapter.getMaxIDAnswersTabele());
         choices.setOptionId(options.getId());
+        choices.setOption(options.getContent());
         dbAdapter.insertDataChoicesTable(choices);
         //Toast.makeText(NewResponseActivity.this,dbAdapter.insertDataChoicesTable(choices)+"add",Toast.LENGTH_LONG).show();
     }
@@ -1448,13 +1471,15 @@ public class NewResponseActivity extends Activity {
             int mYear = year;
             int mMonth = monthOfYear;
             int mDay = dayOfMonth;
-            dateText.setText(new StringBuilder().append(mMonth + 1).append("/").append(mDay).append("/").append(mYear).append(" ").toString());
+            dateText.setText(new StringBuilder().append(mYear).append("/").append(mMonth + 1).append("/").append(mDay).toString());
 
 
                 Answers answers = new Answers();
                 answers.setResponseId((int) dbAdapter.getMaxID());
                 answers.setQuestion_id(dateQuestion.getId());
                 answers.setContent(dateText.getText().toString());
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
                 long x = dbAdapter.insertDataAnswersTable(answers);
                 //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
 

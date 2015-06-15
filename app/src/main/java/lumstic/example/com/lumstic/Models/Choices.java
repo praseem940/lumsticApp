@@ -5,9 +5,18 @@ public class Choices {
     int id;
     int optionId;
     int answerId;
+    String option;
 
     public int getId() {
         return id;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
     }
 
     public void setId(int id) {

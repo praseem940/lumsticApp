@@ -2,6 +2,7 @@ package lumstic.example.com.lumstic.UI;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,7 @@ import lumstic.example.com.lumstic.Models.Responses;
 import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
+import lumstic.example.com.lumstic.Utils.JSONParser;
 import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class SurveyDetailsActivity extends Activity {
@@ -64,11 +67,12 @@ public class SurveyDetailsActivity extends Activity {
     Button addResponsesButton;
     ActionBar actionBar;
     Surveys surveys;
-    ImageView uploadButton;
+    RelativeLayout uploadButton;
     TextView surveyTitleText, surveyDescriptionText, endDateText;
     List<Questions> questionsList;
     Responses responses;
     String timestamp = "";
+    private ProgressDialog progressDialog;
     String mobilId;
     List<Answers> answerses;
     int completeCount = 0, incompleteCount = 0;
@@ -76,15 +80,18 @@ public class SurveyDetailsActivity extends Activity {
     TextView completeTv, incompleteTv;
     List<Integer> completedResponseIds;
     LumsticApp lumsticApp;
+    String syncString="";
     String jsonStr = null;
     private LocationManager locationManager;
     boolean gps_enabled = false;
     boolean network_enabled = false;
     double lat = 0, lon = 0;
     Answers ans;
+    JSONParser jsonParser;
+    JSONArray jsonArray;
 
     int surveyId = 0;
-    String uploadUrl = "https://lumstic.com/api/responses.json?";
+    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
     // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
 
 
@@ -93,6 +100,7 @@ public class SurveyDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_details);
         actionBar = getActionBar();
+        jsonParser= new JSONParser();
         completedResponseIds = new ArrayList<Integer>();
         lumsticApp = (LumsticApp) getApplication();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -113,7 +121,7 @@ public class SurveyDetailsActivity extends Activity {
 //        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
 
-        uploadButton = (ImageView) findViewById(R.id.upload_button);
+        uploadButton = (RelativeLayout) findViewById(R.id.upload_button);
         surveyTitleText = (TextView) findViewById(R.id.survey_title_text);
         surveyDescriptionText = (TextView) findViewById(R.id.survey_description_text);
         endDateText = (TextView) findViewById(R.id.end_date_text);
@@ -162,8 +170,19 @@ public class SurveyDetailsActivity extends Activity {
 
                 Long tsLong = System.currentTimeMillis() / 1000;
                 timestamp = tsLong.toString();
-                new uploadResponse().execute();
 
+                if(completeCount>0) {
+                    progressDialog = new ProgressDialog(SurveyDetailsActivity.this);
+                    progressDialog.setCancelable(false);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Sync in Progress");
+                    progressDialog.show();
+                    new uploadResponse().execute();
+                }
+                if(completeCount<=0)
+                {
+                    Toast.makeText(SurveyDetailsActivity.this,"Complete Survey to Upload",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -238,13 +257,20 @@ public class SurveyDetailsActivity extends Activity {
                 answerses = null;
 
                 answerses = dbAdapter.getAnswerByResponseId(completedResponseIds.get(i));
-                JSONArray jsonArray = new JSONArray();
+                 jsonArray = new JSONArray();
                 for (int j = 0; j < answerses.size(); j++) {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
+                        Log.e("uodate",answerses.get(j).getId()+"");
                         jsonObject.put("content", answerses.get(j).getContent());
+
+
+
+
+
+
                         try {
                             if (answerses.get(j).getImage().equals(null)) {
                                 Log.e("answers", "dex");
@@ -279,29 +305,25 @@ public class SurveyDetailsActivity extends Activity {
 
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
-                    obj.put("answers_attributes", jsonArray);
                     obj.put("status", "complete");
                     obj.put("survey_id", surveys.getId());
                     obj.put("updated_at", timestamp);
-                    obj.put("longitude", lon);
-                    obj.put("latitude", lat);
-                    obj.put("user_id", lumsticApp.getPreferences().getUserId());
+                   obj.put("longitude", lon);
+                   obj.put("latitude", lat);
+                   obj.put("user_id", lumsticApp.getPreferences().getUserId());
                     obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
                     obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
                     obj.put("mobile_id", mobilId);
-                    JSONObject responseObj = new JSONObject();
-                    obj.put("response", responseObj);
-                    responseObj.put("answers_attributes", jsonArray);
-                    responseObj.put("status", "complete");
-                    responseObj.put("survey_id", surveys.getId());
-                    responseObj.put("updated_at", timestamp);
-                    responseObj.put("longitude", lon);
-                    responseObj.put("latitude", lat);
-                    responseObj.put("user_id", lumsticApp.getPreferences().getUserId());
-                    responseObj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
 
-                    responseObj.put("mobile_id", mobilId);
+                    obj.put("answers_attributes", jsonArray);
+                    //responseObj.put("status", "complete");
+                    //responseObj.put("survey_id", surveys.getId());
+                    //responseObj.put("updated_at", timestamp);
+                    //responseObj.put("longitude", lon);
+                    //responseObj.put("latitude", lat);
+                    //responseObj.put("user_id", lumsticApp.getPreferences().getUserId());
+                    //responseObj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
+                    //responseObj.put("mobile_id", mobilId);
 
 
                     jsonStr = obj.toString();
@@ -319,7 +341,18 @@ public class SurveyDetailsActivity extends Activity {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(uploadUrl);
             List nameValuePairs = new ArrayList();
-            nameValuePairs.add(new BasicNameValuePair("answer_attribute", jsonStr));
+            nameValuePairs.add(new BasicNameValuePair("answers_attributes",jsonArray.toString()));
+            nameValuePairs.add(new BasicNameValuePair("response", jsonStr));
+            nameValuePairs.add(new BasicNameValuePair("status", "complete"));
+            nameValuePairs.add(new BasicNameValuePair("survey_id",surveys.getId()+"" ));
+            nameValuePairs.add(new BasicNameValuePair("updated_at",timestamp ));
+            nameValuePairs.add(new BasicNameValuePair("longitude",lon+"" ));
+            nameValuePairs.add(new BasicNameValuePair("latitude", lat+""));
+            nameValuePairs.add(new BasicNameValuePair("access_token", lumsticApp.getPreferences().getAccessToken()));
+            nameValuePairs.add(new BasicNameValuePair("user_id", lumsticApp.getPreferences().getUserId()));
+            nameValuePairs.add(new BasicNameValuePair("organization_id",lumsticApp.getPreferences().getOrganizationId() ));
+            nameValuePairs.add(new BasicNameValuePair("mobile_id",mobilId ));
+
             // nameValuePairs.add(new BasicNameValuePair("access_token",  lumsticApp.getPreferences().getAccessToken()));
 
             // List nameValuePairs = new ArrayList();
@@ -329,8 +362,10 @@ public class SurveyDetailsActivity extends Activity {
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();
-                String jsonLoginString = EntityUtils.toString(httpEntity);
-                Log.e("jsonsyncresponse", jsonLoginString);
+               syncString = EntityUtils.toString(httpEntity);
+
+
+                Log.e("jsonsyncresponse", syncString);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -345,7 +380,18 @@ public class SurveyDetailsActivity extends Activity {
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(SurveyDetailsActivity.this, completedResponseIds.get(0) + "", Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
+
+            if(jsonParser.parseSyncResult(syncString)) {
+                Toast.makeText(SurveyDetailsActivity.this, "Responses Uploaded", Toast.LENGTH_LONG).show();
+                Toast.makeText(SurveyDetailsActivity.this, dbAdapter.deleteFromResponseTableOnUpload(surveyId) + "", Toast.LENGTH_LONG).show();
+                completeCount = dbAdapter.getCompleteResponse(surveys.getId());
+                completeTv.setText(completeCount+"");
+            }
+            else{
+                Toast.makeText(SurveyDetailsActivity.this, "Responses Upload Unsuccessfull", Toast.LENGTH_LONG).show();
+
+            }
         }
     }
 

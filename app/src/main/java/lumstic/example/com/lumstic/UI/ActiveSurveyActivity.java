@@ -47,7 +47,7 @@ public class ActiveSurveyActivity extends Activity {
     DashBoardAdapter dashBoardAdapter;
     DBAdapter dbAdapter;
     // String fetchUrl = "http://192.168.2.16:3000/api/deep_surveys?access_token=";
-    String fetchUrl = "https://lumstic.com/api/deep_surveys?access_token=";
+    String fetchUrl = "https://survey-web-stgng.herokuapp.com/api/deep_surveys?access_token=";
     String jsonFetchString = "";
 
     protected void onCreate(Bundle savedInstanceState) {
