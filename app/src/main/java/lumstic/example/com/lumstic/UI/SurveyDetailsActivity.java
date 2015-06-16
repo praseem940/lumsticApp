@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,11 +28,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +40,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +86,7 @@ public class SurveyDetailsActivity extends Activity {
     JSONArray jsonArray;
 
     int surveyId = 0;
-    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/android_responses.json?";
     // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
 
 
@@ -263,8 +258,27 @@ public class SurveyDetailsActivity extends Activity {
                     try {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
-                        Log.e("uodate",answerses.get(j).getId()+"");
                         jsonObject.put("content", answerses.get(j).getContent());
+
+                        if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) == 0)) {
+                            jsonObject.put("content", "");
+
+                        }
+
+                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) == 1) && (answerses.get(j).getContent().equals(""))) {
+                            jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+
+                        }
+                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 1) && (answerses.get(j).getContent().equals(""))) {
+                            List<Integer> options = new ArrayList<>();
+                            options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
+                            jsonObject.putOpt("option_ids", options);
+
+                        }
+
+
+
+
 
 
 

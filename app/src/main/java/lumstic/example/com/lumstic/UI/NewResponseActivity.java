@@ -34,6 +34,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.internal.db;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,6 +64,8 @@ public class NewResponseActivity extends Activity {
     boolean hint = true;
     TextView dateText;
     Spinner spinner;
+    RadioGroup radioGroup;
+    boolean checked=false;
     Surveys surveys;
     Long tsLong =null;
     RelativeLayout deleteImageRelativeLayout;
@@ -229,11 +233,40 @@ public class NewResponseActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                if(universalQuestion.getType().equals("RadioQuestion")){
+                    if (radioGroup.getCheckedRadioButtonId() == -1)
+                    {
+                       addOptionToDataBase(null,universalQuestion);
+                    }
+                }
+                if(universalQuestion.getType().equals("MultiChoiceQuestion")){
+                    if(!checked){
+                        addOptionToDataBase(null,universalQuestion);
+                    }
+                }
+                if(universalQuestion.getType().equals("RatingQuestion")){
+                    if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+                        addAnswer(universalQuestion);
+                }
+
+                if(universalQuestion.getType().equals("SingleLineQuestion")){
+                    if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+                        addAnswer(universalQuestion);
+                }
+                if(universalQuestion.getType().equals("MultiLineQuestion")){
+                    if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+                        addAnswer(universalQuestion);
+                }
+                if(universalQuestion.getType().equals("NumericQuestion")){
+                    if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+                        addAnswer(universalQuestion);
+                }
+
 
                 if (!universalQuestion.getType().equals("PhotoQuestion"))
 
                     if (!universalQuestion.getType().equals("PhotoQuestion")) {
-                        if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
+                        if(questionCounter==totalQuestionCount-1){
                         }}
 
 
@@ -479,11 +512,11 @@ public class NewResponseActivity extends Activity {
         if (ques.getType().contains("MultiChoiceQuestion")) {
 
 
+
             nestedQuestions.add(ques);
 
 
             Log.e("nestedquestionitem", nestedQuestions.size() + "");
-
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
@@ -513,6 +546,7 @@ public class NewResponseActivity extends Activity {
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        checked=true;
                         if (((CheckBox) view).isChecked()) {
 
                             CheckBox checkBox1 = (CheckBox) view;
@@ -558,6 +592,8 @@ public class NewResponseActivity extends Activity {
 
 
             }
+
+
             fieldContainer.addView(nestedContainer);
             checkHint();
         }
@@ -680,7 +716,7 @@ public class NewResponseActivity extends Activity {
             idList.add(ques.getId());
 
 
-            RadioGroup radioGroup = new RadioGroup(this);
+            radioGroup = new RadioGroup(this);
             radioGroup.setOrientation(RadioGroup.VERTICAL);
             nestedContainer.addView(radioGroup);
             for (int i = 0; i < ques.getOptions().size(); i++) {
@@ -754,10 +790,13 @@ public class NewResponseActivity extends Activity {
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                    if(dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId)){
+                        dbAdapter.deleteRatingAnswer(universalQuestion.getId(),currentResponseId);
+                    }
                     Answers answers = new Answers();
                     answers.setResponseId((int) dbAdapter.getMaxID());
                     answers.setQuestion_id(ques.getId());
-                    tsLong= System.currentTimeMillis() / 1000;
+                    tsLong = System.currentTimeMillis() / 1000;
                     answers.setUpdated_at(tsLong);
                     answers.setContent(String.valueOf(v));
                     long x = dbAdapter.insertDataAnswersTable(answers);
@@ -888,11 +927,16 @@ public class NewResponseActivity extends Activity {
             fieldContainer.removeAllViews();
 
 
+            if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+            addAnswer(universalQuestion);
             if (!universalQuestion.getType().equals("PhotoQuestion")) {
                 if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
                 }}
 
             questionCounter++;
+
+
+
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
 
             for (int j = 0; j < categoriesList.size(); j++) {
@@ -989,11 +1033,14 @@ public class NewResponseActivity extends Activity {
             idList.clear();
             fieldContainer.removeAllViews();
 
+
             if (!universalQuestion.getType().equals("PhotoQuestion")) {
              if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
             }}
 
             questionCounter--;
+            if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
+            addAnswer(universalQuestion);
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
@@ -1259,6 +1306,10 @@ public class NewResponseActivity extends Activity {
 
 
         if (questions.getType().equals("RatingQuestion")) {
+
+            if(dbAdapter.doesAnswerExist(questions.getId(),currentResponseId)){
+                dbAdapter.deleteRatingAnswer(questions.getId(),currentResponseId);
+            }
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
@@ -1438,13 +1489,16 @@ public class NewResponseActivity extends Activity {
         Answers answers = new Answers();
         answers.setQuestion_id(qu.getId());
         answers.setResponseId(currentResponseId);
+        tsLong= System.currentTimeMillis() / 1000;
+        answers.setUpdated_at(tsLong);
         answers.setContent("");
         long x = dbAdapter.insertDataAnswersTable(answers);
+        if(options!=null){
         Choices choices = new Choices();
-        choices.setAnswerId((int) dbAdapter.getMaxIDAnswersTabele());
-        choices.setOptionId(options.getId());
-        choices.setOption(options.getContent());
-        dbAdapter.insertDataChoicesTable(choices);
+            choices.setAnswerId((int) dbAdapter.getMaxIDAnswersTabele());
+            choices.setOptionId(options.getId());
+            choices.setOption(options.getContent());
+        dbAdapter.insertDataChoicesTable(choices);}
         //Toast.makeText(NewResponseActivity.this,dbAdapter.insertDataChoicesTable(choices)+"add",Toast.LENGTH_LONG).show();
     }
 

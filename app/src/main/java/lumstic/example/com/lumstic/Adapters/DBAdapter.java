@@ -289,7 +289,92 @@ ContentValues contentValues = new ContentValues();
 
         int id = surveyId;
         String[] selectionArgs={String.valueOf(id),"complete"};
-        int id1= sqLiteDatabase.delete(DBhelper.TABLE_responses, DBhelper.SURVEY_ID + " =? AND " + DBhelper.STATUS + " =?",selectionArgs);
+        int id1 = sqLiteDatabase.delete(DBhelper.TABLE_responses, DBhelper.SURVEY_ID + " =? AND " + DBhelper.STATUS + " =?", selectionArgs);
+        return id1;
+    }
+
+
+    public int getChoicesCountWhereAnswerIdIs(int answerId) {
+
+
+        int count = 0;
+        String[] coloums = {DBhelper.OPTION_ID};
+        String[] selectionArgs = {String.valueOf(answerId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        return count;
+    }
+
+    public String getChoicesWhereAnswerCountIsOne(int answerId) {
+
+
+        String content = null;
+        String[] coloums = {DBhelper.OPTION};
+        String[] selectionArgs = {String.valueOf(answerId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.OPTION);
+            content = cursor.getString(index);
+
+
+        }
+
+
+        return content;
+
+
+    }
+
+    public List<Integer> getChoicesWhereAnswerCountIsMoreThanOne(int answerId) {
+
+
+        List<Integer> optionList;
+        optionList = new ArrayList<>();
+        String content = null;
+        String[] coloums = {DBhelper.OPTION_ID};
+        String[] selectionArgs = {String.valueOf(answerId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.OPTION_ID);
+            optionList.add(cursor.getInt(index));
+
+
+
+        }
+
+
+        return optionList;
+
+
+    }
+
+    public boolean doesAnswerExist(int id,int responseid){
+        int count=0;
+
+        String[] coloums = {DBhelper.ID};
+        String[] selectionArgs = {String.valueOf(id),String.valueOf(responseid)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+        count++;
+        }
+        if(count>0)
+return true;
+        else
+            return false;
+    }
+
+
+    public int deleteRatingAnswer(int id,int responseId){
+
+
+        String[] selectionArgs={String.valueOf(id),String.valueOf(responseId)};
+        int id1 = sqLiteDatabase.delete(DBhelper.TABLE_answers, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs);
         return id1;
     }
 
