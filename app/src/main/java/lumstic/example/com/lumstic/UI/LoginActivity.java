@@ -48,7 +48,8 @@ public class LoginActivity extends Activity {
     private LumsticApp lumsticApp;
     private String accessToken="";
 
-
+    //https://survey-web-stgng.herokuapp.com/
+  //  https://user-owner-stgng.herokuapp.com/
    private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
     //  private static String url = "http://192.168.2.16:3000/api/login";
 

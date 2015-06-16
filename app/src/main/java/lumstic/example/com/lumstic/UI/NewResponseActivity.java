@@ -34,8 +34,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.db;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -236,7 +234,7 @@ public class NewResponseActivity extends Activity {
                 if(universalQuestion.getType().equals("RadioQuestion")){
                     if (radioGroup.getCheckedRadioButtonId() == -1)
                     {
-                       addOptionToDataBase(null,universalQuestion);
+                        addOptionToDataBase(null,universalQuestion);
                     }
                 }
                 if(universalQuestion.getType().equals("MultiChoiceQuestion")){
@@ -244,6 +242,14 @@ public class NewResponseActivity extends Activity {
                         addOptionToDataBase(null,universalQuestion);
                     }
                 }
+
+                if(universalQuestion.getType().equals("DropDownQuestion")){
+                    if(!checked){
+                        addOptionToDataBase(null,universalQuestion);
+                    }
+                }
+
+
                 if(universalQuestion.getType().equals("RatingQuestion")){
                     if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
                         addAnswer(universalQuestion);
@@ -343,13 +349,14 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.setId(ques.getId());
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
 
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId());
+            answer.setId(ques.getId()+220);
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
@@ -369,7 +376,7 @@ public class NewResponseActivity extends Activity {
                         long x = dbAdapter.insertDataAnswersTable(answers);
                         Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
 
-                }}
+                    }}
             });
 
 
@@ -395,12 +402,12 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId());
+            answer.setId(ques.getId()+220);
 
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -433,7 +440,7 @@ public class NewResponseActivity extends Activity {
 
         if (ques.getType().contains("DropDownQuestion")) {
 
-
+            addAnswer(ques);
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
@@ -445,7 +452,7 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -515,7 +522,7 @@ public class NewResponseActivity extends Activity {
 
             nestedQuestions.add(ques);
 
-
+            addAnswer(ques);
             Log.e("nestedquestionitem", nestedQuestions.size() + "");
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
@@ -527,7 +534,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -555,16 +562,20 @@ public class NewResponseActivity extends Activity {
                             addOptionToDataBase(options, ques);
 
 
-                            if (options.getQuestions().size() > 0) {
-                                //        Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
-                                for (int i = 0; i < options.getQuestions().size(); i++) {
-                                    buildLayout(options.getQuestions().get(i));
-                                    checkForAnswer(options.getQuestions().get(i), currentResponseId);
+                            try {
+                                if (options.getQuestions().size() > 0) {
+                                    //        Toast.makeText(NewResponseActivity.this,"has options",Toast.LENGTH_SHORT).show();
+                                    for (int i = 0; i < options.getQuestions().size(); i++) {
+                                        buildLayout(options.getQuestions().get(i));
+                                        checkForAnswer(options.getQuestions().get(i), currentResponseId);
+                                    }
                                 }
-                            }
 
-                            if (options.getCategories().size() > 0) {
-                                setCategoryTitle(options);
+                                if (options.getCategories().size() > 0) {
+                                    setCategoryTitle(options);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -612,12 +623,12 @@ public class NewResponseActivity extends Activity {
 
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId());
+            answer.setId(ques.getId()+220);
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
@@ -626,14 +637,15 @@ public class NewResponseActivity extends Activity {
 
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
-                        tsLong= System.currentTimeMillis() / 1000;
+                        tsLong = System.currentTimeMillis() / 1000;
                         answers.setUpdated_at(tsLong);
                         answers.setResponseId(currentResponseId);
                         answers.setContent(answer.getText().toString());
                         long x = dbAdapter.insertDataAnswersTable(answers);
                         Toast.makeText(NewResponseActivity.this, ques.getId() + "answer is saved", Toast.LENGTH_LONG).show();
 
-                    }}
+                    }
+                }
             });
             try {
                 checkForAnswer(ques, currentResponseId);
@@ -661,7 +673,7 @@ public class NewResponseActivity extends Activity {
 
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -700,6 +712,7 @@ public class NewResponseActivity extends Activity {
 
 
             nestedQuestions.add(ques);
+            addAnswer(ques);
 
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
@@ -711,7 +724,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
-
+            nestedContainer.setId(ques.getId());
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -749,16 +762,16 @@ public class NewResponseActivity extends Activity {
                                 checkForAnswer(options.getQuestions().get(i), currentResponseId);
                             }
                         }
-                        if (options.getQuestions().size() <= 0) {
-                            for (int i = 0; i < ques.getOptions().size(); i++) {
-                                if (!ques.getOptions().get(i).getContent().equals(options.getContent())) {
-                                    removeQuestionView(ques.getOptions().get(i));
-                                    removeCategoryView(ques.getOptions().get(i));
+                            if (options.getQuestions().size() <= 0) {
+                                for (int i = 0; i < ques.getOptions().size(); i++) {
+                                    if (!ques.getOptions().get(i).getContent().equals(options.getContent())) {
+                                        removeQuestionView(ques.getOptions().get(i));
+                                        removeCategoryView(ques.getOptions().get(i));
+                                    }
+
                                 }
 
                             }
-
-                        }
 
                     }
                 });
@@ -780,7 +793,7 @@ public class NewResponseActivity extends Activity {
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
-
+            nestedContainer.setId(ques.getId());
 
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
@@ -790,8 +803,8 @@ public class NewResponseActivity extends Activity {
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                    if(dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId)){
-                        dbAdapter.deleteRatingAnswer(universalQuestion.getId(),currentResponseId);
+                    if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
+                        dbAdapter.deleteRatingAnswer(universalQuestion.getId(), currentResponseId);
                     }
                     Answers answers = new Answers();
                     answers.setResponseId((int) dbAdapter.getMaxID());
@@ -819,7 +832,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
             nestedContainer.addView(questionTextSingleLine);
-
+            nestedContainer.setId(ques.getId());
 
             nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
             fieldContainer.addView(nestedContainer);
@@ -928,7 +941,7 @@ public class NewResponseActivity extends Activity {
 
 
             if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
-            addAnswer(universalQuestion);
+                addAnswer(universalQuestion);
             if (!universalQuestion.getType().equals("PhotoQuestion")) {
                 if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
                 }}
@@ -1035,12 +1048,12 @@ public class NewResponseActivity extends Activity {
 
 
             if (!universalQuestion.getType().equals("PhotoQuestion")) {
-             if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
-            }}
+                if(questionCounter==totalQuestionCount-1){   addAnswer(universalQuestion);
+                }}
 
             questionCounter--;
             if(!dbAdapter.doesAnswerExist(universalQuestion.getId(),currentResponseId))
-            addAnswer(universalQuestion);
+                addAnswer(universalQuestion);
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
@@ -1330,22 +1343,52 @@ public class NewResponseActivity extends Activity {
             tsLong= System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             long x = dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this, x + "", Toast.LENGTH_LONG).show();
+
         }
 
+        if(questions.getType().equals("RadioQuestion")){
+            Answers answers = new Answers();
+            answers.setQuestion_id(questions.getId());
+            answers.setResponseId(currentResponseId);
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
+            answers.setContent("");
+            long x = dbAdapter.insertDataAnswersTable(answers);
+        }
+
+
+        if(questions.getType().equals("DropDownQuestion")){
+            Answers answers = new Answers();
+            answers.setQuestion_id(questions.getId());
+            answers.setResponseId(currentResponseId);
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
+            answers.setContent("");
+            long x = dbAdapter.insertDataAnswersTable(answers);
+        }
+
+        if(questions.getType().equals("MultiChoiceQuestion")){
+            Answers answers = new Answers();
+            answers.setQuestion_id(questions.getId());
+            answers.setResponseId(currentResponseId);
+            tsLong= System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
+            answers.setContent("");
+            long x = dbAdapter.insertDataAnswersTable(answers);
+        }
 
     }
 
     public void checkForAnswer(Questions qu, int responseId) {
 
         if (qu.getType().equals("SingleLineQuestion")) {
-            answer= (EditText) findViewById(qu.getId());
+            answer= (EditText) findViewById(qu.getId()+220);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("MultiLineQuestion")) {
-            answer= (EditText) findViewById(qu.getId());
+            answer= (EditText) findViewById(qu.getId()+220);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
@@ -1356,7 +1399,7 @@ public class NewResponseActivity extends Activity {
         }
 
         if (qu.getType().equals("NumericQuestion")) {
-            answer= (EditText) findViewById(qu.getId());
+            answer= (EditText) findViewById(qu.getId()+220);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
         if (qu.getType().equals("RatingQuestion")) {
@@ -1486,19 +1529,19 @@ public class NewResponseActivity extends Activity {
     //add record to database in case of selectedlement
     public void addOptionToDataBase(Options options, Questions qu) {
 
-        Answers answers = new Answers();
-        answers.setQuestion_id(qu.getId());
-        answers.setResponseId(currentResponseId);
-        tsLong= System.currentTimeMillis() / 1000;
-        answers.setUpdated_at(tsLong);
-        answers.setContent("");
-        long x = dbAdapter.insertDataAnswersTable(answers);
+//        Answers answers = new Answers();
+//        answers.setQuestion_id(qu.getId());
+//        answers.setResponseId(currentResponseId);
+//        tsLong= System.currentTimeMillis() / 1000;
+//        answers.setUpdated_at(tsLong);
+//        answers.setContent("");
+//        long x = dbAdapter.insertDataAnswersTable(answers);
         if(options!=null){
-        Choices choices = new Choices();
+            Choices choices = new Choices();
             choices.setAnswerId((int) dbAdapter.getMaxIDAnswersTabele());
             choices.setOptionId(options.getId());
             choices.setOption(options.getContent());
-        dbAdapter.insertDataChoicesTable(choices);}
+            dbAdapter.insertDataChoicesTable(choices);}
         //Toast.makeText(NewResponseActivity.this,dbAdapter.insertDataChoicesTable(choices)+"add",Toast.LENGTH_LONG).show();
     }
 
@@ -1528,14 +1571,14 @@ public class NewResponseActivity extends Activity {
             dateText.setText(new StringBuilder().append(mYear).append("/").append(mMonth + 1).append("/").append(mDay).toString());
 
 
-                Answers answers = new Answers();
-                answers.setResponseId((int) dbAdapter.getMaxID());
-                answers.setQuestion_id(dateQuestion.getId());
-                answers.setContent(dateText.getText().toString());
+            Answers answers = new Answers();
+            answers.setResponseId((int) dbAdapter.getMaxID());
+            answers.setQuestion_id(dateQuestion.getId());
+            answers.setContent(dateText.getText().toString());
             tsLong= System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
-                long x = dbAdapter.insertDataAnswersTable(answers);
-                //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
+            long x = dbAdapter.insertDataAnswersTable(answers);
+            //Toast.makeText(NewResponseActivity.this,x+"",Toast.LENGTH_SHORT).show();
 
         }
     }

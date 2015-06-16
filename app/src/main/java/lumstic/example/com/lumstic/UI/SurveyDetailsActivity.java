@@ -86,7 +86,7 @@ public class SurveyDetailsActivity extends Activity {
     JSONArray jsonArray;
 
     int surveyId = 0;
-    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/android_responses.json?";
+    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
     // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
 
 
@@ -259,9 +259,13 @@ public class SurveyDetailsActivity extends Activity {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
+                        Log.e("counting",answerses.get(j).getId()+"");
+
+
 
                         if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) == 0)) {
                             jsonObject.put("content", "");
+
 
                         }
 
@@ -269,10 +273,12 @@ public class SurveyDetailsActivity extends Activity {
                             jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
 
                         }
-                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 1) && (answerses.get(j).getContent().equals(""))) {
+                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 1)  && (answerses.get(j).getContent().equals(""))) {
+                            Log.e("morethanone","true");
                             List<Integer> options = new ArrayList<>();
                             options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
                             jsonObject.putOpt("option_ids", options);
+                            jsonObject.remove("content");
 
                         }
 
