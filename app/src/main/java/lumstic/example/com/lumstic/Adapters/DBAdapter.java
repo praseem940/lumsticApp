@@ -308,6 +308,22 @@ ContentValues contentValues = new ContentValues();
         return count;
     }
 
+    public String getQuestionTypeWhereAnswerIdIs(int answerId) {
+
+
+        String type="";
+        String[] coloums = {DBhelper.TYPE};
+        String[] selectionArgs = {String.valueOf(answerId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.TYPE);
+            type = cursor.getString(index);
+
+        }
+        return type;
+    }
+
     public String getChoicesWhereAnswerCountIsOne(int answerId) {
 
 
@@ -378,6 +394,67 @@ return true;
         return id1;
     }
 
+
+    public boolean checkIfQuestionHasAnswer(int id,int responseid){
+        String str = "";
+        String[] coloums = {DBhelper.CONTENT};
+        String[] selectionArgs = {String.valueOf(id),String.valueOf(responseid)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.CONTENT);
+           str=cursor.getString(index);
+        }
+        if(str.equals("")){
+            return false;
+        }
+        else
+            return true;
+    }
+
+
+    public int getAnswerIdMandatory(int id,int responseid){
+        int answerId = 0;
+        String str = "";
+        String[] coloums = {DBhelper.CONTENT,DBhelper.ID};
+        String[] selectionArgs = {String.valueOf(id),String.valueOf(responseid)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.CONTENT);
+            int index2 = cursor.getColumnIndex(DBhelper.ID);
+            str=cursor.getString(index);
+            answerId= cursor.getInt(index2);
+        }
+        if(str.equals("")){
+            return answerId;
+        }
+        else
+            return 0;
+    }
+    public boolean checkChoiceTableForAnswer(int answerId) {
+        int count=0;
+
+        String[] coloums = {DBhelper.OPTION};
+        String[] selectionArgs = {String.valueOf(answerId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+           count++;
+
+        }
+        if(count>0){
+            return  true;
+        }
+        else
+            return false;
+
+
+
+
+
+    }
+
     public long insertDataQuestionTable(Questions questions) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBhelper.IDENTIFIER, questions.getIdentifier());
@@ -401,6 +478,7 @@ return true;
         contentValues.put(DBhelper.OPTION_ID, choices.getOptionId());
         contentValues.put(DBhelper.ANSWER_ID, choices.getAnswerId());
         contentValues.put(DBhelper.OPTION, choices.getOption());
+        contentValues.put(DBhelper.TYPE, choices.getType());
         return sqLiteDatabase.insert(DBhelper.TABLE_choices, null, contentValues);
     }
 
@@ -519,7 +597,7 @@ return true;
         private static final String ORGANISATION_ID = "organisation_id";
         private static final String CREATE_TABLE_choices = "CREATE TABLE "
                 + TABLE_choices + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + OPTION_ID + " INTEGER," + OPTION + " VARCHAR(255)," + ANSWER_ID + " INTEGER" + ")";
+                + OPTION_ID + " INTEGER," + OPTION + " VARCHAR(255)," + TYPE + " VARCHAR(255)," + ANSWER_ID + " INTEGER" + ")";
 
         private static final String CREATE_TABLE_questions = "CREATE TABLE "
                 + TABLE_questions + "(" + ID + " INTEGER PRIMARY KEY,"

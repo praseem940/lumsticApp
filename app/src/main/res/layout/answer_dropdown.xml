@@ -6,6 +6,7 @@
         android:layout_width="fill_parent"
         android:layout_margin="8dp"
         android:padding="2dp"
+        android:prompt="@string/select_one"
         android:id="@+id/drop_down"
          style="@style/spinner_style"
         android:layout_height="wrap_content">

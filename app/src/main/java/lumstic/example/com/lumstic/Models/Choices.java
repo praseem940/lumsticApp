@@ -6,6 +6,7 @@ public class Choices {
     int optionId;
     int answerId;
     String option;
+    String type;
 
     public int getId() {
         return id;
@@ -13,6 +14,14 @@ public class Choices {
 
     public String getOption() {
         return option;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setOption(String option) {

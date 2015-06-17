@@ -65,10 +65,12 @@ public class CompleteResponsesActivity extends Activity {
             }
         }
 
-        for(int i=0;i<completeResponseCount;i++){
+       try{ for(int i=0;i<completeResponseCount;i++){
             identifierQuestionAnswers.add(dbAdapter.getAnswer(completeResponsesId.get(i), identifierQuestionId));
             completeResponseses.add(i,new CompleteResponses(String.valueOf(completeResponsesId.get(i)),identifierQuestion.getContent()+" :"+"  "+identifierQuestionAnswers.get(i)));
-        }
+        }}catch (Exception e){
+           e.printStackTrace();
+       }
 
         listView = (ListView) findViewById(R.id.listview);
         completeResponsesAdapter = new CompleteResponsesAdapter(getApplicationContext(), completeResponseses,surveys);

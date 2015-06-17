@@ -252,36 +252,36 @@ public class SurveyDetailsActivity extends Activity {
                 answerses = null;
 
                 answerses = dbAdapter.getAnswerByResponseId(completedResponseIds.get(i));
-                 jsonArray = new JSONArray();
+                jsonArray = new JSONArray();
                 for (int j = 0; j < answerses.size(); j++) {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
-                        Log.e("counting",answerses.get(j).getId()+"");
 
 
 
-                        if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) == 0)) {
-                            jsonObject.put("content", "");
+
+                        if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 0)) {
+                            Log.e("goingintheloop","intheloop");
+                            String type=dbAdapter.getQuestionTypeWhereAnswerIdIs(answerses.get(j).getId());
+                            if(type.equals("RadioQuestion")){
+                                jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+                            }
+                            if(type.equals("DropDownQuestion")){
+                                jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+                            }
+                            if(type.equals("MultiChoiceQuestion")){
+                                List<Integer> options = new ArrayList<>();
+                                options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
+                                if(options.size()>0)
+                                jsonObject.putOpt("option_ids", options);
+                                jsonObject.remove("content");
+                            }
 
 
                         }
-
-                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) == 1) && (answerses.get(j).getContent().equals(""))) {
-                            jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
-
-                        }
-                        if ((dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 1)  && (answerses.get(j).getContent().equals(""))) {
-                            Log.e("morethanone","true");
-                            List<Integer> options = new ArrayList<>();
-                            options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
-                            jsonObject.putOpt("option_ids", options);
-                            jsonObject.remove("content");
-
-                        }
-
 
 
 
@@ -328,9 +328,9 @@ public class SurveyDetailsActivity extends Activity {
                     obj.put("status", "complete");
                     obj.put("survey_id", surveys.getId());
                     obj.put("updated_at", timestamp);
-                   obj.put("longitude", lon);
-                   obj.put("latitude", lat);
-                   obj.put("user_id", lumsticApp.getPreferences().getUserId());
+                    obj.put("longitude", lon);
+                    obj.put("latitude", lat);
+                    obj.put("user_id", lumsticApp.getPreferences().getUserId());
                     obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
                     obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
                     obj.put("mobile_id", mobilId);
@@ -382,7 +382,7 @@ public class SurveyDetailsActivity extends Activity {
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();
-               syncString = EntityUtils.toString(httpEntity);
+                syncString = EntityUtils.toString(httpEntity);
 
 
                 Log.e("jsonsyncresponse", syncString);
