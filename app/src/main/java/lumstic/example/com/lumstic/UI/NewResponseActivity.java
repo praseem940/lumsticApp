@@ -966,7 +966,6 @@ public class NewResponseActivity extends Activity {
 
     public void onNextClick() {
 
-
         try {
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
@@ -976,6 +975,8 @@ public class NewResponseActivity extends Activity {
         }
 
 
+
+
         if (questionCounter < totalQuestionCount - 1) {
             previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
             previousQuestion.setTextColor(getResources().getColor(R.color.white));
@@ -983,7 +984,7 @@ public class NewResponseActivity extends Activity {
             nestedQuestions.clear();
             nestedQuestions.clear();
             idList.clear();
-
+            fieldContainer.removeAllViews();
 
 
             if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
@@ -996,17 +997,16 @@ public class NewResponseActivity extends Activity {
                 }
             }
 
-                Toast.makeText(NewResponseActivity.this,"thisd is working",Toast.LENGTH_SHORT).show();
-                questionCounter++;
+            questionCounter++;
 
 
-                counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
 
-                for (int j = 0; j < categoriesList.size(); j++) {
-                    if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
+            for (int j = 0; j < categoriesList.size(); j++) {
+                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
 
 
-                        currentCategory = categoriesList.get(j);
+                    currentCategory = categoriesList.get(j);
 
 
 //                    if (currentCategory.getType().equals("MultiRecordCategory")) {
@@ -1025,45 +1025,43 @@ public class NewResponseActivity extends Activity {
 //                            }
 //                        });
 //                    }
-                        buildCategoryLayout(currentCategory);
+                    buildCategoryLayout(currentCategory);
 //                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
 //                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
 //
 //                    }
 
-                    }
-                }
-
-                for (int j = 0; j < questionsList.size(); j++) {
-                    if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
-                        Questions cq = questionsList.get(j);
-                        buildLayout(cq);
-                        checkForAnswer(cq, currentResponseId);
-                        break;
-                    }
-                }
-
-                if (questionCounter + 1 == totalQuestionCount) {
-
-
-                    markAsComplete.setVisibility(View.VISIBLE);
-                    nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                    nextQuestion.setText("NEXT");
-                    nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-                    nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-                    fieldContainer.addView(markAsComplete);
                 }
             }
 
-            if (questionCounter != 0) {
-                actionBar.setDisplayHomeAsUpEnabled(false);
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayShowHomeEnabled(false);
-                actionBar.setDisplayUseLogoEnabled(false);
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                    Questions cq = questionsList.get(j);
+                    buildLayout(cq);
+                    checkForAnswer(cq, currentResponseId);
+                    break;
+                }
             }
 
+            if (questionCounter + 1 == totalQuestionCount) {
+
+
+                markAsComplete.setVisibility(View.VISIBLE);
+                nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                nextQuestion.setText("NEXT");
+                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+                nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                fieldContainer.addView(markAsComplete);
+            }
+        }
+
+        if (questionCounter != 0) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+        }
     }
-
 
     public void createMarkAsComplete() {
 
