@@ -68,7 +68,6 @@ public class SurveyDetailsActivity extends Activity {
     List<Questions> questionsList;
     Responses responses;
     String timestamp = "";
-    private ProgressDialog progressDialog;
     String mobilId;
     List<Answers> answerses;
     int completeCount = 0, incompleteCount = 0;
@@ -76,27 +75,27 @@ public class SurveyDetailsActivity extends Activity {
     TextView completeTv, incompleteTv;
     List<Integer> completedResponseIds;
     LumsticApp lumsticApp;
-    String syncString="";
+    String syncString = "";
     String jsonStr = null;
-    private LocationManager locationManager;
     boolean gps_enabled = false;
     boolean network_enabled = false;
     double lat = 0, lon = 0;
     Answers ans;
+    List<String> jsonSyncResponses;
     JSONParser jsonParser;
     JSONArray jsonArray;
-
     int surveyId = 0;
     String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    private ProgressDialog progressDialog;
+    private LocationManager locationManager;
     // String uploadUrl = "http://192.168.2.16:3000/api/responses.json?";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_details);
         actionBar = getActionBar();
-        jsonParser= new JSONParser();
+        jsonParser = new JSONParser();
         completedResponseIds = new ArrayList<Integer>();
         lumsticApp = (LumsticApp) getApplication();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -167,7 +166,7 @@ public class SurveyDetailsActivity extends Activity {
                 Long tsLong = System.currentTimeMillis() / 1000;
                 timestamp = tsLong.toString();
 
-                if(completeCount>0) {
+                if (completeCount > 0) {
                     progressDialog = new ProgressDialog(SurveyDetailsActivity.this);
                     progressDialog.setCancelable(false);
                     progressDialog.setIndeterminate(true);
@@ -175,9 +174,8 @@ public class SurveyDetailsActivity extends Activity {
                     progressDialog.show();
                     new uploadResponse().execute();
                 }
-                if(completeCount<=0)
-                {
-                    Toast.makeText(SurveyDetailsActivity.this,"Complete Survey to Upload",Toast.LENGTH_LONG).show();
+                if (completeCount <= 0) {
+                    Toast.makeText(SurveyDetailsActivity.this, "Complete Survey to Upload", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -238,12 +236,39 @@ public class SurveyDetailsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public Location getLocation() {
+        if (null != locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)) {
+            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } else if (null != locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)) {
+            return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+    }
+
+    public boolean checkLocationOn() {
+//
+        try {
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+        try {
+            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        } catch (Exception ex) {
+        }
+        if (!gps_enabled && !network_enabled) {
+            return false;
+        } else
+            return true;
+    }
+
     public class uploadResponse extends AsyncTask<Void, Void, String> {
 
 
         protected String doInBackground(Void... voids) {
 
 
+            jsonSyncResponses= new ArrayList<>();
             completedResponseIds = dbAdapter.getCompleteResponsesIds(surveyId);
             for (int i = 0; i < completedResponseIds.size(); i++) {
                 answerses = new ArrayList<Answers>();
@@ -261,54 +286,46 @@ public class SurveyDetailsActivity extends Activity {
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
 
-                        if((answerses.get(j).getType().equals("MultiChoiceQuestion"))&&(dbAdapter.getChoicesCount(answerses.get(j).getId()) == 0))
-                        {
-                            Log.e("thereisastring",dbAdapter.getChoicesCount(answerses.get(j).getId())+"cdcdcd");
-                            Log.e("testing", answerses.get(j).getType()+"this is a type");
+                        try{
+                        if ((answerses.get(j).getType().equals("MultiChoiceQuestion")) && (dbAdapter.getChoicesCount(answerses.get(j).getId()) == 0)) {
+                            Log.e("thereisastring", dbAdapter.getChoicesCount(answerses.get(j).getId()) + "cdcdcd");
+                            Log.e("testing", answerses.get(j).getType() + "this is a type");
                             jsonObject.put("option_ids", JSONObject.NULL);
                             jsonObject.remove("content");
+                        }}catch (Exception e){
+                            e.printStackTrace();
                         }
 
 
-try{
-    if((answerses.get(j).getType().equals("DropDownQuestion"))||(answerses.get(j).getType().equals("MultiChoiceQuestion"))||(answerses.get(j).getType().equals("RadioQuestion")))
-    {
-                        if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 0)) {
-                            Log.e("goingintheloop","intheloop");
-                            String type=dbAdapter.getQuestionTypeWhereAnswerIdIs(answerses.get(j).getId());
-                            if(type.equals("RadioQuestion")){
-                                jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+                        try {
+                            if ((answerses.get(j).getType().equals("DropDownQuestion")) || (answerses.get(j).getType().equals("MultiChoiceQuestion")) || (answerses.get(j).getType().equals("RadioQuestion"))) {
+                                if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 0)) {
+                                    Log.e("goingintheloop", "intheloop");
+                                    String type = dbAdapter.getQuestionTypeWhereAnswerIdIs(answerses.get(j).getId());
+                                    if (type.equals("RadioQuestion")) {
+                                        jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+                                    }
+                                    if (type.equals("DropDownQuestion")) {
+                                        jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
+                                    }
+                                    if (type.equals("MultiChoiceQuestion")) {
+
+
+                                        List<Integer> options = new ArrayList<>();
+                                        options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
+                                        if (options.size() > 0)
+                                            jsonObject.putOpt("option_ids", options);
+                                        jsonObject.remove("content");
+                                    }
+
+
+                                }
+
+
                             }
-                            if(type.equals("DropDownQuestion")){
-                                jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
-                            }
-                            if(type.equals("MultiChoiceQuestion")){
-
-
-
-                                List<Integer> options = new ArrayList<>();
-                                options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
-                                if(options.size()>0)
-                                jsonObject.putOpt("option_ids", options);
-                                jsonObject.remove("content");
-                            }
-
-
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-
-
-
-    }}catch (Exception e){
-    e.printStackTrace();
-                        }
-
-
-
-
-
-
-
 
 
                         try {
@@ -379,44 +396,47 @@ try{
                 }
 
 
+                UUID.randomUUID().toString();
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(uploadUrl);
+                List nameValuePairs = new ArrayList();
+                nameValuePairs.add(new BasicNameValuePair("answers_attributes", jsonArray.toString()));
+                nameValuePairs.add(new BasicNameValuePair("response", jsonStr));
+                nameValuePairs.add(new BasicNameValuePair("status", "complete"));
+                nameValuePairs.add(new BasicNameValuePair("survey_id", surveys.getId() + ""));
+                nameValuePairs.add(new BasicNameValuePair("updated_at", timestamp));
+                nameValuePairs.add(new BasicNameValuePair("longitude", lon + ""));
+                nameValuePairs.add(new BasicNameValuePair("latitude", lat + ""));
+                nameValuePairs.add(new BasicNameValuePair("access_token", lumsticApp.getPreferences().getAccessToken()));
+                nameValuePairs.add(new BasicNameValuePair("user_id", lumsticApp.getPreferences().getUserId()));
+                nameValuePairs.add(new BasicNameValuePair("organization_id", lumsticApp.getPreferences().getOrganizationId()));
+                nameValuePairs.add(new BasicNameValuePair("mobile_id", mobilId));
+                try {
+                    httppost.addHeader("access_token", lumsticApp.getPreferences().getAccessToken());
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    HttpResponse httpResponse = httpclient.execute(httppost);
+                    HttpEntity httpEntity = httpResponse.getEntity();
+                    syncString = EntityUtils.toString(httpEntity);
+
+
+                    Log.e("jsonsyncresponse", syncString);
+                    jsonSyncResponses.add(syncString);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
 
-            UUID.randomUUID().toString();
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(uploadUrl);
-            List nameValuePairs = new ArrayList();
-            nameValuePairs.add(new BasicNameValuePair("answers_attributes",jsonArray.toString()));
-            nameValuePairs.add(new BasicNameValuePair("response", jsonStr));
-            nameValuePairs.add(new BasicNameValuePair("status", "complete"));
-            nameValuePairs.add(new BasicNameValuePair("survey_id",surveys.getId()+"" ));
-            nameValuePairs.add(new BasicNameValuePair("updated_at",timestamp ));
-            nameValuePairs.add(new BasicNameValuePair("longitude",lon+"" ));
-            nameValuePairs.add(new BasicNameValuePair("latitude", lat+""));
-            nameValuePairs.add(new BasicNameValuePair("access_token", lumsticApp.getPreferences().getAccessToken()));
-            nameValuePairs.add(new BasicNameValuePair("user_id", lumsticApp.getPreferences().getUserId()));
-            nameValuePairs.add(new BasicNameValuePair("organization_id",lumsticApp.getPreferences().getOrganizationId() ));
-            nameValuePairs.add(new BasicNameValuePair("mobile_id",mobilId ));
 
             // nameValuePairs.add(new BasicNameValuePair("access_token",  lumsticApp.getPreferences().getAccessToken()));
 
             // List nameValuePairs = new ArrayList();
             //nameValuePairs.add(new BasicNameValuePair("answer_attribute", ""));
-            try {
-                httppost.addHeader("access_token", lumsticApp.getPreferences().getAccessToken());
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse httpResponse = httpclient.execute(httppost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                syncString = EntityUtils.toString(httpEntity);
-
-
-                Log.e("jsonsyncresponse", syncString);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
 
             return null;
@@ -425,43 +445,19 @@ try{
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
-
-            if(jsonParser.parseSyncResult(syncString)) {
+int uploadCount=0;
+            for(int i=0;i<jsonSyncResponses.size();i++){
+            if (jsonParser.parseSyncResult(jsonSyncResponses.get(i))) {
+                uploadCount++;
+            } }
+            if(uploadCount==completeCount){
                 Toast.makeText(SurveyDetailsActivity.this, "Responses Uploaded", Toast.LENGTH_LONG).show();
                 Toast.makeText(SurveyDetailsActivity.this, dbAdapter.deleteFromResponseTableOnUpload(surveyId) + "", Toast.LENGTH_LONG).show();
                 completeCount = dbAdapter.getCompleteResponse(surveys.getId());
-                completeTv.setText(completeCount+"");
-            }
-            else{
-                Toast.makeText(SurveyDetailsActivity.this, "Responses Upload Unsuccessfull", Toast.LENGTH_LONG).show();
+                completeTv.setText(completeCount + "");
+                finish();
 
             }
         }
-    }
-
-    public Location getLocation() {
-        if (null != locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)) {
-            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else if (null != locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)) {
-            return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-        return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-    }
-
-    public boolean checkLocationOn() {
-//
-        try {
-            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
-        }
-        try {
-            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        } catch (Exception ex) {
-        }
-        if (!gps_enabled && !network_enabled) {
-            return false;
-        } else
-            return true;
     }
 }
