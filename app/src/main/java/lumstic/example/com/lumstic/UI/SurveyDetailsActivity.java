@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -260,9 +261,18 @@ public class SurveyDetailsActivity extends Activity {
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
 
+                        if((answerses.get(j).getType().equals("MultiChoiceQuestion"))&&(dbAdapter.getChoicesCount(answerses.get(j).getId()) == 0))
+                        {
+                            Log.e("thereisastring",dbAdapter.getChoicesCount(answerses.get(j).getId())+"cdcdcd");
+                            Log.e("testing", answerses.get(j).getType()+"this is a type");
+                            jsonObject.put("option_ids", JSONObject.NULL);
+                            jsonObject.remove("content");
+                        }
 
 
-
+try{
+    if((answerses.get(j).getType().equals("DropDownQuestion"))||(answerses.get(j).getType().equals("MultiChoiceQuestion"))||(answerses.get(j).getType().equals("RadioQuestion")))
+    {
                         if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 0)) {
                             Log.e("goingintheloop","intheloop");
                             String type=dbAdapter.getQuestionTypeWhereAnswerIdIs(answerses.get(j).getId());
@@ -273,6 +283,9 @@ public class SurveyDetailsActivity extends Activity {
                                 jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
                             }
                             if(type.equals("MultiChoiceQuestion")){
+
+
+
                                 List<Integer> options = new ArrayList<>();
                                 options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
                                 if(options.size()>0)
@@ -286,17 +299,25 @@ public class SurveyDetailsActivity extends Activity {
 
 
 
+    }}catch (Exception e){
+    e.printStackTrace();
+                        }
+
+
+
+
 
 
 
 
 
                         try {
-                            if (answerses.get(j).getImage().equals(null)) {
+                            if (answerses.get(j).getType().equals("PhotoQuestion")) {
                                 Log.e("answers", "dex");
-                                String path = "Environment.getExternalStorageDirectory().toString() + \"/saved_images\"";
+                                String path = Environment.getExternalStorageDirectory().toString() + "/saved_images";
                                 Bitmap b = null;
                                 String fileName = answerses.get(j).getImage();
+                                //Toast.makeText(SurveyDetailsActivity.this,fileName,Toast.LENGTH_SHORT).show();
                                 try {
                                     File f = new File(path, fileName);
                                     b = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -310,7 +331,10 @@ public class SurveyDetailsActivity extends Activity {
                                 b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                                 byte[] byteArray = byteArrayOutputStream.toByteArray();
                                 String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                jsonObject.put("image", encoded);
+
+                                jsonObject.put("photo", encoded);
+                                jsonObject.put("content", "");
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

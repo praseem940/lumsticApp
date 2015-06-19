@@ -14,6 +14,7 @@ public class Answers {
     int question_id;
     String image;
     String content;
+    String type;
     ArrayList<Integer> optionIds;
 
     public ArrayList<Integer> getOptionIds() {
@@ -58,6 +59,14 @@ public class Answers {
 
     public int getResponseId() {
         return responseId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setResponseId(int responseId) {
