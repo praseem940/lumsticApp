@@ -11,15 +11,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -72,6 +76,7 @@ public class NewResponseActivity extends Activity {
     Long tsLong = null;
     boolean proceed = true;
     RelativeLayout deleteImageRelativeLayout;
+    Answers answers;
 
     List<Questions> nestedQuestions;
 
@@ -126,6 +131,7 @@ public class NewResponseActivity extends Activity {
         nestedQuestions = new ArrayList<Questions>();
         idList = new ArrayList<Integer>();
         counterButton = (Button) findViewById(R.id.counter_button);
+
 
         dbAdapter = new DBAdapter(NewResponseActivity.this);
         questionsList = new ArrayList<Questions>();
@@ -325,6 +331,7 @@ public class NewResponseActivity extends Activity {
         }
         if (id == R.id.save) {
 
+            finish();
 
             return true;
 
@@ -348,23 +355,35 @@ public class NewResponseActivity extends Activity {
 
         universalQuestion = ques;
         if (ques.getType().equals("SingleLineQuestion")) {
+
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
+
+
+
 
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
+
+
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
 
             nestedContainer.setTag(ques);
@@ -372,12 +391,29 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
             answer.setId(ques.getId() + 220);
+
+
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+
+            answers = new Answers();
+            answers.setQuestion_id(ques.getId());
+            answers.setResponseId(currentResponseId);
+            tsLong = System.currentTimeMillis() / 1000;
+            answers.setUpdated_at(tsLong);
+
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
+
+                    if (b) {
+
+                        answer = (EditText) view;
+                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+
+
+                    }
 
                     if (!b) {
 
@@ -388,10 +424,12 @@ public class NewResponseActivity extends Activity {
 
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
-                        if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
-                        if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                            dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+
+                        Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
+                        if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                            dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
 
                         }
@@ -399,7 +437,6 @@ public class NewResponseActivity extends Activity {
                     }
                 }
             });
-
 
             try {
                 checkForAnswer(ques, currentResponseId);
@@ -418,17 +455,23 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_multi_line, null));
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -439,24 +482,37 @@ public class NewResponseActivity extends Activity {
                 @Override
                 public void onFocusChange(View view, boolean b) {
 
+                    if (b) {
+
+                        answer = (EditText) view;
+                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+
+
+                    }
+
                     if (!b) {
 
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
                         tsLong = System.currentTimeMillis() / 1000;
+
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
-                        if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
-                        if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                            dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+
+                        Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
+                        if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                            dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
 
                         }
+
                     }
                 }
             });
+
 
 
             try {
@@ -471,7 +527,7 @@ public class NewResponseActivity extends Activity {
 
         if (ques.getType().contains("DropDownQuestion")) {
             nestedQuestions.add(ques);
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
+            if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                 addAnswer(ques);
             }
             LinearLayout nestedContainer = new LinearLayout(this);
@@ -480,17 +536,23 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             //nestedContainer.addView(inflater.inflate(R.layout.answer_dropdown, null));
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -534,7 +596,6 @@ public class NewResponseActivity extends Activity {
                             if (!ques.getOptions().get(j).getContent().equals(options.getContent())) {
 
 
-
                                 removeQuestionView(ques.getOptions().get(j));
                                 removeCategoryView(ques.getOptions().get(j));
 
@@ -564,7 +625,7 @@ public class NewResponseActivity extends Activity {
 
             nestedQuestions.add(ques);
 
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
+            if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
             addAnswer(ques);
 
             }
@@ -575,16 +636,22 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -611,7 +678,7 @@ public class NewResponseActivity extends Activity {
 
                             addOptionToDataBase(options, ques);
                             nestedQuestionList.clear();
-                            nestedQuestionList.add(ques);
+                           nestedQuestionList.add(ques);
 
 
 
@@ -669,18 +736,23 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
 
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_numeric, null));
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -690,24 +762,37 @@ public class NewResponseActivity extends Activity {
                 @Override
                 public void onFocusChange(View view, boolean b) {
 
+                    if (b) {
+
+                        answer = (EditText) view;
+                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+
+
+                    }
+
                     if (!b) {
 
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
-                        tsLong = System.currentTimeMillis() / 1000;
-                        answers.setUpdated_at(tsLong);
                         answers.setResponseId(currentResponseId);
+                        tsLong = System.currentTimeMillis() / 1000;
+
+                        answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
-                        if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
-                        if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                            dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+
+                        Toast.makeText(NewResponseActivity.this, "saved", Toast.LENGTH_LONG).show();
+                        if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                            dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
 
                         }
+
                     }
                 }
             });
+
             try {
                 checkForAnswer(ques, currentResponseId);
             } catch (Exception e) {
@@ -728,18 +813,23 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
 
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_date_picker, null));
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
             fieldContainer.addView(nestedContainer);
@@ -776,7 +866,7 @@ public class NewResponseActivity extends Activity {
 
 
             nestedQuestions.add(ques);
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
+            if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                 addAnswer(ques);
             }
 
@@ -786,16 +876,22 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
 
@@ -859,17 +955,23 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
 
             nestedContainer.setTag(ques);
             idList.add(ques.getId());
@@ -879,8 +981,8 @@ public class NewResponseActivity extends Activity {
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                    if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                        dbAdapter.deleteRatingAnswer(universalQuestion.getId(), currentResponseId);
+                    if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                        dbAdapter.deleteRatingAnswer(ques.getId(), currentResponseId);
                     }
                     Answers answers = new Answers();
                     answers.setResponseId((int) dbAdapter.getMaxID());
@@ -888,8 +990,11 @@ public class NewResponseActivity extends Activity {
                     tsLong = System.currentTimeMillis() / 1000;
                     answers.setUpdated_at(tsLong);
                     answers.setContent(String.valueOf(v));
-                    long x = dbAdapter.insertDataAnswersTable(answers);
-                }
+                    if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                        dbAdapter.insertDataAnswersTable(answers);
+                        Toast.makeText(NewResponseActivity.this, "rating saved", Toast.LENGTH_SHORT).show();
+                    }
+                                    }
             });
 
 
@@ -904,25 +1009,33 @@ public class NewResponseActivity extends Activity {
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
             questionTextSingleLine.setPadding(0, 0, 0, 16);
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent()+"  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent()+"  *");
+            }
+
+            else{
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
             nestedContainer.addView(questionTextSingleLine);
             nestedContainer.setId(ques.getId());
-            if (universalQuestion.getMandatory() == 1) {
 
-                TextView mandatoryText = makeMandatoryText();
-                nestedContainer.addView(mandatoryText);
-            }
 
             nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
             fieldContainer.addView(nestedContainer);
 
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text_image);
+            linearLayout.setId(ques.getId() + 220);
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
             imageViewPhotoQuestion = (ImageView) findViewById(R.id.image);
+
             imageContainer = (RelativeLayout) findViewById(R.id.image_container);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1378,11 +1491,11 @@ public class NewResponseActivity extends Activity {
             answers.setContent(answer.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
+            if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
                 dbAdapter.insertDataAnswersTable(answers);
             }
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            if (dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(questions.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
@@ -1396,10 +1509,10 @@ public class NewResponseActivity extends Activity {
             answers.setContent(answer.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+            if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
                 dbAdapter.insertDataAnswersTable(answers);
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            if (dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(questions.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
@@ -1412,10 +1525,10 @@ public class NewResponseActivity extends Activity {
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             answers.setContent(answer.getText().toString());
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+            if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
                 dbAdapter.insertDataAnswersTable(answers);
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            if (dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(questions.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
@@ -1429,10 +1542,10 @@ public class NewResponseActivity extends Activity {
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             answers.setContent(dateText.getText().toString());
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+            if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
                 dbAdapter.insertDataAnswersTable(answers);
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            if (dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(questions.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
@@ -1450,10 +1563,10 @@ public class NewResponseActivity extends Activity {
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             answers.setContent(String.valueOf(ratingBar.getRating()));
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+            if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
                 dbAdapter.insertDataAnswersTable(answers);
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            if (dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(questions.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
@@ -1688,6 +1801,13 @@ public class NewResponseActivity extends Activity {
         for (int i = 0; i < qu.getOptions().size(); i++) {
             if (options.getId() != qu.getOptions().get(i).getId()) {
                 dbAdapter.deleteFromChoicesTableWhereOptionId(qu.getOptions().get(i).getId());
+                if(qu.getOptions().get(i).getQuestions().size()>0)
+                {
+                    for(int j=0;j<qu.getOptions().get(i).getQuestions().size();j++){
+                        dbAdapter.deleteFromAnswerTable(qu.getOptions().get(i).getQuestions().get(j).getId(),currentResponseId);
+
+                    }
+                }
             }
         }
     }

@@ -46,7 +46,7 @@ public class IncompleteResponseActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomplete_response);
         actionBar = getActionBar();
-        actionBar.setTitle("Incompleted Responses");
+        actionBar.setTitle("Incomplete Responses");
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);

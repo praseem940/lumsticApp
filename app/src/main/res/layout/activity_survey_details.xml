@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:text="Ends on:"
                     android:textColor="#6c6c6c"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
 
                 <lumstic.example.com.lumstic.Views.RobotoLightTextView
                     android:layout_marginLeft="4dp"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:text="18th Feb 2015"
                     android:textColor="#6c6c6c"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
 
 
             </LinearLayout>
@@ -75,13 +75,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Responses"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="20dp"
                 android:textColor="#212121"
                 android:layout_marginLeft="20dp"
                 android:textSize="18sp"
                 android:layout_below="@+id/ends_date_container" />
 
-
+<View
+    android:layout_width="fill_parent"
+    android:layout_height="0.5dp"
+    android:layout_marginTop="17dp"
+    android:alpha=".4"
+    android:layout_marginLeft="20dp"
+    android:layout_below="@+id/response"
+    android:background="#999999"></View>
 
             <RelativeLayout
 

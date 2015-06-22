@@ -36,8 +36,8 @@
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginRight="14dp"
                 android:background="@drawable/ic_upload" />
 

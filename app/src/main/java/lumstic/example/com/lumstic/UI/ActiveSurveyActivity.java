@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 public class ActiveSurveyActivity extends Activity {
     ListView listView;
     LumsticApp lumsticApp;
+    LinearLayout uploadContainer;
     List<Surveys> surveysList;
     JsonHelper jsonHelper;
     boolean surveyFromServer = false;
@@ -56,8 +58,13 @@ public class ActiveSurveyActivity extends Activity {
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
 
+
         lumsticApp = (LumsticApp) getApplication();
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
+        uploadContainer= (LinearLayout)findViewById(R.id.upload_container);
+        if(dbAdapter.getCompleteResponseFull()==0){
+            uploadContainer.setVisibility(View.GONE);
+        }
 
         progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
         progressDialog.setCancelable(false);

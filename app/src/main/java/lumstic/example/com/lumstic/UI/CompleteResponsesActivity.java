@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class CompleteResponsesActivity extends Activity {
     ListView listView;
     DBAdapter dbAdapter;
     TextView responseCount;
+    TextView surveyTitle;
+    LinearLayout uploadContainer;
     Surveys surveys;
     int completeResponseCount=0;
     List<CompleteResponses> completeResponseses;
@@ -53,17 +56,33 @@ public class CompleteResponsesActivity extends Activity {
         completeResponsesId= new ArrayList<Integer>();
         identifierQuestionAnswers= new ArrayList<String>();
         responseCount= (TextView)findViewById(R.id.complete_response_count);
+        surveyTitle= (TextView)findViewById(R.id.survey_title_text);
+        uploadContainer= (LinearLayout)findViewById(R.id.upload_container);
+
         surveys = new Surveys();
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         completeResponseCount=dbAdapter.getCompleteResponse(surveys.getId());
         completeResponsesId=dbAdapter.getCompleteResponsesIds(surveys.getId());
+        if(completeResponseCount==0){
+            uploadContainer.setVisibility(View.GONE);
+        }
+        surveyTitle.setText(surveys.getName());
         responseCount.setText(completeResponseCount+"");
         for(int j=0;j<surveys.getQuestions().size();j++){
             if(surveys.getQuestions().get(j).getIdentifier()==1){
-                identifierQuestion=surveys.getQuestions().get(j);
-                identifierQuestionId=surveys.getQuestions().get(j).getId();
+                try {
+                    identifierQuestion = surveys.getQuestions().get(j);
+                    identifierQuestionId = surveys.getQuestions().get(j).getId();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
+
+
+
+
 
        try{ for(int i=0;i<completeResponseCount;i++){
             identifierQuestionAnswers.add(dbAdapter.getAnswer(completeResponsesId.get(i), identifierQuestionId));

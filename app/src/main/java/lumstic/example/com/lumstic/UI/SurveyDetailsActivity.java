@@ -110,6 +110,7 @@ public class SurveyDetailsActivity extends Activity {
             actionBar.setTitle("Survey Detail");
 
 
+
         surveyId = surveys.getId();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -126,6 +127,11 @@ public class SurveyDetailsActivity extends Activity {
 
         responses = new Responses();
         dbAdapter = new DBAdapter(SurveyDetailsActivity.this);
+
+
+        if(dbAdapter.getCompleteResponse(surveys.getId())==0){
+            uploadButton.setVisibility(View.GONE);
+        }
         if (getIntent().hasExtra(IntentConstants.SURVEY)) {
 
             surveyTitleText.setText(surveys.getName());
@@ -174,9 +180,7 @@ public class SurveyDetailsActivity extends Activity {
                     progressDialog.show();
                     new uploadResponse().execute();
                 }
-                if (completeCount <= 0) {
-                    Toast.makeText(SurveyDetailsActivity.this, "Complete Survey to Upload", Toast.LENGTH_LONG).show();
-                }
+
             }
         });
 
@@ -451,7 +455,7 @@ int uploadCount=0;
                 uploadCount++;
             } }
             if(uploadCount==completeCount){
-                Toast.makeText(SurveyDetailsActivity.this, "Responses Uploaded", Toast.LENGTH_LONG).show();
+                Toast.makeText(SurveyDetailsActivity.this, "Responses uploaded successfully:  "+completedResponseIds.size()+"    Errors:0", Toast.LENGTH_LONG).show();
                 Toast.makeText(SurveyDetailsActivity.this, dbAdapter.deleteFromResponseTableOnUpload(surveyId) + "", Toast.LENGTH_LONG).show();
                 completeCount = dbAdapter.getCompleteResponse(surveys.getId());
                 completeTv.setText(completeCount + "");

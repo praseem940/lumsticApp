@@ -161,6 +161,8 @@ public class DBAdapter {
     }
 
 
+
+
     public int deleteImagePath(int responseId, int questionId){
         int id = 0;
         String[] selectionArgs={String.valueOf(responseId),String.valueOf(questionId)};
@@ -216,6 +218,21 @@ public class DBAdapter {
         return value;
     }
 
+    public int getCompleteResponseFull(){
+        int value=0;
+        String[] coloums={DBhelper.STATUS};
+        Cursor cursor=sqLiteDatabase.query(DBhelper.TABLE_responses, coloums, null, null, null, null, null);
+
+        while(cursor.moveToNext()){
+            int index=cursor.getColumnIndex(DBhelper.STATUS);
+            if(cursor.getString(index).equals("complete")){
+                value++;
+            }
+
+        }
+
+        return value;
+    }
 
 
     public List<Integer> getIncompleteResponsesIds(int surveyId){
