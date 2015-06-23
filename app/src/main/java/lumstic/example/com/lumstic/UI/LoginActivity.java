@@ -104,8 +104,8 @@ public class LoginActivity extends Activity {
 
                 } else {
                     lumsticApp.showToast("Enter Valid Email ");
-                    Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
-                    startActivity(intent);
+
+
                 }
 
 

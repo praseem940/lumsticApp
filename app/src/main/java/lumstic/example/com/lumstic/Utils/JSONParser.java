@@ -26,6 +26,19 @@ public class JSONParser {
     List<Categories> categorieses;
 
 
+    public boolean parseForgotPassword(JSONObject jsonObjectForgotPassword){
+        String str= null;
+        try {
+            str = jsonObjectForgotPassword.getString("notice");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(str.equals("Email address not valid"))
+    return false;
+        else
+return true;
+    }
+
     public UserModel parseLogin(JSONObject jsonObjectLogin){
         userModel= new UserModel();
         try {

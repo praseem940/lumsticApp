@@ -144,6 +144,11 @@ public class NewResponseActivity extends Activity {
 
 
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+        for(int i=0;i<surveys.getQuestions().size();i++){
+            if(surveys.getQuestions().get(i).getCategoryId()>0){
+                surveys.getQuestions().remove(i);
+            }
+        }
 
 
         if (getIntent().hasExtra(IntentConstants.RESPONSE_ID)) {
@@ -1145,8 +1150,6 @@ public class NewResponseActivity extends Activity {
 
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
-
-
                     currentCategory = categoriesList.get(j);
 
 
@@ -1413,7 +1416,7 @@ public class NewResponseActivity extends Activity {
         idList.add(categories.getId());
         fieldContainer.addView(nestedContainer);
 
-        for (int j = 0; j < categories.getQuestionsList().size(); j++) {
+        for (int j = categories.getQuestionsList().size()-1; j >= 0; j--) {
 
             buildLayout(categories.getQuestionsList().get(j));
             checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);

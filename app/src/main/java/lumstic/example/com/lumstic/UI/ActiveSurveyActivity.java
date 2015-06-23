@@ -59,6 +59,9 @@ public class ActiveSurveyActivity extends Activity {
         getActionBar().setTitle("DashBoard");
 
 
+
+
+
         lumsticApp = (LumsticApp) getApplication();
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
         uploadContainer= (LinearLayout)findViewById(R.id.upload_container);
@@ -128,6 +131,8 @@ public class ActiveSurveyActivity extends Activity {
 lumsticApp.getPreferences().setSurveyData(s);
 
                      surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
+
+
                 //  surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
