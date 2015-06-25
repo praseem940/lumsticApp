@@ -144,12 +144,19 @@ public class NewResponseActivity extends Activity {
 
 
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
-        for(int i=0;i<surveys.getQuestions().size();i++){
-            if(surveys.getQuestions().get(i).getCategoryId()>0){
-                surveys.getQuestions().remove(i);
-            }
-        }
 
+
+
+        for(int j=surveys.getQuestions().size()-1;j>=0;j--){
+            if(surveys.getQuestions().get(j).getCategoryId()>0)
+                surveys.getQuestions().remove(j);
+
+        }
+        for(int j=surveys.getCategories().size()-1;j>=0;j--){
+            if(surveys.getCategories().get(j).getParentId()>0)
+                surveys.getCategories().remove(j);
+
+        }
 
         if (getIntent().hasExtra(IntentConstants.RESPONSE_ID)) {
             currentResponseId = getIntent().getIntExtra(IntentConstants.RESPONSE_ID, 0);
@@ -414,13 +421,15 @@ public class NewResponseActivity extends Activity {
 
                     if (b) {
 
-                        answer = (EditText) view;
-                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+                       // answer = (EditText) view;
+                       // Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
 
 
                     }
 
                     if (!b) {
+
+                        answer = (EditText) view;
 
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
@@ -926,6 +935,7 @@ public class NewResponseActivity extends Activity {
                         nestedQuestionList.clear();
                         nestedQuestionList.add(ques);
                         removeOthersFromDataBase(options, ques);
+                        removeOther
 
 
 
@@ -936,18 +946,21 @@ public class NewResponseActivity extends Activity {
                             }
                         }
 
+                        if(options.getCategories().size()>0){
+                            for(int i=0;i<options.getCategories().size();i++){
+                                buildCategoryLayout(options.getCategories().get(i));
+                            }
+                        }
+
+
                         for (int i = 0; i < ques.getOptions().size(); i++) {
                             if (!ques.getOptions().get(i).getContent().equals(options.getContent())) {
                                 removeQuestionView(ques.getOptions().get(i));
                                 removeCategoryView(ques.getOptions().get(i));
                             }
-
                         }
-
-
                     }
                 });
-
             }
             fieldContainer.addView(nestedContainer);
             checkHint();
@@ -999,7 +1012,7 @@ public class NewResponseActivity extends Activity {
                         dbAdapter.insertDataAnswersTable(answers);
                         Toast.makeText(NewResponseActivity.this, "rating saved", Toast.LENGTH_SHORT).show();
                     }
-                                    }
+                }
             });
 
 

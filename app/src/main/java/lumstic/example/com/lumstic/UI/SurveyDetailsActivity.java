@@ -103,6 +103,10 @@ public class SurveyDetailsActivity extends Activity {
         if (getIntent().hasExtra(IntentConstants.SURVEY)) {
             surveys = new Surveys();
             surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+
+
+
+
             actionBar.setTitle(surveys.getName());
             questionsList = new ArrayList<Questions>();
             questionsList = surveys.getQuestions();
@@ -114,7 +118,8 @@ public class SurveyDetailsActivity extends Activity {
         surveyId = surveys.getId();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+
+//  actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
 
         uploadButton = (RelativeLayout) findViewById(R.id.upload_button);
@@ -459,6 +464,7 @@ int uploadCount=0;
                 Toast.makeText(SurveyDetailsActivity.this, dbAdapter.deleteFromResponseTableOnUpload(surveyId) + "", Toast.LENGTH_LONG).show();
                 completeCount = dbAdapter.getCompleteResponse(surveys.getId());
                 completeTv.setText(completeCount + "");
+
                 finish();
 
             }

@@ -133,7 +133,7 @@ lumsticApp.getPreferences().setSurveyData(s);
                      surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
 
 
-                //  surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
+                  //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
 
 
             } catch (Exception e) {
