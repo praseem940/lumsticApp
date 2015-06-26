@@ -76,7 +76,7 @@ ActionBar actionBar;
                 progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Logging in");
+                progressDialog.setMessage("Processing ");
                 progressDialog.show();
                 if (!TextUtils.isEmpty(email) && CommonUtil.validateEmail(email)) {
 

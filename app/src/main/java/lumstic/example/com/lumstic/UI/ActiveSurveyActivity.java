@@ -84,20 +84,7 @@ public class ActiveSurveyActivity extends Activity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_help) {
-            return true;
-        }
-        if (id == R.id.action_logout) {
-            lumsticApp.getPreferences().setAccessToken("");
-            Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
-            startActivity(i);
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
 
     class FetchSurvey extends AsyncTask<Void, Void, String> {
 
@@ -257,6 +244,32 @@ lumsticApp.getPreferences().setSurveyData(s);
         }
 
     }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_help) {
+            return true;
+        }
+        if (id == R.id.action_logout) {
+            lumsticApp.getPreferences().setAccessToken("");
+            Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
+            startActivity(i);
+            return true;
+        }
+
+        if (id == R.id.action_fetch) {
+//            progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setIndeterminate(true);
+//            progressDialog.setMessage("Fetching Surveys ");
+//            progressDialog.show();
+//
+//            new FetchSurvey().execute();
+//            //dashBoardAdapter.notifyDataSetChanged();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 }

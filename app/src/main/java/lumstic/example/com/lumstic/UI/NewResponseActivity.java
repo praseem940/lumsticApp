@@ -276,17 +276,17 @@ public class NewResponseActivity extends Activity {
 
 
                 if (universalQuestion.getType().equals("RatingQuestion")) {
-                        addAnswer(universalQuestion);
+                    addAnswer(universalQuestion);
                 }
 
                 if (universalQuestion.getType().equals("SingleLineQuestion")) {
-                        addAnswer(universalQuestion);
+                    addAnswer(universalQuestion);
                 }
                 if (universalQuestion.getType().equals("MultiLineQuestion")) {
-                        addAnswer(universalQuestion);
+                    addAnswer(universalQuestion);
                 }
                 if (universalQuestion.getType().equals("NumericQuestion")) {
-                        addAnswer(universalQuestion);
+                    addAnswer(universalQuestion);
                 }
 
 
@@ -421,8 +421,8 @@ public class NewResponseActivity extends Activity {
 
                     if (b) {
 
-                       // answer = (EditText) view;
-                       // Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+                        // answer = (EditText) view;
+                        // Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -604,6 +604,12 @@ public class NewResponseActivity extends Activity {
 
                         }
 
+                        if(options.getCategories().size()>0){
+                            for(int j=0;j<options.getCategories().size();j++){
+                                buildCategoryLayout(options.getCategories().get(j));
+                            }
+                        }
+
 
                         for (int j = 0; j < ques.getOptions().size(); j++) {
 
@@ -640,7 +646,7 @@ public class NewResponseActivity extends Activity {
             nestedQuestions.add(ques);
 
             if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
-            addAnswer(ques);
+                addAnswer(ques);
 
             }
             Log.e("nestedquestionitem", nestedQuestions.size() + "");
@@ -692,7 +698,7 @@ public class NewResponseActivity extends Activity {
 
                             addOptionToDataBase(options, ques);
                             nestedQuestionList.clear();
-                           nestedQuestionList.add(ques);
+                            nestedQuestionList.add(ques);
 
 
 
@@ -704,9 +710,13 @@ public class NewResponseActivity extends Activity {
                                     }
                                 }
 
-                                if (options.getCategories().size() > 0) {
-                                    setCategoryTitle(options);
+                                if(options.getCategories().size()>0){
+                                    for(int i=0;i<options.getCategories().size();i++){
+                                        buildCategoryLayout(options.getCategories().get(i));
+                                    }
                                 }
+
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -935,7 +945,7 @@ public class NewResponseActivity extends Activity {
                         nestedQuestionList.clear();
                         nestedQuestionList.add(ques);
                         removeOthersFromDataBase(options, ques);
-                        removeOther
+
 
 
 
@@ -1144,80 +1154,76 @@ public class NewResponseActivity extends Activity {
         boolean x = checkMandatory(nestedQuestionList);
         if (x) {
             nestedQuestionList.clear();
-        if (questionCounter < totalQuestionCount - 1) {
-            previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
-            previousQuestion.setTextColor(getResources().getColor(R.color.white));
-            previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
-            nestedQuestions.clear();
-            nestedQuestions.clear();
-            idList.clear();
-            fieldContainer.removeAllViews();
+            if (questionCounter < totalQuestionCount - 1) {
+                previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
+                previousQuestion.setTextColor(getResources().getColor(R.color.white));
+                previousQuestion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow_back, 0, 0, 0);
+                nestedQuestions.clear();
+                nestedQuestions.clear();
+                idList.clear();
+                fieldContainer.removeAllViews();
 
 
 
 
-            questionCounter++;
+                questionCounter++;
 
 
-            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+                counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
 
-            for (int j = 0; j < categoriesList.size(); j++) {
-                if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
-                    currentCategory = categoriesList.get(j);
+                for (int j = 0; j < categoriesList.size(); j++) {
+                    if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                        currentCategory = categoriesList.get(j);
 
 
-//                    if (currentCategory.getType().equals("MultiRecordCategory")) {
-//                        Button addRecord = new Button(this);
-//                        addRecord.setBackgroundResource(R.drawable.custom_button);
-//                        addRecord.setText("+  Add Record");
-//                        addRecord.setTextColor(getResources().getColor(R.color.white));
-//                        fieldContainer.addView(addRecord);
-//                        addRecord.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                buildCategoryLayout(currentCategory);
-//                                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
+                    if (currentCategory.getType().equals("MultiRecordCategory")) {
+                        Button addRecord = new Button(this);
+                        addRecord.setBackgroundResource(R.drawable.custom_button);
+                        addRecord.setText("+  Add Record");
+                        addRecord.setTextColor(getResources().getColor(R.color.white));
+                        fieldContainer.addView(addRecord);
+                        addRecord.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                buildCategoryLayout(currentCategory);
+                                for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
 //                                    checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-//                                }
-//                            }
-//                        });
-//                    }
-                    buildCategoryLayout(currentCategory);
-//                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-//                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
-//
-//                    }
+                                }
+                            }
+                        });
+                    }
+                        buildCategoryLayout(currentCategory);
 
+                    }
+                }
+
+                for (int j = 0; j < questionsList.size(); j++) {
+                    if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
+                        Questions cq = questionsList.get(j);
+                        buildLayout(cq);
+                        checkForAnswer(cq, currentResponseId);
+                        break;
+                    }
+                }
+
+                if (questionCounter + 1 == totalQuestionCount) {
+
+
+                    markAsComplete.setVisibility(View.VISIBLE);
+                    nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
+                    nextQuestion.setText("NEXT");
+                    nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
+                    nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
+                    fieldContainer.addView(markAsComplete);
                 }
             }
 
-            for (int j = 0; j < questionsList.size(); j++) {
-                if (questionsList.get(j).getOrderNumber() == types.get(questionCounter)) {
-                    Questions cq = questionsList.get(j);
-                    buildLayout(cq);
-                    checkForAnswer(cq, currentResponseId);
-                    break;
-                }
+            if (questionCounter != 0) {
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayShowHomeEnabled(false);
+                actionBar.setDisplayUseLogoEnabled(false);
             }
-
-            if (questionCounter + 1 == totalQuestionCount) {
-
-
-                markAsComplete.setVisibility(View.VISIBLE);
-                nextQuestion.setTextColor(getResources().getColor(R.color.back_button_text));
-                nextQuestion.setText("NEXT");
-                nextQuestion.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_next_disable, 0);
-                nextQuestion.setBackgroundColor(getResources().getColor(R.color.back_button_background));
-                fieldContainer.addView(markAsComplete);
-            }
-        }
-
-        if (questionCounter != 0) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayUseLogoEnabled(false);
-        }
         }
     }
 
@@ -1824,6 +1830,17 @@ public class NewResponseActivity extends Activity {
 
                     }
                 }
+
+
+
+                if(qu.getOptions().get(i).getCategories().size()>0){
+                    for(int k=0;k<qu.getOptions().get(i).getCategories().size();k++){
+                        for(int l=0;l<qu.getOptions().get(i).getCategories().get(k).getQuestionsList().size();l++){
+                            Toast.makeText(NewResponseActivity.this,"delete "+qu.getOptions().get(i).getCategories().get(k).getQuestionsList().get(l).getId(),Toast.LENGTH_SHORT).show();
+                            dbAdapter.deleteFromAnswerTable(qu.getOptions().get(i).getCategories().get(k).getQuestionsList().get(l).getId(),currentResponseId);
+                        }
+                    }
+                }
             }
         }
     }
@@ -1850,35 +1867,35 @@ public class NewResponseActivity extends Activity {
                     } else proceed = true;
                 }
             }
-                if (nestedQuestionList.get(i).getType().equals("RadioQuestion")) {
+            if (nestedQuestionList.get(i).getType().equals("RadioQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
-                int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
-                if (count == 0) {
-                    showDialog();
-                    proceed = false;
-                }
-
-                if (count != 0) {
-                    if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                    int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
+                    if (count == 0) {
                         showDialog();
                         proceed = false;
                     }
-                }
-            }}
+
+                    if (count != 0) {
+                        if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                            showDialog();
+                            proceed = false;
+                        }
+                    }
+                }}
             if (nestedQuestionList.get(i).getType().equals("MultiChoiceQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
-                int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
-                if (count == 0) {
-                    showDialog();
-                    proceed = false;
-                }
-                if (count != 0) {
-                    if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                    int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
+                    if (count == 0) {
                         showDialog();
                         proceed = false;
                     }
-                }
-            }}
+                    if (count != 0) {
+                        if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                            showDialog();
+                            proceed = false;
+                        }
+                    }
+                }}
             if (nestedQuestionList.get(i).getType().equals("RatingQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
                     if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
@@ -1908,18 +1925,18 @@ public class NewResponseActivity extends Activity {
             }
             if (nestedQuestionList.get(i).getType().equals("DropDownQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
-                int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
-                if (count == 0) {
-                    showDialog();
-                    proceed = false;
-                }
-                if (count != 0) {
-                    if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                    int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
+                    if (count == 0) {
                         showDialog();
-                        proceed=false;
+                        proceed = false;
                     }
-                }
-            }}
+                    if (count != 0) {
+                        if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
+                            showDialog();
+                            proceed=false;
+                        }
+                    }
+                }}
 
         }
         return proceed;

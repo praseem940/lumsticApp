@@ -45,6 +45,7 @@ public class DashBoardActivity extends Activity {
             surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
             listView = (ListView) findViewById(R.id.active_survey_list);
 
+            if(surveysList!=null){
             dashBoardAdapter = new DashBoardAdapter(getApplicationContext(), surveysList);
             listView.setAdapter(dashBoardAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,7 +58,7 @@ public class DashBoardActivity extends Activity {
                 }
             });
         }
-    }
+    }}
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dash_board, menu);
