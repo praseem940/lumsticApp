@@ -218,7 +218,7 @@ public class SurveyDetailsActivity extends Activity {
                     startActivity(intent);
                 }
                 Toast.makeText(SurveyDetailsActivity.this, dbAdapter.insertDataResponsesTable(responses) + "", Toast.LENGTH_SHORT).show();
-
+finish();
 
             }
         });

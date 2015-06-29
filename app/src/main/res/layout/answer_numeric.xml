@@ -9,6 +9,8 @@
         android:hint="type your answer here"
         android:padding="14dp"
         android:layout_margin="14dp"
+    android:layout_marginBottom="30dp"
+
     android:textColorHint="#bcbcbc"
         android:inputType="number"
         android:background="@drawable/edittext_modified_state"

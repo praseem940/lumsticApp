@@ -11,10 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import lumstic.example.com.lumstic.Adapters.CompleteResponsesAdapter;
 import lumstic.example.com.lumstic.Adapters.DBAdapter;
 import lumstic.example.com.lumstic.Adapters.IncompleteResponsesAdapter;
-import lumstic.example.com.lumstic.Models.CompleteResponses;
 import lumstic.example.com.lumstic.Models.IncompleteResponses;
 import lumstic.example.com.lumstic.Models.Questions;
 import lumstic.example.com.lumstic.Models.Surveys;
@@ -28,6 +26,7 @@ public class IncompleteResponseActivity extends Activity {
     DBAdapter dbAdapter;
     Surveys surveys;
     TextView responseCount;
+    TextView surveyTitle;
     int incompleteResponseCount = 0;
     List<IncompleteResponses> incompleteResponseses;
     Questions identifierQuestion;
@@ -47,6 +46,7 @@ public class IncompleteResponseActivity extends Activity {
         setContentView(R.layout.activity_incomplete_response);
         actionBar = getActionBar();
         actionBar.setTitle("Incomplete Responses");
+        surveyTitle= (TextView)findViewById(R.id.survey_title_text);
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
@@ -63,6 +63,7 @@ public class IncompleteResponseActivity extends Activity {
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         incompleteResponseCount = dbAdapter.getIncompleteResponse(surveys.getId());
         incompleteResponsesId = dbAdapter.getIncompleteResponsesIds(surveys.getId());
+        surveyTitle.setText(surveys.getName());
 
         responseCount.setText(incompleteResponseCount+"");
         for (int j = 0; j < surveys.getQuestions().size(); j++) {

@@ -11,19 +11,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -370,6 +366,11 @@ public class NewResponseActivity extends Activity {
 
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -465,6 +466,11 @@ public class NewResponseActivity extends Activity {
 
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -546,6 +552,11 @@ public class NewResponseActivity extends Activity {
             }
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -652,6 +663,11 @@ public class NewResponseActivity extends Activity {
             Log.e("nestedquestionitem", nestedQuestions.size() + "");
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -756,6 +772,11 @@ public class NewResponseActivity extends Activity {
         if (ques.getType().contains("NumericQuestion")) {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -833,6 +854,11 @@ public class NewResponseActivity extends Activity {
             dateQuestion = ques;
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -896,6 +922,11 @@ public class NewResponseActivity extends Activity {
 
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -979,6 +1010,11 @@ public class NewResponseActivity extends Activity {
         if (ques.getType().equals("RatingQuestion")) {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -1033,6 +1069,11 @@ public class NewResponseActivity extends Activity {
         if (ques.getType().equals("PhotoQuestion")) {
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(10,10,10,20);
+            nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
             questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
@@ -1057,15 +1098,15 @@ public class NewResponseActivity extends Activity {
             nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
             fieldContainer.addView(nestedContainer);
 
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.answer_text_image);
-            linearLayout.setId(ques.getId() + 220);
+            Button   lButton= (Button) findViewById(R.id.answer_text_image);
+            lButton.setId(ques.getId() + 220);
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
             imageViewPhotoQuestion = (ImageView) findViewById(R.id.image);
 
             imageContainer = (RelativeLayout) findViewById(R.id.image_container);
-            linearLayout.setOnClickListener(new View.OnClickListener() {
+            lButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent cameraIntent = new Intent(
@@ -1232,7 +1273,8 @@ public class NewResponseActivity extends Activity {
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.leftMargin = 5;
-        params.topMargin = 10;
+        params.topMargin = 30;
+        params.gravity=Gravity.CENTER;
 
 
         markAsComplete.setBackgroundResource(R.drawable.custom_button);

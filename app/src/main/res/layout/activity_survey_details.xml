@@ -126,6 +126,7 @@
                         <lumstic.example.com.lumstic.Views.RobotoRegularTextView
                             android:id="@+id/complete_response"
                             android:text="02"
+                            android:layout_marginTop="2dp"
                             android:textColor="#63b436"
                             android:textSize="30sp"
                             android:layout_width="wrap_content"
@@ -193,6 +194,7 @@
                         android:id="@+id/incomplete_response"
                         android:text="02"
                         android:textColor="#FDA500"
+                        android:layout_marginTop="2dp"
                         android:textSize="30sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
