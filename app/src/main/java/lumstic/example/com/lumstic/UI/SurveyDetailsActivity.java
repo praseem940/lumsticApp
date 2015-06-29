@@ -217,7 +217,7 @@ public class SurveyDetailsActivity extends Activity {
                     intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
                     startActivity(intent);
                 }
-                Toast.makeText(SurveyDetailsActivity.this, dbAdapter.insertDataResponsesTable(responses) + "", Toast.LENGTH_SHORT).show();
+               dbAdapter.insertDataResponsesTable(responses);
 finish();
 
             }
@@ -461,7 +461,7 @@ int uploadCount=0;
             } }
             if(uploadCount==completeCount){
                 Toast.makeText(SurveyDetailsActivity.this, "Responses uploaded successfully:  "+completedResponseIds.size()+"    Errors:0", Toast.LENGTH_LONG).show();
-                Toast.makeText(SurveyDetailsActivity.this, dbAdapter.deleteFromResponseTableOnUpload(surveyId) + "", Toast.LENGTH_LONG).show();
+                dbAdapter.deleteFromResponseTableOnUpload(surveyId);
                 completeCount = dbAdapter.getCompleteResponse(surveys.getId());
                 completeTv.setText(completeCount + "");
 

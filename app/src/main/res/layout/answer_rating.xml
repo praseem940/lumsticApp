@@ -2,13 +2,13 @@
 <LinearLayout
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:layout_marginBottom="30dp"
+    android:layout_marginBottom="10dp"
 
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <RatingBar
         android:layout_width="wrap_content"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         style="@style/customRatingBar"
         android:id="@+id/ratingBar"
     android:numStars="5"

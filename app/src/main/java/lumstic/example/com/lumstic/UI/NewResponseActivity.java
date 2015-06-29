@@ -278,7 +278,7 @@ public class NewResponseActivity extends Activity {
                 if (universalQuestion.getType().equals("SingleLineQuestion")) {
                     addAnswer(universalQuestion);
                 }
-                if (universalQuestion.getType().equals("MultiLineQuestion")) {
+                if (universalQuestion.getType().equals("MultilineQuestion")) {
                     addAnswer(universalQuestion);
                 }
                 if (universalQuestion.getType().equals("NumericQuestion")) {
@@ -369,7 +369,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -442,7 +442,7 @@ public class NewResponseActivity extends Activity {
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
 
-                        Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
@@ -462,14 +462,14 @@ public class NewResponseActivity extends Activity {
         }
 
 
-        if (ques.getType().contains("MultiLineQuestion")) {
+        if (ques.getType().contains("MultilineQuestion")) {
 
             LinearLayout nestedContainer = new LinearLayout(this);
             nestedContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -505,7 +505,7 @@ public class NewResponseActivity extends Activity {
                     if (b) {
 
                         answer = (EditText) view;
-                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -522,7 +522,7 @@ public class NewResponseActivity extends Activity {
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
 
-                        Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
@@ -555,7 +555,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -666,7 +666,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -775,7 +775,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -810,7 +810,7 @@ public class NewResponseActivity extends Activity {
                     if (b) {
 
                         answer = (EditText) view;
-                        Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(NewResponseActivity.this, answer.getId() + "answerr id", Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -827,7 +827,7 @@ public class NewResponseActivity extends Activity {
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
 
-                        Toast.makeText(NewResponseActivity.this, "saved", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(NewResponseActivity.this, "saved", Toast.LENGTH_LONG).show();
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
@@ -857,7 +857,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -925,7 +925,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -1013,7 +1013,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -1056,7 +1056,7 @@ public class NewResponseActivity extends Activity {
                     answers.setContent(String.valueOf(v));
                     if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                         dbAdapter.insertDataAnswersTable(answers);
-                        Toast.makeText(NewResponseActivity.this, "rating saved", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(NewResponseActivity.this, "rating saved", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -1072,7 +1072,7 @@ public class NewResponseActivity extends Activity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.setMargins(10,10,10,20);
+            layoutParams.setMargins(10,10,10,30);
             nestedContainer.setLayoutParams(layoutParams);
             TextView questionTextSingleLine = new TextView(this);
             questionTextSingleLine.setTextSize(20);
@@ -1179,7 +1179,7 @@ public class NewResponseActivity extends Activity {
             e.printStackTrace();
         }
 
-        if ((universalQuestion.getType().equals("SingleLineQuestion")) || ((universalQuestion.getType().equals("MultiLineQuestion")) || ((universalQuestion.getType().equals("DateQuestion")) || ((universalQuestion.getType().equals("NumericQuestion")))))) {
+        if ((universalQuestion.getType().equals("SingleLineQuestion")) || ((universalQuestion.getType().equals("MultilineQuestion")) || ((universalQuestion.getType().equals("DateQuestion")) || ((universalQuestion.getType().equals("NumericQuestion")))))) {
             addAnswer(universalQuestion);
         } else {
             if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
@@ -1306,7 +1306,7 @@ public class NewResponseActivity extends Activity {
             }
         }
 
-        if ((universalQuestion.getType().equals("SingleLineQuestion")) || ((universalQuestion.getType().equals("MultiLineQuestion")) || ((universalQuestion.getType().equals("DateQuestion")) || ((universalQuestion.getType().equals("NumericQuestion")))))) {
+        if ((universalQuestion.getType().equals("SingleLineQuestion")) || ((universalQuestion.getType().equals("MultilineQuestion")) || ((universalQuestion.getType().equals("DateQuestion")) || ((universalQuestion.getType().equals("NumericQuestion")))))) {
             addAnswer(universalQuestion);
         } else {
             if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
@@ -1566,7 +1566,7 @@ public class NewResponseActivity extends Activity {
             ;
         }
 
-        if (questions.getType().equals("MultiLineQuestion")) {
+        if (questions.getType().equals("MultilineQuestion")) {
             Answers answers = new Answers();
             answers.setQuestion_id(questions.getId());
             answers.setResponseId((int) dbAdapter.getMaxID());
@@ -1694,7 +1694,7 @@ public class NewResponseActivity extends Activity {
         }
 
 
-        if (qu.getType().equals("MultiLineQuestion")) {
+        if (qu.getType().equals("MultilineQuestion")) {
             answer = (EditText) findViewById(qu.getId() + 220);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
@@ -1878,7 +1878,7 @@ public class NewResponseActivity extends Activity {
                 if(qu.getOptions().get(i).getCategories().size()>0){
                     for(int k=0;k<qu.getOptions().get(i).getCategories().size();k++){
                         for(int l=0;l<qu.getOptions().get(i).getCategories().get(k).getQuestionsList().size();l++){
-                            Toast.makeText(NewResponseActivity.this,"delete "+qu.getOptions().get(i).getCategories().get(k).getQuestionsList().get(l).getId(),Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(NewResponseActivity.this,"delete "+qu.getOptions().get(i).getCategories().get(k).getQuestionsList().get(l).getId(),Toast.LENGTH_SHORT).show();
                             dbAdapter.deleteFromAnswerTable(qu.getOptions().get(i).getCategories().get(k).getQuestionsList().get(l).getId(),currentResponseId);
                         }
                     }
@@ -1901,7 +1901,7 @@ public class NewResponseActivity extends Activity {
                 }
 
             }
-            if (nestedQuestionList.get(i).getType().equals("MultiLineQuestion")) {
+            if (nestedQuestionList.get(i).getType().equals("MultilineQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
                     if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
                         showDialog();
