@@ -471,6 +471,23 @@ int count=0;
             return str;
 
     }
+    public String doesImageExistAsNonNull(int id,int responseid){
+
+
+
+        String str="";
+        String[] coloums = {DBhelper.IMAGE};
+        String[] selectionArgs = {String.valueOf(id),String.valueOf(responseid)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int index = cursor.getColumnIndex(DBhelper.IMAGE);
+            str=cursor.getString(index);
+        }
+
+        return str;
+
+    }
 
 
     public int deleteFromAnswerTable(int questionId, int responseId){

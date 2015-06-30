@@ -33,47 +33,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lumstic.example.com.lumstic.Models.UserModel;
-import lumstic.example.com.lumstic.Utils.JSONParser;
-import lumstic.example.com.lumstic.Utils.LumsticApp;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.Utils.CommonUtil;
+import lumstic.example.com.lumstic.Utils.JSONParser;
+import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class LoginActivity extends Activity {
 
-    String jsonLoginString="";
-    private       UserModel  userModel;
-    private ActionBar actionBar;
-    private Button loginButton;
-    private TextView fogotPassword;
+    private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
+    private UserModel userModel;
     private LumsticApp lumsticApp;
-    private String accessToken="";
-
-    //https://survey-web-stgng.herokuapp.com/
-  //  https://user-owner-stgng.herokuapp.com/
-   private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
-    //  private static String url = "http://192.168.2.16:3000/api/login";
-
-    private EditText emailEditText, passwordEditText;
     private ProgressDialog progressDialog;
+    private ActionBar actionBar;
+    private TextView fogotPassword;
+    private Button loginButton;
+    private EditText emailEditText, passwordEditText;
+    private String jsonLoginString = "";
     private String email = null, password = null;
-    int ctr;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         lumsticApp = (LumsticApp) getApplication();
 
-
-        try{
-        if(!lumsticApp.getPreferences().getAccessToken().equals(""))
-        {
-            Intent i = new Intent(LoginActivity.this,DashBoardActivity.class);
-            startActivity(i);
-            finish();
-        }}
-        catch (Exception e){
+        //if USER IS SIGNED IN
+        try {
+            if (!lumsticApp.getPreferences().getAccessToken().equals("")) {
+                Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+                startActivity(i);
+                finish();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //initialize action bar
         actionBar = getActionBar();
         actionBar.setTitle("Login");
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -82,10 +77,13 @@ public class LoginActivity extends Activity {
         actionBar.setDisplayUseLogoEnabled(false);
 
 
+        //initialize views and variables
         emailEditText = (EditText) findViewById(R.id.email_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
         loginButton = (Button) findViewById(R.id.login_button);
         fogotPassword = (TextView) findViewById(R.id.forgot_password);
+
+        //on login button click
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,20 +95,17 @@ public class LoginActivity extends Activity {
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Logging in");
                 progressDialog.show();
+                //validation of email
                 if (!TextUtils.isEmpty(email) && CommonUtil.validateEmail(email)) {
                     lumsticApp.getPreferences().setSurveyData("");
                     new Login().execute();
-
-
                 } else {
                     lumsticApp.showToast("Enter Valid Email ");
-
-
                 }
-
-
             }
         });
+
+        //on user forgot password
         fogotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +113,6 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -141,8 +135,7 @@ public class LoginActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
+    //asyn class on new thread to api call progress
     public class Login extends AsyncTask<Void, Void, String> {
 
 
@@ -158,22 +151,23 @@ public class LoginActivity extends Activity {
                 HttpResponse httpResponse = httpclient.execute(httppost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 jsonLoginString = EntityUtils.toString(httpEntity);
-                Log.e("datainfo",jsonLoginString);
+                Log.e("datainfo", jsonLoginString);
             } catch (ClientProtocolException e) {
             } catch (IOException e) {
             }
             return jsonLoginString;
         }
 
+        // response back from server
         @Override
         protected void onPostExecute(String result) {
 
             Log.e("isthisworking", jsonLoginString);
-            JSONObject jsonObjectLogin= null;
+            JSONObject jsonObjectLogin = null;
             try {
                 jsonObjectLogin = new JSONObject(jsonLoginString);
                 JSONParser jsonParser = new JSONParser();
-                userModel=jsonParser.parseLogin(jsonObjectLogin);
+                userModel = jsonParser.parseLogin(jsonObjectLogin);
                 lumsticApp.getPreferences().setAccessToken(userModel.getAccess_token());
                 lumsticApp.getPreferences().setUserId(String.valueOf(userModel.getUser_id()));
                 lumsticApp.getPreferences().setOrganizationId(String.valueOf(userModel.getOrganisation_id()));
@@ -181,21 +175,13 @@ public class LoginActivity extends Activity {
                 e.printStackTrace();
             }
 
-            if(userModel!=null){
-
+            if (userModel != null) {
                 progressDialog.dismiss();
-                Toast.makeText(LoginActivity.this,"Logged In ",Toast.LENGTH_LONG).show();
-
-
+                Toast.makeText(LoginActivity.this, "Logged In ", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
                 startActivity(intent);
                 finish();
-
-
             }
-
-
         }
     }
-
 }

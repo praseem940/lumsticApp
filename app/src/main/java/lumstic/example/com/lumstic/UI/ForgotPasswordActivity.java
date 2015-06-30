@@ -88,11 +88,6 @@ ActionBar actionBar;
 
 
                 }
-
-//                Toast.makeText(ForgotPasswordActivity.this,"We have sent you a password reset link",Toast.LENGTH_LONG).show();
-//                Intent i = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
-//                startActivity(i);
-//                finish();
             }
         });
 
@@ -143,32 +138,6 @@ ActionBar actionBar;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-//            JSONObject jsonObjectLogin= null;
-//            try {
-//                jsonObjectLogin = new JSONObject(jsonLoginString);
-//                JSONParser jsonParser = new JSONParser();
-//                userModel=jsonParser.parseLogin(jsonObjectLogin);
-//                lumsticApp.getPreferences().setAccessToken(userModel.getAccess_token());
-//                lumsticApp.getPreferences().setUserId(String.valueOf(userModel.getUser_id()));
-//                lumsticApp.getPreferences().setOrganizationId(String.valueOf(userModel.getOrganisation_id()));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if(userModel!=null){
-//
-//                progressDialog.dismiss();
-//                Toast.makeText(LoginActivity.this,"Logged In ",Toast.LENGTH_LONG).show();
-//
-//
-//                Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
-//                startActivity(intent);
-//                finish();
-//
-//
-//            }
-//
 
         }
     }

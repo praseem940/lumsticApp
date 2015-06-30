@@ -62,63 +62,66 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 
 public class ActiveSurveyActivity extends Activity {
-    ListView listView;
-    LumsticApp lumsticApp;
-    LinearLayout uploadContainer;
-    List<Surveys> surveysList;
-    List<Integer> completedResponseIds;
-    List<Answers> answerses;
-    String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
-    Surveys surveys;
-    int surveyId;
-    JSONArray jsonArray;
-    String jsonStr = null;
-    double lat = 0, lon = 0;
-    boolean gps_enabled = false;
-    boolean network_enabled = false;
-    int completeCount = 0;
-    JSONParser jsonParser;
-    Button uploadButton;
-    int uploadCount=0;
-    List<String> jsonSyncResponses;
-    JsonHelper jsonHelper;
-    boolean surveyFromServer = false;
-    ProgressDialog progressDialog;
-    String mobilId;
-    String syncString = "";
-    String timestamp = "";
-    DashBoardAdapter dashBoardAdapter;
-    DBAdapter dbAdapter;
-    // String fetchUrl = "http://192.168.2.16:3000/api/deep_surveys?access_token=";
-    String fetchUrl = "https://survey-web-stgng.herokuapp.com/api/deep_surveys?access_token=";
-    String jsonFetchString = "";
+
+    private LinearLayout uploadContainer;
+    private ListView listView;
+    private Button uploadButton;
+
+    private LumsticApp lumsticApp;
+    private Surveys surveys;
+    private JSONArray jsonArray;
+    private JSONParser jsonParser;
+    private JsonHelper jsonHelper;
+    private ProgressDialog progressDialog;
+    private DashBoardAdapter dashBoardAdapter;
+    private DBAdapter dbAdapter;
     private LocationManager locationManager;
+
+    private List<Surveys> surveysList;
+    private List<Integer> completedResponseIds;
+    private List<Answers> answerses;
+    private List<String> jsonSyncResponses;
+
+
+    private String fetchUrl = "https://survey-web-stgng.herokuapp.com/api/deep_surveys?access_token=";
+    private String jsonFetchString = "";
+    private String mobilId;
+    private String syncString = "";
+    private String timestamp = "";
+    private String jsonStr = null;
+    private String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    private int uploadCount = 0;
+    private int surveyId;
+    private int completeCount = 0;
+    private double lat = 0, lon = 0;
+    private boolean gps_enabled = false;
+    private boolean network_enabled = false;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
-
-
         lumsticApp = (LumsticApp) getApplication();
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
+        jsonParser = new JSONParser();
+        progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
+
         uploadContainer = (LinearLayout) findViewById(R.id.upload_container);
-        uploadButton=(Button)findViewById(R.id.upload_all);
+        uploadButton = (Button) findViewById(R.id.upload_all);
+
         completeCount = dbAdapter.getCompleteResponseFull();
         if (dbAdapter.getCompleteResponseFull() == 0) {
             uploadContainer.setVisibility(View.GONE);
         }
 
-        jsonParser = new JSONParser();
-        progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Surveys ");
         progressDialog.show();
+//fetch survey execute
         new FetchSurvey().execute();
-
-
 
 
     }
@@ -128,7 +131,7 @@ public class ActiveSurveyActivity extends Activity {
         super.onResume();
 
 
-        uploadButton=(Button)findViewById(R.id.upload_all);
+        uploadButton = (Button) findViewById(R.id.upload_all);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,9 +169,10 @@ public class ActiveSurveyActivity extends Activity {
 
         try {
             dashBoardAdapter.notifyDataSetChanged();
-        }catch (Exception e){
-            e.printStackTrace();}
-            completeCount = dbAdapter.getCompleteResponseFull();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        completeCount = dbAdapter.getCompleteResponseFull();
 
         if (dbAdapter.getCompleteResponseFull() != 0) {
             uploadContainer.setVisibility(View.VISIBLE);
@@ -583,12 +587,13 @@ public class ActiveSurveyActivity extends Activity {
 
                 }
 
-                           for(int i=0;i<jsonSyncResponses.size();i++){
-                if (jsonParser.parseSyncResult(jsonSyncResponses.get(i))) {
-                    uploadCount++;
-                    dbAdapter.deleteFromResponseTableOnUpload(surveyId);
+                for (int i = 0; i < jsonSyncResponses.size(); i++) {
+                    if (jsonParser.parseSyncResult(jsonSyncResponses.get(i))) {
+                        uploadCount++;
+                        dbAdapter.deleteFromResponseTableOnUpload(surveyId);
 
-                } }
+                    }
+                }
             }
 
             return null;
@@ -597,9 +602,9 @@ public class ActiveSurveyActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
-            if(uploadCount==completeCount){
+            if (uploadCount == completeCount) {
                 dashBoardAdapter.notifyDataSetChanged();
-                Toast.makeText(ActiveSurveyActivity.this, "Responses uploaded successfully:  "+uploadCount+"    Errors:0", Toast.LENGTH_LONG).show();
+                Toast.makeText(ActiveSurveyActivity.this, "Responses uploaded successfully:  " + uploadCount + "    Errors:0", Toast.LENGTH_LONG).show();
                 //completeCount = dbAdapter.getCompleteResponse(surveys.getId());
                 //completeTv.setText(completeCount + "");
 
@@ -607,15 +612,13 @@ public class ActiveSurveyActivity extends Activity {
 
                 completeCount = dbAdapter.getCompleteResponseFull();
 
-            if (dbAdapter.getCompleteResponseFull() != 0) {
-                uploadContainer.setVisibility(View.VISIBLE);
-            }
+                if (dbAdapter.getCompleteResponseFull() != 0) {
+                    uploadContainer.setVisibility(View.VISIBLE);
+                }
 
-            if (dbAdapter.getCompleteResponseFull() == 0) {
-                uploadContainer.setVisibility(View.GONE);
-            }
-
-
+                if (dbAdapter.getCompleteResponseFull() == 0) {
+                    uploadContainer.setVisibility(View.GONE);
+                }
 
 
             }

@@ -15,26 +15,28 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class SplashActivity extends Activity {
 
-    LumsticApp  lumsticApp;
+    private LumsticApp lumsticApp;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        lumsticApp= (LumsticApp) getApplication();
+
+        lumsticApp = (LumsticApp) getApplication();
+        //set timer for splash screen
         TimerTask task = new TimerTask() {
 
             @Override
             public void run() {
 
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();}
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
         };
         Timer t = new Timer();
-        t.schedule(task,2000);
+        t.schedule(task, 2000);
     }
-
-
 
 
     @Override
