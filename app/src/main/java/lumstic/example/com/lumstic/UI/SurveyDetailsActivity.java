@@ -77,7 +77,8 @@ public class SurveyDetailsActivity extends Activity {
     private LocationManager locationManager;
 
     private String timestamp = "";
-    private String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    private String baseUrl = "";
+    private String uploadUrl = "/api/responses.json?";
     private String mobilId;
     private String syncString = "";
     private String jsonStr = null;
@@ -98,6 +99,11 @@ public class SurveyDetailsActivity extends Activity {
         setContentView(R.layout.activity_survey_details);
         actionBar = getActionBar();
         lumsticApp = (LumsticApp) getApplication();
+        if (lumsticApp.getPreferences().getBaseUrl() == null) {
+            baseUrl = SurveyDetailsActivity.this.getResources().getString(R.string.server_url);
+        } else
+            baseUrl = lumsticApp.getPreferences().getBaseUrl();
+        uploadUrl = baseUrl + uploadUrl;
         jsonParser = new JSONParser();
         completedResponseIds = new ArrayList<Integer>();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

@@ -37,7 +37,8 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class ForgotPasswordActivity extends Activity {
 
-    private static String url = "https://user-owner-stgng.herokuapp.com/api/password_resets";
+    private String baseUrl = "";
+    private  String url = "/api/password_resets";
     private ProgressDialog progressDialog;
     private LumsticApp lumsticApp;
     private Button requestPasswordButton;
@@ -62,6 +63,13 @@ public class ForgotPasswordActivity extends Activity {
         actionBar.setDisplayUseLogoEnabled(false);
 
         lumsticApp = (LumsticApp) getApplication();
+
+        if(lumsticApp.getPreferences().getBaseUrl()==null){
+            baseUrl=ForgotPasswordActivity.this.getResources().getString(R.string.server_url);
+        }
+        else
+            baseUrl=lumsticApp.getPreferences().getBaseUrl();
+        url=baseUrl+url;
 
         //setting up views
         emailET = (EditText) findViewById(R.id.email_edit_text);
@@ -111,6 +119,7 @@ public class ForgotPasswordActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             JSONObject jsonObjectForgotPassword = null;
+            progressDialog.dismiss();
             try {
                 jsonObjectForgotPassword = new JSONObject(jsonPasswordString);
                 JSONParser jsonParser = new JSONParser();
@@ -125,6 +134,10 @@ public class ForgotPasswordActivity extends Activity {
                 if (!proceed) {
                     progressDialog.dismiss();
                     errorContainer.setVisibility(View.VISIBLE);
+                }
+                else{
+
+                    Toast.makeText(ForgotPasswordActivity.this,"Network error",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

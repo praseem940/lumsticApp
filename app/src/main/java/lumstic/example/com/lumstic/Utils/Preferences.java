@@ -9,6 +9,7 @@ public class Preferences {
     private static final String access_token = "access_token";
     private static final String user_id= "user_id";
     private static final String organization_id = "organization_id";
+    private static final String base_url="base_url";
 
     private static final String SEARCH_LOG_ID="SEARCH_LOG_ID";
     private String SURVEY_DATA ="SURVEY_DATA";
@@ -49,7 +50,12 @@ public class Preferences {
         setBoolean(ADD_AUTH_IN_HEADER, addAuthInHeader);
     }
 
-
+    public String getBaseUrl() {
+        return getString(base_url, null);
+    }
+    public void setBaseUrl(String baseUrl) {
+        setString(base_url, baseUrl);
+    }
 
 
     public String getAccessToken() {

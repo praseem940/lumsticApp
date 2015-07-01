@@ -1,7 +1,6 @@
 package lumstic.example.com.lumstic.Adapters;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,23 +18,28 @@ public class DashBoardAdapter extends BaseAdapter {
     ViewHolder viewHolder;
     List<Surveys> surveyList;
     DBAdapter dbAdapter;
+
     public DashBoardAdapter(Context context, List<Surveys> surveyList) {
         this.context = context;
         this.surveyList = surveyList;
-        dbAdapter= new DBAdapter(context) ;
+        dbAdapter = new DBAdapter(context);
     }
+
     @Override
     public int getCount() {
         return surveyList.size();
     }
+
     @Override
     public Object getItem(int i) {
         return surveyList.get(i);
     }
+
     @Override
     public long getItemId(int i) {
         return i;
     }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         LayoutInflater inflater = (LayoutInflater) context
@@ -58,6 +62,7 @@ public class DashBoardAdapter extends BaseAdapter {
         viewHolder.endDate.setText(survey.getExpiryDate());
         return view;
     }
+
     private static class ViewHolder {
         TextView surveyName, completedSurvey, incompleteSurvey, uploadedSurvey, endDate;
         LinearLayout linearLayout;

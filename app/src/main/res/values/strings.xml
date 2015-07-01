@@ -3,7 +3,7 @@
 
     <bool name="isDebugEnabled">false</bool>
 
-    <string name="server_url">http://sxxws</string>
+    <string name="server_url">https://survey-web-stgng.herokuapp.com</string>
     <string name="app_name">LumStic</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

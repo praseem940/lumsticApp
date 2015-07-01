@@ -83,13 +83,14 @@ public class ActiveSurveyActivity extends Activity {
     private List<String> jsonSyncResponses;
 
 
-    private String fetchUrl = "https://survey-web-stgng.herokuapp.com/api/deep_surveys?access_token=";
+    private String baseUrl = "";
+    private String fetchUrl = "/api/deep_surveys?access_token=";
     private String jsonFetchString = "";
     private String mobilId;
     private String syncString = "";
     private String timestamp = "";
     private String jsonStr = null;
-    private String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    private String uploadUrl = "/api/responses.json?";
     private int uploadCount = 0;
     private int surveyId;
     private int completeCount = 0;
@@ -104,6 +105,15 @@ public class ActiveSurveyActivity extends Activity {
         setContentView(R.layout.activity_active_survey);
         getActionBar().setTitle("DashBoard");
         lumsticApp = (LumsticApp) getApplication();
+
+
+        if(lumsticApp.getPreferences().getBaseUrl()==null){
+            baseUrl=ActiveSurveyActivity.this.getResources().getString(R.string.server_url);
+        }
+        else
+            baseUrl=lumsticApp.getPreferences().getBaseUrl();
+        fetchUrl=baseUrl+fetchUrl;
+        uploadUrl=baseUrl+uploadUrl;
         dbAdapter = new DBAdapter(ActiveSurveyActivity.this);
         jsonParser = new JSONParser();
         progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
@@ -123,6 +133,7 @@ public class ActiveSurveyActivity extends Activity {
         //fetch survey execute
         new FetchSurvey().execute();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -168,10 +179,12 @@ public class ActiveSurveyActivity extends Activity {
             uploadContainer.setVisibility(View.GONE);
         }
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.active_survey, menu);
         return true;
     }
+
     public void addCategories(Surveys surveys) {
         for (int h = 0; h < surveys.getCategories().size(); h++) {
             Categories categories = surveys.getCategories().get(h);
@@ -202,6 +215,7 @@ public class ActiveSurveyActivity extends Activity {
                 addOptions(question);
         }
     }
+
     public void addOptions(Questions questions) {
         for (int k = 0; k < questions.getOptions().size(); k++) {
             Options options = questions.getOptions().get(k);
@@ -213,6 +227,7 @@ public class ActiveSurveyActivity extends Activity {
                 addNestedCategories(options);
         }
     }
+
     public void addNestedCategories(Options options) {
         for (int d = 0; d < options.getCategories().size(); d++) {
             Categories categories = options.getCategories().get(d);
@@ -222,6 +237,7 @@ public class ActiveSurveyActivity extends Activity {
                 addQuestionFromCategories(categories);
         }
     }
+
     public void addNestedQuestions(Options options) {
         for (int l = 0; l < options.getQuestions().size(); l++) {
             Questions question = options.getQuestions().get(l);
@@ -231,6 +247,7 @@ public class ActiveSurveyActivity extends Activity {
                 addOptions(question);
         }
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_help) {
@@ -249,6 +266,7 @@ public class ActiveSurveyActivity extends Activity {
                     lumsticApp.getPreferences().setAccessToken("");
                     Intent i = new Intent(ActiveSurveyActivity.this, LoginActivity.class);
                     startActivity(i);
+                    dialog.dismiss();
                 }
             });
 
@@ -314,7 +332,7 @@ public class ActiveSurveyActivity extends Activity {
 
                 lumsticApp.getPreferences().setSurveyData(s);
                 surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
-       } catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             listView = (ListView) findViewById(R.id.active_survey_list);
@@ -352,6 +370,7 @@ public class ActiveSurveyActivity extends Activity {
             });
         }
     }
+
     public class uploadResponse extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... voids) {
             for (int count = 0; count < surveysList.size(); count++) {
@@ -486,6 +505,7 @@ public class ActiveSurveyActivity extends Activity {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();

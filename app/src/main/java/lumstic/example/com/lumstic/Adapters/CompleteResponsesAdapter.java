@@ -1,4 +1,5 @@
 package lumstic.example.com.lumstic.Adapters;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,17 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
 
 import lumstic.example.com.lumstic.Models.CompleteResponses;
-import lumstic.example.com.lumstic.Models.Survey;
 import lumstic.example.com.lumstic.Models.Surveys;
 import lumstic.example.com.lumstic.R;
 import lumstic.example.com.lumstic.UI.NewResponseActivity;
 import lumstic.example.com.lumstic.Utils.IntentConstants;
-
 
 public class CompleteResponsesAdapter extends BaseAdapter {
 
@@ -26,9 +23,9 @@ public class CompleteResponsesAdapter extends BaseAdapter {
     List<CompleteResponses> completeResponseses;
     Surveys surveys;
 
-    public CompleteResponsesAdapter(Context context, List<CompleteResponses> completeResponseses,Surveys surveys) {
+    public CompleteResponsesAdapter(Context context, List<CompleteResponses> completeResponseses, Surveys surveys) {
         this.context = context;
-        this.surveys=surveys;
+        this.surveys = surveys;
         this.completeResponseses = completeResponseses;
     }
 
@@ -50,7 +47,7 @@ public class CompleteResponsesAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.item_complete_responses, null);
         viewHolder = new ViewHolder();
-        viewHolder.container= (LinearLayout)view.findViewById(R.id.container);
+        viewHolder.container = (LinearLayout) view.findViewById(R.id.container);
         viewHolder.responseNumber = (TextView) view.findViewById(R.id.response_number_text);
         viewHolder.responseText = (TextView) view.findViewById(R.id.response_description_text);
         view.setTag(viewHolder);
@@ -58,28 +55,21 @@ public class CompleteResponsesAdapter extends BaseAdapter {
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.responseNumber.setText("Response: " + completeResponses.getResponseNumber());
         viewHolder.responseText.setText(completeResponses.getResponseText());
-
-
         viewHolder.responseNumber.setTextIsSelectable(true);
-
-
         viewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-          Intent intent = new Intent(context, NewResponseActivity.class);
+                Intent intent = new Intent(context, NewResponseActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
-               intent.putExtra(IntentConstants.RESPONSE_ID,Integer.parseInt(completeResponses.getResponseNumber()));
-             context.startActivity(intent);
+                intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
+                intent.putExtra(IntentConstants.RESPONSE_ID, Integer.parseInt(completeResponses.getResponseNumber()));
+                context.startActivity(intent);
 
             }
         });
-
-
-
-
         return view;
     }
+
     private static class ViewHolder {
         TextView responseNumber, responseText;
         LinearLayout container;

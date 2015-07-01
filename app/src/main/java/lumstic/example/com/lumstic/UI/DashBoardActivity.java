@@ -88,7 +88,9 @@ public class DashBoardActivity extends Activity {
     private int uploadCount = 0;
     private String timestamp = "";
     private String mobilId;
-    private String uploadUrl = "https://survey-web-stgng.herokuapp.com/api/responses.json?";
+    private String baseUrl = "";
+
+    private String uploadUrl = "/api/responses.json?";
     private String jsonStr = null;
     private String syncString = "";
     private boolean gps_enabled = false;
@@ -103,6 +105,12 @@ public class DashBoardActivity extends Activity {
         actionBar.setTitle("Dashboard");
         dbAdapter = new DBAdapter(DashBoardActivity.this);
         lumsticApp = (LumsticApp) getApplication();
+        if(lumsticApp.getPreferences().getBaseUrl()==null){
+            baseUrl=DashBoardActivity.this.getResources().getString(R.string.server_url);
+        }
+        else
+            baseUrl=lumsticApp.getPreferences().getBaseUrl();
+        uploadUrl=baseUrl+uploadUrl;
         surveysList = new ArrayList<Surveys>();
         jsonHelper = new JsonHelper(DashBoardActivity.this);
     }
@@ -223,6 +231,7 @@ public class DashBoardActivity extends Activity {
                     lumsticApp.getPreferences().setAccessToken("");
                     Intent i = new Intent(DashBoardActivity.this, LoginActivity.class);
                     startActivity(i);
+                    dialog.dismiss();
                 }
             });
             return true;

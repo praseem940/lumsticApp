@@ -449,14 +449,11 @@ public class NewResponseActivity extends Activity {
                         tsLong = System.currentTimeMillis() / 1000;
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
-
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
-
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
-
                         }
 
                     }
@@ -1095,22 +1092,19 @@ public class NewResponseActivity extends Activity {
         }
     }
 
+    //get data from camera activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-
             photo = (Bitmap) data.getExtras().get("data");
-
             deleteImageRelativeLayout.setVisibility(View.VISIBLE);
             imageViewPhotoQuestion.setImageBitmap(photo);
             SaveImage(photo);
             addAnswer(universalQuestion);
-
         }
     }
 
+    //save image to sd card
     private void SaveImage(Bitmap finalBitmap) {
-
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/saved_images");
         myDir.mkdirs();
@@ -1125,63 +1119,27 @@ public class NewResponseActivity extends Activity {
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
+    //load image from memory card
     private void loadImageFromStorage(String path, String fileName) {
-
         try {
             File f = new File(path, fileName);
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
             imageViewPhotoQuestion.setImageBitmap(b);
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
-
-    public void setCategoryTitle(Options options) {
-
-
-        for (int i = 0; i < options.getCategories().size(); i++) {
-            Categories categories = options.getCategories().get(i);
-            LinearLayout nestedContainer = new LinearLayout(this);
-            nestedContainer.setOrientation(LinearLayout.VERTICAL);
-            TextView questionTextSingleLine = new TextView(this);
-            questionTextSingleLine.setTextSize(20);
-            questionTextSingleLine.setTextColor(Color.BLACK);
-            questionTextSingleLine.setPadding(8, 12, 8, 20);
-            questionTextSingleLine.setText("" + categories.getContent());
-            nestedContainer.addView(questionTextSingleLine);
-            nestedContainer.setId(categories.getId());
-            nestedContainer.setTag(categories);
-            fieldContainer.addView(nestedContainer);
-            for (int j = 0; j < 1; j++) {
-
-                buildLayout(categories.getQuestionsList().get(0));
-                checkForAnswer(categories.getQuestionsList().get(0), currentResponseId);
-            }
-
-        }
-
-    }
-
+    //set category titles and build category layout
     public void setCategoryTitle(Categories categories) {
-
-
         LinearLayout nestedContainer = new LinearLayout(this);
         nestedContainer.setOrientation(LinearLayout.VERTICAL);
         TextView questionTextSingleLine = new TextView(this);
@@ -1193,29 +1151,21 @@ public class NewResponseActivity extends Activity {
         nestedContainer.setId(categories.getId());
         nestedContainer.setTag(categories);
         fieldContainer.addView(nestedContainer);
-
         for (int j = categories.getQuestionsList().size() - 1; j >= 0; j--) {
-
             buildLayout(categories.getQuestionsList().get(j));
             checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
         }
-
-
     }
 
+    //remove questions view from main container
     public void removeQuestionView(Options options) {
-
-
         try {
             for (int i = 0; i < options.getQuestions().size(); i++) {
-
                 View myView = findViewById(options.getQuestions().get(i).getId());
                 ViewGroup parent = (ViewGroup) myView.getParent();
                 parent.removeView(myView);
                 nestedQuestions.remove(options.getQuestions().get(i));
-
                 if (options.getQuestions().get(i).getOptions().size() > 0) {
-
                     for (int j = 0; j < options.getQuestions().get(i).getOptions().size(); j++) {
                         removeQuestionView(options.getQuestions().get(i).getOptions().get(j));
                         removeCategoryView(options.getQuestions().get(i).getOptions().get(j));
@@ -1225,9 +1175,9 @@ public class NewResponseActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
+    //remove category views from main container
     public void removeCategoryView(Options options) {
 
         try {
@@ -1236,35 +1186,27 @@ public class NewResponseActivity extends Activity {
                 View myView = findViewById(options.getCategories().get(k).getId());
                 ViewGroup parent = (ViewGroup) myView.getParent();
                 parent.removeView(myView);
-
-
                 for (int h = 0; h < options.getCategories().get(k).getQuestionsList().size(); h++) {
                     View myView2 = findViewById(options.getCategories().get(k).getQuestionsList().get(h).getId());
                     ViewGroup parent2 = (ViewGroup) myView2.getParent();
                     parent2.removeView(myView2);
-
-
                     if (options.getCategories().get(k).getQuestionsList().get(h).getOptions().size() > 0) {
-
                         for (int j = 0; j < options.getCategories().get(k).getQuestionsList().get(h).getOptions().size(); j++) {
                             removeQuestionView(options.getCategories().get(k).getQuestionsList().get(h).getOptions().get(j));
                             removeCategoryView(options.getCategories().get(k).getQuestionsList().get(h).getOptions().get(j));
                         }
                     }
                 }
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void addAnswer(Questions questions) {
 
-
         if (questions.getType().equals("SingleLineQuestion")) {
+
             Answers answers = new Answers();
             answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);

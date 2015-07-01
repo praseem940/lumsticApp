@@ -2,6 +2,7 @@ package lumstic.example.com.lumstic.UI;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,7 +42,9 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class LoginActivity extends Activity {
 
-    private static String url = "https://survey-web-stgng.herokuapp.com/api/login";
+    private String baseUrl = "";
+    private String loginUrl="/api/login";
+    private  String url = "";
     private UserModel userModel;
     private LumsticApp lumsticApp;
     private ProgressDialog progressDialog;
@@ -56,7 +60,16 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         lumsticApp = (LumsticApp) getApplication();
+        if(lumsticApp.getPreferences().getBaseUrl()==null){
+            baseUrl=LoginActivity.this.getResources().getString(R.string.server_url);
+        }
+        else
+        baseUrl=lumsticApp.getPreferences().getBaseUrl();
 
+
+        Toast.makeText(LoginActivity.this,baseUrl,Toast.LENGTH_SHORT).show();
+
+        url=baseUrl+loginUrl;
         //if USER IS SIGNED IN
         try {
             if (!lumsticApp.getPreferences().getAccessToken().equals("")) {
@@ -125,7 +138,28 @@ public class LoginActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+
+             final Dialog dialog = new Dialog(LoginActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+            dialog.setContentView(R.layout.settings_dialog);
+            dialog.show();
+
+            final EditText url=(EditText)dialog.findViewById(R.id.server_address);
+            url.setText(lumsticApp.getPreferences().getBaseUrl());
+
+            Button button = (Button) dialog.findViewById(R.id.save);
+           button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!url.getText().toString().equals(""))
+                    lumsticApp.getPreferences().setBaseUrl(url.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+
             return true;
+
+
         }
 
         if (id == R.id.action_help) {
