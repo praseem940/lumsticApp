@@ -120,23 +120,16 @@ public class ActiveSurveyActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Surveys ");
         progressDialog.show();
-//fetch survey execute
+        //fetch survey execute
         new FetchSurvey().execute();
-
-
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-
-
         uploadButton = (Button) findViewById(R.id.upload_all);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 mobilId = UUID.randomUUID().toString();
                 if (checkLocationOn()) {
                     Location location = getLocation();
@@ -148,11 +141,8 @@ public class ActiveSurveyActivity extends Activity {
                     lat = 18.54194666666656;
                     lon = 73.8291466666657;
                 }
-
-
                 Long tsLong = System.currentTimeMillis() / 1000;
                 timestamp = tsLong.toString();
-
                 if (completeCount > 0) {
                     progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
                     progressDialog.setCancelable(false);
@@ -161,12 +151,8 @@ public class ActiveSurveyActivity extends Activity {
                     progressDialog.show();
                     new uploadResponse().execute();
                 }
-
-
             }
         });
-
-
         try {
             dashBoardAdapter.notifyDataSetChanged();
         } catch (Exception e) {
@@ -181,16 +167,12 @@ public class ActiveSurveyActivity extends Activity {
         if (dbAdapter.getCompleteResponseFull() == 0) {
             uploadContainer.setVisibility(View.GONE);
         }
-
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.active_survey, menu);
         return true;
     }
-
     public void addCategories(Surveys surveys) {
-
         for (int h = 0; h < surveys.getCategories().size(); h++) {
             Categories categories = surveys.getCategories().get(h);
             long value1 = dbAdapter.insertDataCategoriesTable(categories);
@@ -216,32 +198,22 @@ public class ActiveSurveyActivity extends Activity {
             Questions question = categories.getQuestionsList().get(m);
             long value1 = dbAdapter.insertDataQuestionTable(question);
             Log.e("value", value1 + "");
-
             if (question.getOptions().size() > 0)
                 addOptions(question);
         }
     }
-
     public void addOptions(Questions questions) {
-
         for (int k = 0; k < questions.getOptions().size(); k++) {
             Options options = questions.getOptions().get(k);
             long value1 = dbAdapter.insertDataOptionsTable(options);
             Log.e("value", value1 + "");
             if (options.getQuestions().size() > 0)
                 addNestedQuestions(options);
-
-
             if (options.getCategories().size() > 0)
                 addNestedCategories(options);
-
-
         }
     }
-
     public void addNestedCategories(Options options) {
-
-
         for (int d = 0; d < options.getCategories().size(); d++) {
             Categories categories = options.getCategories().get(d);
             long value1 = dbAdapter.insertDataCategoriesTable(categories);
@@ -249,12 +221,8 @@ public class ActiveSurveyActivity extends Activity {
             if (categories.getQuestionsList().size() > 0)
                 addQuestionFromCategories(categories);
         }
-
     }
-
     public void addNestedQuestions(Options options) {
-
-
         for (int l = 0; l < options.getQuestions().size(); l++) {
             Questions question = options.getQuestions().get(l);
             long value1 = dbAdapter.insertDataQuestionTable(question);
@@ -262,9 +230,7 @@ public class ActiveSurveyActivity extends Activity {
             if (question.getOptions().size() > 0)
                 addOptions(question);
         }
-
     }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_help) {
@@ -286,18 +252,6 @@ public class ActiveSurveyActivity extends Activity {
                 }
             });
 
-            return true;
-        }
-
-        if (id == R.id.action_fetch) {
-//            progressDialog = new ProgressDialog(ActiveSurveyActivity.this);
-//            progressDialog.setCancelable(false);
-//            progressDialog.setIndeterminate(true);
-//            progressDialog.setMessage("Fetching Surveys ");
-//            progressDialog.show();
-//
-//            new FetchSurvey().execute();
-//            //dashBoardAdapter.notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -359,14 +313,8 @@ public class ActiveSurveyActivity extends Activity {
             try {
 
                 lumsticApp.getPreferences().setSurveyData(s);
-
                 surveysList = jsonHelper.tryParsing(lumsticApp.getPreferences().getSurveyData());
-
-
-                //surveysList = jsonHelper.tryParsing(jsonHelper.getStringFromJson());
-
-
-            } catch (Exception e) {
+       } catch (Exception e) {
                 e.printStackTrace();
             }
             listView = (ListView) findViewById(R.id.active_survey_list);
@@ -379,23 +327,18 @@ public class ActiveSurveyActivity extends Activity {
                 progressDialog.dismiss();
                 Toast.makeText(ActiveSurveyActivity.this, "Please check your wifi or network settings", Toast.LENGTH_SHORT).show();
             }
-
             try {
                 for (int i = 0; i < surveysList.size(); i++) {
-
                     Surveys surveys = surveysList.get(i);
                     long value = dbAdapter.insertDataSurveysTable(surveys);
-                    //Toast.makeText(ActiveSurveyActivity.this, value + "", Toast.LENGTH_SHORT).show();
                     if (surveys.getCategories().size() > 0)
                         addCategories(surveys);
                     if (surveys.getQuestions().size() > 0)
                         addQuestions(surveys);
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             listView.setAdapter(dashBoardAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -409,28 +352,18 @@ public class ActiveSurveyActivity extends Activity {
             });
         }
     }
-
     public class uploadResponse extends AsyncTask<Void, Void, String> {
-
-
         protected String doInBackground(Void... voids) {
-
-
             for (int count = 0; count < surveysList.size(); count++) {
                 jsonSyncResponses = new ArrayList<>();
                 completedResponseIds = new ArrayList<Integer>();
                 surveys = surveysList.get(count);
                 surveyId = surveys.getId();
-
-
                 completedResponseIds = dbAdapter.getCompleteResponsesIds(surveyId);
                 for (int i = 0; i < completedResponseIds.size(); i++) {
                     answerses = new ArrayList<Answers>();
-
                     completedResponseIds.get(i);
-
                     answerses = null;
-
                     answerses = dbAdapter.getAnswerByResponseId(completedResponseIds.get(i));
                     jsonArray = new JSONArray();
                     for (int j = 0; j < answerses.size(); j++) {
@@ -439,23 +372,18 @@ public class ActiveSurveyActivity extends Activity {
                             jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                             jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                             jsonObject.put("content", answerses.get(j).getContent());
-
                             try {
                                 if ((answerses.get(j).getType().equals("MultiChoiceQuestion")) && (dbAdapter.getChoicesCount(answerses.get(j).getId()) == 0)) {
                                     Log.e("thereisastring", dbAdapter.getChoicesCount(answerses.get(j).getId()) + "cdcdcd");
-                                    Log.e("testing", answerses.get(j).getType() + "this is a type");
                                     jsonObject.put("option_ids", JSONObject.NULL);
                                     jsonObject.remove("content");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                             try {
                                 if ((answerses.get(j).getType().equals("DropDownQuestion")) || (answerses.get(j).getType().equals("MultiChoiceQuestion")) || (answerses.get(j).getType().equals("RadioQuestion"))) {
                                     if ((answerses.get(j).getContent().equals("")) && (dbAdapter.getChoicesCountWhereAnswerIdIs(answerses.get(j).getId()) > 0)) {
-                                        Log.e("goingintheloop", "intheloop");
                                         String type = dbAdapter.getQuestionTypeWhereAnswerIdIs(answerses.get(j).getId());
                                         if (type.equals("RadioQuestion")) {
                                             jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
@@ -464,61 +392,43 @@ public class ActiveSurveyActivity extends Activity {
                                             jsonObject.put("content", dbAdapter.getChoicesWhereAnswerCountIsOne(answerses.get(j).getId()));
                                         }
                                         if (type.equals("MultiChoiceQuestion")) {
-
-
                                             List<Integer> options = new ArrayList<>();
                                             options = dbAdapter.getChoicesWhereAnswerCountIsMoreThanOne(answerses.get(j).getId());
                                             if (options.size() > 0)
                                                 jsonObject.putOpt("option_ids", options);
                                             jsonObject.remove("content");
                                         }
-
-
                                     }
-
-
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                             try {
                                 if (answerses.get(j).getType().equals("PhotoQuestion")) {
-                                    Log.e("answers", "dex");
                                     String path = Environment.getExternalStorageDirectory().toString() + "/saved_images";
                                     Bitmap b = null;
                                     String fileName = answerses.get(j).getImage();
-                                    //Toast.makeText(SurveyDetailsActivity.this,fileName,Toast.LENGTH_SHORT).show();
                                     try {
                                         File f = new File(path, fileName);
                                         b = BitmapFactory.decodeStream(new FileInputStream(f));
-
-
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     }
-
                                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                                     b.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                                     byte[] byteArray = byteArrayOutputStream.toByteArray();
                                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
                                     jsonObject.put("photo", encoded);
                                     jsonObject.put("content", "");
-
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         jsonArray.put(jsonObject);
                     }
-
                     JSONObject obj = new JSONObject();
                     try {
                         obj.put("status", "complete");
@@ -530,27 +440,12 @@ public class ActiveSurveyActivity extends Activity {
                         obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
                         obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
                         obj.put("mobile_id", mobilId);
-
                         obj.put("answers_attributes", jsonArray);
-                        //responseObj.put("status", "complete");
-                        //responseObj.put("survey_id", surveys.getId());
-                        //responseObj.put("updated_at", timestamp);
-                        //responseObj.put("longitude", lon);
-                        //responseObj.put("latitude", lat);
-                        //responseObj.put("user_id", lumsticApp.getPreferences().getUserId());
-                        //responseObj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
-                        //responseObj.put("mobile_id", mobilId);
-
-
                         jsonStr = obj.toString();
-
                         Log.e("jsonString", jsonStr);
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                     UUID.randomUUID().toString();
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost(uploadUrl);
@@ -572,8 +467,6 @@ public class ActiveSurveyActivity extends Activity {
                         HttpResponse httpResponse = httpclient.execute(httppost);
                         HttpEntity httpEntity = httpResponse.getEntity();
                         syncString = EntityUtils.toString(httpEntity);
-
-
                         Log.e("jsonsyncresponse", syncString);
                         jsonSyncResponses.add(syncString);
                     } catch (UnsupportedEncodingException e) {
@@ -583,44 +476,29 @@ public class ActiveSurveyActivity extends Activity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
                 }
-
                 for (int i = 0; i < jsonSyncResponses.size(); i++) {
                     if (jsonParser.parseSyncResult(jsonSyncResponses.get(i))) {
                         uploadCount++;
                         dbAdapter.deleteFromResponseTableOnUpload(surveyId);
-
                     }
                 }
             }
-
             return null;
         }
-
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
             if (uploadCount == completeCount) {
                 dashBoardAdapter.notifyDataSetChanged();
                 Toast.makeText(ActiveSurveyActivity.this, "Responses uploaded successfully:  " + uploadCount + "    Errors:0", Toast.LENGTH_LONG).show();
-                //completeCount = dbAdapter.getCompleteResponse(surveys.getId());
-                //completeTv.setText(completeCount + "");
-
-                //finish();
-
                 completeCount = dbAdapter.getCompleteResponseFull();
-
                 if (dbAdapter.getCompleteResponseFull() != 0) {
                     uploadContainer.setVisibility(View.VISIBLE);
                 }
-
                 if (dbAdapter.getCompleteResponseFull() == 0) {
                     uploadContainer.setVisibility(View.GONE);
                 }
-
-
             }
         }
     }

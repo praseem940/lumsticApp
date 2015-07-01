@@ -21,51 +21,55 @@ import lumstic.example.com.lumstic.Utils.IntentConstants;
 
 public class IncompleteResponseActivity extends Activity {
 
+    private IncompleteResponsesAdapter incompleteResponsesAdapter;
+    private DBAdapter dbAdapter;
+    private ActionBar actionBar;
 
-    ListView listView;
-    DBAdapter dbAdapter;
-    Surveys surveys;
-    TextView responseCount;
-    TextView surveyTitle;
-    int incompleteResponseCount = 0;
-    List<IncompleteResponses> incompleteResponseses;
-    Questions identifierQuestion;
-    int identifierQuestionId = 0;
-    ActionBar actionBar;
-    List<Integer> incompleteResponsesId;
+    private Surveys surveys;
+    private Questions identifierQuestion;
 
-    List<String> identifierQuestionAnswers;
+    private ListView listView;
+    private TextView responseCount;
+    private TextView surveyTitle;
 
+    private int incompleteResponseCount = 0;
+    private int identifierQuestionId = 0;
 
-    IncompleteResponsesAdapter incompleteResponsesAdapter;
+    private List<IncompleteResponses> incompleteResponseses;
+    private List<Integer> incompleteResponsesId;
+    private List<String> identifierQuestionAnswers;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomplete_response);
+
+        //setting up action bar
         actionBar = getActionBar();
         actionBar.setTitle("Incomplete Responses");
-        surveyTitle= (TextView)findViewById(R.id.survey_title_text);
-
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
+        //actionBar.setHomeAsUpIndicator(R.drawable.ic_action_ic_back);
         actionBar.setDisplayShowTitleEnabled(true);
         dbAdapter = new DBAdapter(IncompleteResponseActivity.this);
+
+        //initialize lists
         incompleteResponseses = new ArrayList<IncompleteResponses>();
         incompleteResponsesId = new ArrayList<Integer>();
         identifierQuestionAnswers = new ArrayList<String>();
-
-        responseCount=(TextView)findViewById(R.id.incomplete_response_count);
-
-
         surveys = new Surveys();
+
+        //defining views
+        responseCount = (TextView) findViewById(R.id.incomplete_response_count);
+        surveyTitle = (TextView) findViewById(R.id.survey_title_text);
+
+
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
+        //get counts
         incompleteResponseCount = dbAdapter.getIncompleteResponse(surveys.getId());
         incompleteResponsesId = dbAdapter.getIncompleteResponsesIds(surveys.getId());
         surveyTitle.setText(surveys.getName());
-
-        responseCount.setText(incompleteResponseCount+"");
+        responseCount.setText(incompleteResponseCount + "");
         for (int j = 0; j < surveys.getQuestions().size(); j++) {
             if (surveys.getQuestions().get(j).getIdentifier() == 1) {
                 identifierQuestion = surveys.getQuestions().get(j);
@@ -74,18 +78,16 @@ public class IncompleteResponseActivity extends Activity {
         }
 
         for (int i = 0; i < incompleteResponseCount; i++) {
-
             identifierQuestionAnswers.add(dbAdapter.getAnswer(incompleteResponsesId.get(i), identifierQuestionId));
-
-            incompleteResponseses.add(i, new IncompleteResponses(String.valueOf(incompleteResponsesId.get(i)), identifierQuestion.getContent() + " :" + "  " + identifierQuestionAnswers.get(i)));
+            try {
+                incompleteResponseses.add(i, new IncompleteResponses(String.valueOf(incompleteResponsesId.get(i)), identifierQuestion.getContent() + " :" + "  " + identifierQuestionAnswers.get(i)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
         listView = (ListView) findViewById(R.id.listview);
-
         incompleteResponsesAdapter = new IncompleteResponsesAdapter(getApplicationContext(), incompleteResponseses, surveys);
         listView.setAdapter(incompleteResponsesAdapter);
-
     }
 
     @Override

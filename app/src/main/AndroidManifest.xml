@@ -50,14 +50,6 @@
             android:name=".UI.HelpActivity"
             android:label="@string/title_activity_help" >
         </activity>
-        <activity
-            android:name=".UI.TestActivity"
-            android:label="@string/title_activity_test" >
-        </activity>
-        <activity
-            android:name=".UI.Sample"
-            android:label="@string/title_activity_sample" >
-        </activity>
     </application>
 
 </manifest>

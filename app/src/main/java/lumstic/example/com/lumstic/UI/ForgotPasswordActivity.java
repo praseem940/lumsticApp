@@ -37,66 +37,61 @@ import lumstic.example.com.lumstic.Utils.LumsticApp;
 
 public class ForgotPasswordActivity extends Activity {
 
-    Button requestPasswordButton;
-    EditText emailET;
-    String jsonPasswordString="";
-    private LumsticApp lumsticApp;
-    private String accessToken="";
-    RelativeLayout errorContainer;
-
-
-    //  https://user-owner-stgng.herokuapp.com/
     private static String url = "https://user-owner-stgng.herokuapp.com/api/password_resets";
-    //  private static String url = "http://192.168.2.16:3000/api/login";
-
     private ProgressDialog progressDialog;
+    private LumsticApp lumsticApp;
+    private Button requestPasswordButton;
+    private EditText emailET;
+    private RelativeLayout errorContainer;
+    private String accessToken = "";
+    private String jsonPasswordString = "";
     private String email = null;
 
+    private ActionBar actionBar;
 
-ActionBar actionBar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        emailET=(EditText)findViewById(R.id.email_edit_text);
-        lumsticApp = (LumsticApp) getApplication();
-        actionBar= getActionBar();
+
+        //setting up action bar
+        actionBar = getActionBar();
         actionBar.setTitle("Forgot Password");
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
-        requestPasswordButton= (Button) findViewById(R.id.request_password);
-        errorContainer= (RelativeLayout)findViewById(R.id.email_error_container);
+
+        lumsticApp = (LumsticApp) getApplication();
+
+        //setting up views
+        emailET = (EditText) findViewById(R.id.email_edit_text);
+        requestPasswordButton = (Button) findViewById(R.id.request_password);
+        errorContainer = (RelativeLayout) findViewById(R.id.email_error_container);
+
+        //on request password clicked
         requestPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 email = emailET.getText().toString();
+                //show progress dialog
                 progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Processing ");
                 progressDialog.show();
                 if (!TextUtils.isEmpty(email) && CommonUtil.validateEmail(email)) {
-
                     new RequestPassword().execute();
-                }
-
-                else {
+                } else {
                     lumsticApp.showToast("Enter Valid Email ");
-
-
+                    progressDialog.dismiss();
                 }
             }
         });
 
     }
+
     public class RequestPassword extends AsyncTask<Void, Void, String> {
-
-
         protected String doInBackground(Void... voids) {
-
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(url);
@@ -115,30 +110,25 @@ ActionBar actionBar;
 
         @Override
         protected void onPostExecute(String result) {
-
-
-            JSONObject jsonObjectForgotPassword= null;
+            JSONObject jsonObjectForgotPassword = null;
             try {
                 jsonObjectForgotPassword = new JSONObject(jsonPasswordString);
                 JSONParser jsonParser = new JSONParser();
-                boolean proceed=jsonParser.parseForgotPassword(jsonObjectForgotPassword);
-                if(proceed){
+                boolean proceed = jsonParser.parseForgotPassword(jsonObjectForgotPassword);
+                if (proceed) {
                     progressDialog.dismiss();
-                    Toast.makeText(ForgotPasswordActivity.this,"We have sent you a password reset link",Toast.LENGTH_LONG).show();
-                Intent i = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-
+                    Toast.makeText(ForgotPasswordActivity.this, "We have sent you a password reset link", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
                 }
-                if(!proceed){
+                if (!proceed) {
                     progressDialog.dismiss();
                     errorContainer.setVisibility(View.VISIBLE);
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

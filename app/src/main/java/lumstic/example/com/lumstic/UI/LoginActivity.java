@@ -141,6 +141,7 @@ public class LoginActivity extends Activity {
 
         protected String doInBackground(Void... voids) {
 
+            //sends email and password to the server as name value pairs
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(url);
@@ -157,7 +158,6 @@ public class LoginActivity extends Activity {
             }
             return jsonLoginString;
         }
-
         // response back from server
         @Override
         protected void onPostExecute(String result) {
@@ -174,7 +174,6 @@ public class LoginActivity extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             if (userModel != null) {
                 progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this, "Logged In ", Toast.LENGTH_LONG).show();
