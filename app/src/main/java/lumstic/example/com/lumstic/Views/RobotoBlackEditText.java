@@ -7,9 +7,6 @@ import android.widget.EditText;
 import lumstic.example.com.lumstic.Utils.TypefaceLoader;
 
 
-/**
- * Created by poorva on 27/9/14.
- */
 public class RobotoBlackEditText extends EditText {
     public RobotoBlackEditText(Context context) {
         super(context);

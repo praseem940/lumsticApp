@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+
 public class Preferences {
     private static final String SERVER_URL = "SERVER_URL";
     private static final String ADD_AUTH_IN_HEADER = "ADD_AUTH_IN_HEADER";

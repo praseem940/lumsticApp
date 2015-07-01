@@ -6,9 +6,7 @@ import android.widget.Button;
 
 import lumstic.example.com.lumstic.Utils.TypefaceLoader;
 
-/**
- * Created by work on 29/5/15.
- */
+
 public class RobotoBlackRegularButton extends Button {
     public RobotoBlackRegularButton (Context context) {
         super(context);

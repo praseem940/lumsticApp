@@ -64,7 +64,6 @@ public class CompleteResponsesAdapter extends BaseAdapter {
                 intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
                 intent.putExtra(IntentConstants.RESPONSE_ID, Integer.parseInt(completeResponses.getResponseNumber()));
                 context.startActivity(intent);
-
             }
         });
         return view;

@@ -2,7 +2,6 @@ package lumstic.example.com.lumstic.Utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;

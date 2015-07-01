@@ -35,6 +35,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,6 +79,7 @@ public class NewResponseActivity extends Activity {
     private int totalQuestionCount = 0;
     private int CAMERA_REQUEST = 1;
     private int questionCounter = 0;
+    private int categoryQuestionCounter=0;
     private Questions universalQuestion;
     private Surveys surveys;
     private Answers answers;
@@ -392,6 +394,21 @@ public class NewResponseActivity extends Activity {
         questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
         questionTextSingleLine.setPadding(0, 0, 0, 16);
 
+        if(categoryQuestionCounter>0){
+
+            questionTextSingleLine.setTextSize(16);
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1)+"."+categoryQuestionCounter + "   " + ques.getContent() + "  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent() + "  *");
+            } else {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1)+"."+categoryQuestionCounter  + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
+        }
+        else{
         if (ques.getMandatory() == 1) {
             questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent() + "  *");
             if (ques.getParentId() > 0)
@@ -401,7 +418,7 @@ public class NewResponseActivity extends Activity {
             if (ques.getParentId() > 0)
                 questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
 
-        }
+        }}
         return questionTextSingleLine;
 
     }
@@ -721,12 +738,15 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
 
-            dateText = (TextView) findViewById(R.id.answer_text_date);
-            dateText.setId(ques.getId() + 220);
+             dateText = (TextView) findViewById(R.id.answer_text_date);
             dateText.setText("dd.yy.mm");
+            dateText.setId(ques.getId() + 220);
+
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dateQuestion = ques;
+
                     Calendar c = Calendar.getInstance();
                     int mYear = c.get(Calendar.YEAR);
                     int mMonth = c.get(Calendar.MONTH);
@@ -1152,9 +1172,11 @@ public class NewResponseActivity extends Activity {
         nestedContainer.setTag(categories);
         fieldContainer.addView(nestedContainer);
         for (int j = categories.getQuestionsList().size() - 1; j >= 0; j--) {
+            categoryQuestionCounter++;
             buildLayout(categories.getQuestionsList().get(j));
             checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
         }
+        categoryQuestionCounter=0;
     }
 
     //remove questions view from main container
@@ -1665,6 +1687,7 @@ public class NewResponseActivity extends Activity {
             int mYear = year;
             int mMonth = monthOfYear;
             int mDay = dayOfMonth;
+            dateText= (TextView) findViewById(dateQuestion.getId() + 220);
             dateText.setText(new StringBuilder().append(mYear).append("/").append(mMonth + 1).append("/").append(mDay).toString());
 
 
@@ -1674,11 +1697,14 @@ public class NewResponseActivity extends Activity {
             answers.setContent(dateText.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
-            if (!dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId))
+            if (!dbAdapter.doesAnswerExist(dateQuestion.getId(), currentResponseId)){
                 dbAdapter.insertDataAnswersTable(answers);
-            if (dbAdapter.doesAnswerExist(universalQuestion.getId(), currentResponseId)) {
-                dbAdapter.deleteFromAnswerTable(universalQuestion.getId(), currentResponseId);
+            Toast.makeText(NewResponseActivity.this,"answer saved"+dateQuestion.getId(),Toast.LENGTH_SHORT).show();}
+            if (dbAdapter.doesAnswerExist(dateQuestion.getId(), currentResponseId)) {
+                dbAdapter.deleteFromAnswerTable(dateQuestion.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
+
+                Toast.makeText(NewResponseActivity.this,"answer removed and saved"+dateQuestion.getId(),Toast.LENGTH_SHORT).show();
 
             }
 

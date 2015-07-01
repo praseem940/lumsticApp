@@ -3,9 +3,6 @@ package lumstic.example.com.lumstic.Models;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by work on 17/4/15.
- */
 public class Categories implements Serializable {
     int id;
     int surveyId;

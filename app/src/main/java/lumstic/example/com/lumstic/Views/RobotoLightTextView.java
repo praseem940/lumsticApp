@@ -8,9 +8,6 @@ import android.widget.TextView;
 
 import lumstic.example.com.lumstic.Utils.TypefaceLoader;
 
-/**
- * Created by poorva on 9/10/14.
- */
 public class RobotoLightTextView extends TextView{
 
     public RobotoLightTextView(Context context) {

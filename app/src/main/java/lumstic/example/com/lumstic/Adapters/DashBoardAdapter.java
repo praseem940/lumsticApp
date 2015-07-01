@@ -51,7 +51,7 @@ public class DashBoardAdapter extends BaseAdapter {
         viewHolder.incompleteSurvey = (TextView) view.findViewById(R.id.incomplete_survey_text);
 
         viewHolder.endDate = (TextView) view.findViewById(R.id.end_date_text);
-        viewHolder.linearLayout = (LinearLayout) view.findViewById(R.id.container);
+        viewHolder.container = (LinearLayout) view.findViewById(R.id.container);
         view.setTag(viewHolder);
         final Surveys survey = (Surveys) getItem(i);
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
@@ -65,6 +65,6 @@ public class DashBoardAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         TextView surveyName, completedSurvey, incompleteSurvey, uploadedSurvey, endDate;
-        LinearLayout linearLayout;
+        LinearLayout container;
     }
 }

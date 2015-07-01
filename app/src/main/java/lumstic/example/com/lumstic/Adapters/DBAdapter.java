@@ -105,7 +105,6 @@ public class DBAdapter {
         while (cursor.moveToNext()) {
             int index = cursor.getColumnIndex(DBhelper.ID);
             id = cursor.getInt(index);
-
             integers.add(id);
 
 
@@ -302,13 +301,10 @@ public class DBAdapter {
 
 
     public int getChoicesCountWhereAnswerIdIs(int answerId) {
-
-
         int count = 0;
         String[] coloums = {DBhelper.OPTION_ID};
         String[] selectionArgs = {String.valueOf(answerId)};
         Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_choices, coloums, DBhelper.ANSWER_ID + " =?", selectionArgs, null, null, null);
-
         while (cursor.moveToNext()) {
             count++;
         }
@@ -549,7 +545,6 @@ public class DBAdapter {
         contentValues.put(DBhelper.UPDATED_AT, answers.getUpdated_at());
         contentValues.put(DBhelper.CONTENT, answers.getContent());
         contentValues.put(DBhelper.RESPONSE_ID, answers.getResponseId());
-
         contentValues.put(DBhelper.QUESTION_ID, answers.getQuestion_id());
         contentValues.put(DBhelper.TYPE, answers.getType());
         //  Toast.makeText(context,answers.getType(),Toast.LENGTH_SHORT).show();
@@ -654,12 +649,9 @@ public class DBAdapter {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             Log.e("contructor", "called");
             mcontext = context;
-            // Toast.makeText(context, "constructor", Toast.LENGTH_LONG).show();
-        }
-
+         }
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
             sqLiteDatabase.execSQL(CREATE_TABLE_choices);
             sqLiteDatabase.execSQL(CREATE_TABLE_questions);
             sqLiteDatabase.execSQL(CREATE_TABLE_options);
@@ -669,8 +661,6 @@ public class DBAdapter {
             sqLiteDatabase.execSQL(CREATE_TABLE_responses);
             sqLiteDatabase.execSQL(CREATE_TABLE_answers);
             Log.e("success", "success");
-
-            // Toast.makeText(mcontext, "oncreate", Toast.LENGTH_LONG).show();
         }
 
         @Override

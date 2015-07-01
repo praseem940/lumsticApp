@@ -2,9 +2,6 @@ package lumstic.example.com.lumstic.Models;
 
 import java.util.ArrayList;
 
-/**
- * Created by work on 17/4/15.
- */
 public class Answers {
     int recordId;
     int webId;

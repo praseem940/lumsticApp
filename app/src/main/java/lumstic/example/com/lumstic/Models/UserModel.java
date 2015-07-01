@@ -1,8 +1,5 @@
 package lumstic.example.com.lumstic.Models;
 
-/**
- * Created by work on 26/5/15.
- */
 public class UserModel {
 
     String access_token;

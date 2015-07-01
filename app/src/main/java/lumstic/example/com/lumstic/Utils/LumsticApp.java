@@ -27,12 +27,10 @@ public class LumsticApp  extends Application {
     public synchronized Logger getLogger() {
         return logger;
     }
-
     public void showToast(String message) {
         if (null != message)
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
     public void showToast(int stringResId) {
         String message = getString(stringResId);
         if (null != message)
