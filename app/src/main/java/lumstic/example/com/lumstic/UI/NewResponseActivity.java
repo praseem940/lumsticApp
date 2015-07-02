@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,7 +78,7 @@ public class NewResponseActivity extends Activity {
     private int totalQuestionCount = 0;
     private int CAMERA_REQUEST = 1;
     private int questionCounter = 0;
-    private int categoryQuestionCounter=0;
+    private int categoryQuestionCounter = 0;
     private Questions universalQuestion;
     private Surveys surveys;
     private Answers answers;
@@ -96,6 +95,7 @@ public class NewResponseActivity extends Activity {
     private Button counterButton, markAsComplete;
     private Button nextQuestion, previousQuestion;
     private LinearLayout fieldContainer;
+    private int recordId = 0;
     private LayoutInflater inflater;
     private RatingBar ratingBar;
 
@@ -151,7 +151,7 @@ public class NewResponseActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                    onMarkComplete();
+                onMarkComplete();
 
 
             }
@@ -294,14 +294,13 @@ public class NewResponseActivity extends Activity {
             addAnswer(universalQuestion);
         }
 
-        if(checkMandatory(nestedQuestionList))
-        {
-        dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId());
-        Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
-        intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
-        startActivity(intent);
-        finish();
-    }
+        if (checkMandatory(nestedQuestionList)) {
+            dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId());
+            Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
+            intent.putExtra(IntentConstants.SURVEY, (java.io.Serializable) surveys);
+            startActivity(intent);
+            finish();
+        }
     }
 
 
@@ -394,37 +393,37 @@ public class NewResponseActivity extends Activity {
         questionTextSingleLine.setTextColor(getResources().getColor(R.color.text_color));
         questionTextSingleLine.setPadding(0, 0, 0, 16);
 
-        if(categoryQuestionCounter>0){
+        if (categoryQuestionCounter > 0) {
 
             questionTextSingleLine.setTextSize(16);
             if (ques.getMandatory() == 1) {
-                questionTextSingleLine.setText("Q. " + (questionCounter + 1)+"."+categoryQuestionCounter + "   " + ques.getContent() + "  *");
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "." + categoryQuestionCounter + "   " + ques.getContent() + "  *");
                 if (ques.getParentId() > 0)
                     questionTextSingleLine.setText("Q. " + "   " + ques.getContent() + "  *");
             } else {
-                questionTextSingleLine.setText("Q. " + (questionCounter + 1)+"."+categoryQuestionCounter  + "   " + ques.getContent());
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "." + categoryQuestionCounter + "   " + ques.getContent());
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
+
+            }
+        } else {
+            if (ques.getMandatory() == 1) {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent() + "  *");
+                if (ques.getParentId() > 0)
+                    questionTextSingleLine.setText("Q. " + "   " + ques.getContent() + "  *");
+            } else {
+                questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
                 if (ques.getParentId() > 0)
                     questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
 
             }
         }
-        else{
-        if (ques.getMandatory() == 1) {
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent() + "  *");
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent() + "  *");
-        } else {
-            questionTextSingleLine.setText("Q. " + (questionCounter + 1) + "   " + ques.getContent());
-            if (ques.getParentId() > 0)
-                questionTextSingleLine.setText("Q. " + "   " + ques.getContent());
-
-        }}
         return questionTextSingleLine;
 
     }
 
 
-    public void hideKeypad(EditText answer){
+    public void hideKeypad(EditText answer) {
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(answer.getWindowToken(), 0);
@@ -449,7 +448,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220);
+            answer.setId(ques.getId() + 220 + recordId);
             hideKeypad(answer);
 
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -463,15 +462,22 @@ public class NewResponseActivity extends Activity {
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
+
                         tsLong = System.currentTimeMillis() / 1000;
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
-                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
-                            dbAdapter.insertDataAnswersTable(answers);
+
+
+
+
+                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)){
+                            dbAdapter.insertDataAnswersTable(answers);}
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
+
                         }
+
 
                     }
                 }
@@ -496,7 +502,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220);
+            answer.setId(ques.getId() + 220 + recordId);
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
@@ -584,7 +590,7 @@ public class NewResponseActivity extends Activity {
                         }
 
                         //create nested categories
-                         if (options.getCategories().size() > 0) {
+                        if (options.getCategories().size() > 0) {
                             for (int j = 0; j < options.getCategories().size(); j++) {
                                 buildCategoryLayout(options.getCategories().get(j));
                             }
@@ -600,14 +606,13 @@ public class NewResponseActivity extends Activity {
                         }
                     }
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
 
                 }
             });
         }
-
-
 
 
         //create layout for check box questions
@@ -646,7 +651,7 @@ public class NewResponseActivity extends Activity {
                             Options options = (Options) checkBox1.getTag();
 
                             addOptionToDataBase(options, ques);
-                        nestedQuestionList.clear();
+                            nestedQuestionList.clear();
                             nestedQuestionList.add(ques);
 
 
@@ -679,7 +684,9 @@ public class NewResponseActivity extends Activity {
                             }
                             if (options.getCategories().size() > 0) {
                                 removeCategoryView(options);
-                            }}}
+                            }
+                        }
+                    }
                 });
             }
             fieldContainer.addView(nestedContainer);
@@ -696,7 +703,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220);
+            answer.setId(ques.getId() + 220 + recordId);
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
@@ -712,11 +719,13 @@ public class NewResponseActivity extends Activity {
                         answers.setContent(answer.getText().toString());
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
                             dbAdapter.insertDataAnswersTable(answers);
-                                if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
+                        if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
 
-                        }}}
+                        }
+                    }
+                }
             });
             try {
                 checkForAnswer(ques, currentResponseId);
@@ -738,9 +747,9 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
 
-             dateText = (TextView) findViewById(R.id.answer_text_date);
+            dateText = (TextView) findViewById(R.id.answer_text_date);
             dateText.setText("dd.yy.mm");
-            dateText.setId(ques.getId() + 220);
+            dateText.setId(ques.getId() + 220 + recordId);
 
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -761,7 +770,8 @@ public class NewResponseActivity extends Activity {
             } catch (Exception e) {
                 e.printStackTrace();
                 checkHint();
-            }}
+            }
+        }
 
         //for radio question check
         if (ques.getType().contains("RadioQuestion")) {
@@ -811,13 +821,15 @@ public class NewResponseActivity extends Activity {
                             for (int i = 0; i < options.getQuestions().size(); i++) {
                                 buildLayout(options.getQuestions().get(i));
                                 checkForAnswer(options.getQuestions().get(i), currentResponseId);
-                            }}
+                            }
+                        }
 
                         //decide where to make categories for nested question
                         if (options.getCategories().size() > 0) {
                             for (int i = 0; i < options.getCategories().size(); i++) {
                                 buildCategoryLayout(options.getCategories().get(i));
-                            }}
+                            }
+                        }
 
                         //remove unnessecary questions and categories on other item selected
                         for (int i = 0; i < ques.getOptions().size(); i++) {
@@ -833,8 +845,6 @@ public class NewResponseActivity extends Activity {
             checkHint();
 
 
-
-
         }
         if (ques.getType().equals("RatingQuestion")) {
             nestedQuestions.add(ques);
@@ -842,15 +852,15 @@ public class NewResponseActivity extends Activity {
             TextView questionTextSingleLine = createQuestionTitle(ques);
 
             nestedContainer.addView(questionTextSingleLine);
-        nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
-        nestedContainer.setId(ques.getId());
+            nestedContainer.addView(inflater.inflate(R.layout.answer_rating, null));
+            nestedContainer.setId(ques.getId());
 
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-            ratingBar.setId(ques.getId() + 220);
+            ratingBar.setId(ques.getId() + 220 + recordId);
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-               //answer saved on rating changed
+                //answer saved on rating changed
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                     if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
@@ -870,21 +880,21 @@ public class NewResponseActivity extends Activity {
             });
 
 
-        checkHint();
+            checkHint();
         }
 
         //for image question
-    if(ques.getType().equals("PhotoQuestion")) {
-        nestedQuestionList.add(ques);
-        LinearLayout nestedContainer = createNestedContainer();
-        TextView questionTextSingleLine = createQuestionTitle(ques);
-        nestedContainer.addView(questionTextSingleLine);
-        nestedContainer.setId(ques.getId());
+        if (ques.getType().equals("PhotoQuestion")) {
+            nestedQuestionList.add(ques);
+            LinearLayout nestedContainer = createNestedContainer();
+            TextView questionTextSingleLine = createQuestionTitle(ques);
+            nestedContainer.addView(questionTextSingleLine);
+            nestedContainer.setId(ques.getId());
             nestedContainer.addView(inflater.inflate(R.layout.answer_image_picker, null));
-        fieldContainer.addView(nestedContainer);
+            fieldContainer.addView(nestedContainer);
 
             Button lButton = (Button) findViewById(R.id.answer_text_image);
-        lButton.setId(ques.getId() + 220);
+            lButton.setId(ques.getId() + 220 + recordId);
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
@@ -921,6 +931,7 @@ public class NewResponseActivity extends Activity {
 //
 //            fieldContainer.addView(inflater.inflate(R.layout.hint_helper, null));
 //            final RelativeLayout hintContainer = (RelativeLayout) findViewById(R.id.hint_container);
+//            LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
 //            LinearLayout hintButtonContainer = (LinearLayout) findViewById(R.id.hint_buttons_container);
 //            final Button textHintButton = (Button) findViewById(R.id.text_hint_button);
 //            final Button imageHintButton = (Button) findViewById(R.id.image_hint_button);
@@ -974,7 +985,9 @@ public class NewResponseActivity extends Activity {
         //check for mandatory questions
         boolean x = checkMandatory(nestedQuestionList);
         if (x) {
+
             nestedQuestionList.clear();
+
             //set next and previous buttons
             if (questionCounter < totalQuestionCount - 1) {
                 previousQuestion.setBackgroundColor(getResources().getColor(R.color.login_button_color));
@@ -993,6 +1006,7 @@ public class NewResponseActivity extends Activity {
 
                         //for multirecord questions
                         if (currentCategory.getType().equals("MultiRecordCategory")) {
+
                             Button addRecord = new Button(this);
                             addRecord.setBackgroundResource(R.drawable.custom_button);
                             addRecord.setText("+  Add Record");
@@ -1001,9 +1015,11 @@ public class NewResponseActivity extends Activity {
                             addRecord.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+
                                     buildCategoryLayout(currentCategory);
                                     for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
-                                    }}
+                                    }
+                                }
                             });
                         }
                         buildCategoryLayout(currentCategory);
@@ -1022,7 +1038,6 @@ public class NewResponseActivity extends Activity {
 
                 //check if questions is the last question
                 checkIfLastQuestion();
-
             }
 
             //check not the first question
@@ -1035,7 +1050,7 @@ public class NewResponseActivity extends Activity {
         }
     }
 
-//on back is clicked
+    //on back is clicked
     public void onBackClicked() {
         nestedQuestionList.clear();
         markAsComplete.setVisibility(View.GONE);
@@ -1071,7 +1086,7 @@ public class NewResponseActivity extends Activity {
             counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
-                   Categories currentCategory = categoriesList.get(j);
+                    Categories currentCategory = categoriesList.get(j);
                     buildCategoryLayout(currentCategory);
 //                    for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
 //                        checkForAnswer(currentCategory.getQuestionsList().get(k), currentResponseId);
@@ -1143,6 +1158,7 @@ public class NewResponseActivity extends Activity {
             e.printStackTrace();
         }
     }
+
     //load image from memory card
     private void loadImageFromStorage(String path, String fileName) {
         try {
@@ -1174,9 +1190,10 @@ public class NewResponseActivity extends Activity {
         for (int j = categories.getQuestionsList().size() - 1; j >= 0; j--) {
             categoryQuestionCounter++;
             buildLayout(categories.getQuestionsList().get(j));
-            checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
+            //checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
         }
-        categoryQuestionCounter=0;
+        categoryQuestionCounter = 0;
+
     }
 
     //remove questions view from main container
@@ -1235,6 +1252,9 @@ public class NewResponseActivity extends Activity {
             answers.setContent(answer.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
+
+
+
             if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId)) {
                 dbAdapter.insertDataAnswersTable(answers);
             }
@@ -1243,6 +1263,7 @@ public class NewResponseActivity extends Activity {
                 dbAdapter.insertDataAnswersTable(answers);
 
             }
+
             ;
         }
 
@@ -1369,29 +1390,29 @@ public class NewResponseActivity extends Activity {
     public void checkForAnswer(Questions qu, int responseId) {
 
         if (qu.getType().equals("SingleLineQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220);
+            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("MultilineQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220);
+            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("DateQuestion")) {
-            dateText = (TextView) findViewById(qu.getId() + 220);
+            dateText = (TextView) findViewById(qu.getId() + 220 + recordId);
             dateText.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
         if (qu.getType().equals("NumericQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220);
+            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
         if (qu.getType().equals("RatingQuestion")) {
 
-            ratingBar = (RatingBar) findViewById(qu.getId() + 220);
+            ratingBar = (RatingBar) findViewById(qu.getId() + 220 + recordId);
             dbAdapter.getAnswer(responseId, qu.getId());
             //Integer.parseInt(dbAdapter.getAnswer(responseId, qu.getId()));
             try {
@@ -1687,7 +1708,7 @@ public class NewResponseActivity extends Activity {
             int mYear = year;
             int mMonth = monthOfYear;
             int mDay = dayOfMonth;
-            dateText= (TextView) findViewById(dateQuestion.getId() + 220);
+            dateText = (TextView) findViewById(dateQuestion.getId() + 220 + recordId);
             dateText.setText(new StringBuilder().append(mYear).append("/").append(mMonth + 1).append("/").append(mDay).toString());
 
 
@@ -1697,14 +1718,15 @@ public class NewResponseActivity extends Activity {
             answers.setContent(dateText.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
-            if (!dbAdapter.doesAnswerExist(dateQuestion.getId(), currentResponseId)){
+            if (!dbAdapter.doesAnswerExist(dateQuestion.getId(), currentResponseId)) {
                 dbAdapter.insertDataAnswersTable(answers);
-            Toast.makeText(NewResponseActivity.this,"answer saved"+dateQuestion.getId(),Toast.LENGTH_SHORT).show();}
+                Toast.makeText(NewResponseActivity.this, "answer saved" + dateQuestion.getId(), Toast.LENGTH_SHORT).show();
+            }
             if (dbAdapter.doesAnswerExist(dateQuestion.getId(), currentResponseId)) {
                 dbAdapter.deleteFromAnswerTable(dateQuestion.getId(), currentResponseId);
                 dbAdapter.insertDataAnswersTable(answers);
 
-                Toast.makeText(NewResponseActivity.this,"answer removed and saved"+dateQuestion.getId(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewResponseActivity.this, "answer removed and saved" + dateQuestion.getId(), Toast.LENGTH_SHORT).show();
 
             }
 

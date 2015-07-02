@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -417,7 +418,7 @@ public class DBAdapter {
         String[] coloums = {DBhelper.ID};
         String[] selectionArgs = {String.valueOf(id), String.valueOf(responseid)};
         Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =?", selectionArgs, null, null, null);
-
+//Toast.makeText(context,"question id is"+id,Toast.LENGTH_SHORT).show();
         while (cursor.moveToNext()) {
             count++;
         }
@@ -427,6 +428,21 @@ public class DBAdapter {
             return false;
     }
 
+    public boolean doesAnswerExistPlusRecordId(int id, int responseid,int recordId) {
+        int count = 0;
+
+        String[] coloums = {DBhelper.ID};
+        String[] selectionArgs = {String.valueOf(id), String.valueOf(responseid), String.valueOf(recordId)};
+        Cursor cursor = sqLiteDatabase.query(DBhelper.TABLE_answers, coloums, DBhelper.QUESTION_ID + " =? AND " + DBhelper.RESPONSE_ID + " =? AND " + DBhelper.RECORD_ID + " =?", selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        if (count > 0)
+            return true;
+        else
+            return false;
+    }
 
     public int deleteRatingAnswer(int id, int responseId) {
 
@@ -547,7 +563,7 @@ public class DBAdapter {
         contentValues.put(DBhelper.RESPONSE_ID, answers.getResponseId());
         contentValues.put(DBhelper.QUESTION_ID, answers.getQuestion_id());
         contentValues.put(DBhelper.TYPE, answers.getType());
-        //  Toast.makeText(context,answers.getType(),Toast.LENGTH_SHORT).show();
+          //Toast.makeText(context, "answer saved"+answers.getQuestion_id(), Toast.LENGTH_SHORT).show();
         return sqLiteDatabase.insert(DBhelper.TABLE_answers, null, contentValues);
     }
 
