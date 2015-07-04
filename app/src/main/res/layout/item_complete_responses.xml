@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+    <lumstic.ashoka.com.lumstic.Views.RobotoRegularTextView
         android:id="@+id/response_number_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

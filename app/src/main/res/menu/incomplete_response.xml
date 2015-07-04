@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="lumstic.example.com.lumstic.UI.DashBoardActivity">
+    tools:context="lumstic.ashoka.com.lumstic.UI.DashBoardActivity">
     <item
         android:icon="@drawable/ic_action_ic_menu_overflow"
         android:showAsAction="always"

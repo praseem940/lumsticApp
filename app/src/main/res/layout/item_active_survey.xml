@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingBottom="10dp">
 
-    <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+    <lumstic.ashoka.com.lumstic.Views.RobotoRegularTextView
         android:id="@+id/survey_name_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:layout_marginTop="9dp"
         android:orientation="horizontal">
 
-        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+        <lumstic.ashoka.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/complete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textSize="13sp" />
 
 
-        <lumstic.example.com.lumstic.Views.RobotoRegularTextView
+        <lumstic.ashoka.com.lumstic.Views.RobotoRegularTextView
             android:id="@+id/incomplete_survey_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         android:layout_marginTop="9dp"
         android:orientation="horizontal">
 
-        <lumstic.example.com.lumstic.Views.RobotoLightTextView
+        <lumstic.ashoka.com.lumstic.Views.RobotoLightTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ends on:"
@@ -61,7 +61,7 @@
             android:textSize="12sp" />
 
 
-        <lumstic.example.com.lumstic.Views.RobotoLightTextView
+        <lumstic.ashoka.com.lumstic.Views.RobotoLightTextView
             android:id="@+id/end_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
