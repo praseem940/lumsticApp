@@ -161,7 +161,7 @@ public class SurveyDetailsActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                mobilId = UUID.randomUUID().toString();
+
                 if (checkLocationOn()) {
                     Location location = getLocation();
                     if (null != location) {
@@ -282,6 +282,7 @@ public class SurveyDetailsActivity extends Activity {
                         jsonObject.put("question_id", answerses.get(j).getQuestion_id());
                         jsonObject.put("updated_at", answerses.get(j).getUpdated_at());
                         jsonObject.put("content", answerses.get(j).getContent());
+                        jsonObject.put("record_id",answerses.get(j).getRecordId());
 
                         try {
                             if ((answerses.get(j).getType().equals("MultiChoiceQuestion")) && (dbAdapter.getChoicesCount(answerses.get(j).getId()) == 0)) {
@@ -350,6 +351,7 @@ public class SurveyDetailsActivity extends Activity {
                     obj.put("user_id", lumsticApp.getPreferences().getUserId());
                     obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
                     obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
+                    mobilId = UUID.randomUUID().toString();
                     obj.put("mobile_id", mobilId);
                     obj.put("answers_attributes", jsonArray);
                     jsonStr = obj.toString();

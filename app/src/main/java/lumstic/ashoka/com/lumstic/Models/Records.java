@@ -5,7 +5,7 @@ public class Records {
     int id;
     int responseId;
     int categoryId;
-    int answerId;
+    int questionId;
     int webId;
 
     public int getId() {
@@ -16,12 +16,12 @@ public class Records {
         this.id = id;
     }
 
-    public int getAnswerId() {
-        return answerId;
+    public int getQuestionId() {
+        return questionId;
     }
 
-    public void setAnswerId(int answerId) {
-        this.answerId = answerId;
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     public int getResponseId() {

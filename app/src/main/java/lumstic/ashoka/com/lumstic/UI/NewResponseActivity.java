@@ -35,7 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import lumstic.ashoka.com.lumstic.Adapters.DBAdapter;
 import lumstic.ashoka.com.lumstic.Models.Answers;
 import lumstic.ashoka.com.lumstic.Models.Categories;
@@ -95,7 +93,6 @@ public class NewResponseActivity extends Activity {
     private Button counterButton, markAsComplete;
     private Button nextQuestion, previousQuestion;
     private LinearLayout fieldContainer;
-    private int recordId = 0;
     private LayoutInflater inflater;
     private RatingBar ratingBar;
 
@@ -104,17 +101,13 @@ public class NewResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_response);
-
         //action bar attributes
         setActionbar();
-
         //views decleration
         setViews();
-
         //layout inflater initialization
         inflater = getLayoutInflater();
         dbAdapter = new DBAdapter(NewResponseActivity.this);
-
         //decleration of list items
         stringTypes = new ArrayList<String>();
         types = new ArrayList<Integer>();
@@ -122,13 +115,10 @@ public class NewResponseActivity extends Activity {
         questionsList = new ArrayList<Questions>();
         categoriesList = new ArrayList<Categories>();
         nestedQuestionList = new ArrayList<>();
-
-
         //create mark as complete button and mandatory text
         createMarkAsComplete();
         makeMandatoryText();
         previousQuestion.setText("BACK");
-
         //surveys from previous activity
         surveys = (Surveys) getIntent().getExtras().getSerializable(IntentConstants.SURVEY);
         //remove category questions from questions array
@@ -145,15 +135,11 @@ public class NewResponseActivity extends Activity {
         buildFirstQuestion();
         //check if first question is the last question
         checkIfLastQuestion();
-
         //save various answers on mark as complete
         markAsComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 onMarkComplete();
-
-
             }
         });
 
@@ -172,27 +158,20 @@ public class NewResponseActivity extends Activity {
             }
         });
     }
-
-
     public void setActionbar() {
         actionBar = getActionBar();
         actionBar.setTitle("New Response Activity");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
     }
-
     public void setViews() {
-
         counterButton = (Button) findViewById(R.id.counter_button);
         fieldContainer = (LinearLayout) findViewById(R.id.field_container);
         nextQuestion = (Button) findViewById(R.id.next_queation);
         previousQuestion = (Button) findViewById(R.id.previous_question);
         markAsComplete = new Button(this);
-
     }
-
     public void createMarkAsComplete() {
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.leftMargin = 5;
         params.topMargin = 30;
@@ -204,9 +183,7 @@ public class NewResponseActivity extends Activity {
         markAsComplete.setTextColor(getResources().getColor(R.color.white));
         markAsComplete.setLayoutParams(params);
         markAsComplete.setVisibility(View.GONE);
-
     }
-
 
     public TextView makeMandatoryText() {
         TextView mandatoryText = new TextView(this);
@@ -215,14 +192,12 @@ public class NewResponseActivity extends Activity {
         mandatoryText.setPadding(0, 0, 0, 8);
         mandatoryText.setText(" The Question Is Mandatory");
         return mandatoryText;
-
     }
 
     public void removeQuestionBelongingTOCategory(Surveys surveys) {
         for (int j = surveys.getQuestions().size() - 1; j >= 0; j--) {
             if (surveys.getQuestions().get(j).getCategoryId() > 0)
                 surveys.getQuestions().remove(j);
-
         }
     }
 
@@ -230,7 +205,6 @@ public class NewResponseActivity extends Activity {
         for (int j = surveys.getCategories().size() - 1; j >= 0; j--) {
             if (surveys.getCategories().get(j).getParentId() > 0)
                 surveys.getCategories().remove(j);
-
         }
     }
 
@@ -284,16 +258,9 @@ public class NewResponseActivity extends Activity {
 
 
     public void onMarkComplete() {
-        if (universalQuestion.getType().equals("SingleLineQuestion")) {
+        if (universalQuestion.getType().equals("SingleLineQuestion")||(universalQuestion.getType().equals("MultilineQuestion"))||(universalQuestion.getType().equals("NumericQuestion"))) {
             addAnswer(universalQuestion);
         }
-        if (universalQuestion.getType().equals("MultilineQuestion")) {
-            addAnswer(universalQuestion);
-        }
-        if (universalQuestion.getType().equals("NumericQuestion")) {
-            addAnswer(universalQuestion);
-        }
-
         if (checkMandatory(nestedQuestionList)) {
             dbAdapter.UpldateCompleteResponse(currentResponseId, questionsList.get(0).getSurveyId());
             Intent intent = new Intent(NewResponseActivity.this, SurveyDetailsActivity.class);
@@ -422,7 +389,7 @@ public class NewResponseActivity extends Activity {
 
     }
 
-
+    //hide keypad on next click and various events
     public void hideKeypad(EditText answer) {
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
@@ -447,16 +414,9 @@ public class NewResponseActivity extends Activity {
             nestedContainer.addView(inflater.inflate(R.layout.answer_single_line, null));
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
-            answer = (EditText) nestedContainer.findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220 + recordId);
+            answer = (EditText) findViewById(R.id.answer_text);
+            answer.setId(ques.getId() + IntentConstants.VIEW_CONSTANT);
             hideKeypad(answer);
-
-            answer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                Toast.makeText(NewResponseActivity.this,answer.getId()+ "this is edit text id",Toast.LENGTH_SHORT).show();
-                }
-            });
 
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -469,39 +429,21 @@ public class NewResponseActivity extends Activity {
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
-                        answers.setRecordId(recordId);
 
                         tsLong = System.currentTimeMillis() / 1000;
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
 
-                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
-                            dbAdapter.insertDataAnswersTable(answers);
 
-                        //Toast.makeText(NewResponseActivity.this,"saved",Toast.LENGTH_LONG).show();
+
+
+                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)){
+                            dbAdapter.insertDataAnswersTable(answers);}
                         if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
                             dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
                             dbAdapter.insertDataAnswersTable(answers);
 
                         }
-
-//                        long maxId=dbAdapter.getMaxIDAnswersTabele();
-//                        if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)){
-//                            dbAdapter.insertDataAnswersTable(answers);
-//                            maxId=dbAdapter.getMaxIDAnswersTabele();
-//                            dbAdapter.insertIntoRecordTable(maxId,recordId);
-//                        }
-//                        if (dbAdapter.doesAnswerExist(ques.getId(), currentResponseId)) {
-//
-//                            if(dbAdapter.answerExistsInRecordTableAsRecordIdZero(maxId)==0){
-//                            dbAdapter.deleteFromAnswerTable(ques.getId(), currentResponseId);
-//                            dbAdapter.insertDataAnswersTable(answers);}
-//
-//                            if(dbAdapter.answerExistsInRecordTableAsRecordIdZero(maxId)!=0){
-//                                dbAdapter.insertDataAnswersTable(answers);
-//                            }
-//
-//                        }
 
 
                     }
@@ -527,7 +469,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220 + recordId);
+            answer.setId(ques.getId() + IntentConstants.VIEW_CONSTANT );
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
@@ -541,7 +483,7 @@ public class NewResponseActivity extends Activity {
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
                         tsLong = System.currentTimeMillis() / 1000;
-                        answers.setRecordId(recordId);
+
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
                         if (!dbAdapter.doesAnswerExist(ques.getId(), currentResponseId))
@@ -728,7 +670,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             answer = (EditText) findViewById(R.id.answer_text);
-            answer.setId(ques.getId() + 220 + recordId);
+            answer.setId(ques.getId() + IntentConstants.VIEW_CONSTANT );
             answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
@@ -739,7 +681,6 @@ public class NewResponseActivity extends Activity {
                         Answers answers = new Answers();
                         answers.setQuestion_id(ques.getId());
                         answers.setResponseId(currentResponseId);
-                        answers.setRecordId(recordId);
                         tsLong = System.currentTimeMillis() / 1000;
                         answers.setUpdated_at(tsLong);
                         answers.setContent(answer.getText().toString());
@@ -775,7 +716,7 @@ public class NewResponseActivity extends Activity {
 
             dateText = (TextView) findViewById(R.id.answer_text_date);
             dateText.setText("dd.yy.mm");
-            dateText.setId(ques.getId() + 220 + recordId);
+            dateText.setId(ques.getId() + IntentConstants.VIEW_CONSTANT );
 
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -884,7 +825,7 @@ public class NewResponseActivity extends Activity {
             nestedContainer.setTag(ques);
             fieldContainer.addView(nestedContainer);
             ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-            ratingBar.setId(ques.getId() + 220 + recordId);
+            ratingBar.setId(ques.getId() + IntentConstants.VIEW_CONSTANT);
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 //answer saved on rating changed
                 @Override
@@ -895,7 +836,6 @@ public class NewResponseActivity extends Activity {
                     Answers answers = new Answers();
                     answers.setResponseId((int) dbAdapter.getMaxID());
                     answers.setQuestion_id(ques.getId());
-                    answers.setRecordId(recordId);
                     tsLong = System.currentTimeMillis() / 1000;
                     answers.setUpdated_at(tsLong);
                     answers.setContent(String.valueOf(v));
@@ -921,7 +861,7 @@ public class NewResponseActivity extends Activity {
             fieldContainer.addView(nestedContainer);
 
             Button lButton = (Button) findViewById(R.id.answer_text_image);
-            lButton.setId(ques.getId() + 220 + recordId);
+            lButton.setId(ques.getId() + IntentConstants.VIEW_CONSTANT );
 
             deleteImageRelativeLayout = (RelativeLayout) findViewById(R.id.image_container);
 
@@ -1013,7 +953,6 @@ public class NewResponseActivity extends Activity {
         boolean x = checkMandatory(nestedQuestionList);
         if (x) {
 
-            recordId=0;
             nestedQuestionList.clear();
 
             //set next and previous buttons
@@ -1035,7 +974,6 @@ public class NewResponseActivity extends Activity {
                         //for multirecord questions
                         if (currentCategory.getType().equals("MultiRecordCategory")) {
 
-                            recordId=currentCategory.getId();
                             Button addRecord = new Button(this);
                             addRecord.setBackgroundResource(R.drawable.custom_button);
                             addRecord.setText("+  Add Record");
@@ -1045,7 +983,6 @@ public class NewResponseActivity extends Activity {
                                 @Override
                                 public void onClick(View view) {
 
-                                    recordId=recordId+20;
                                     buildCategoryLayout(currentCategory);
                                     for (int k = 0; k < currentCategory.getQuestionsList().size(); k++) {
                                     }
@@ -1113,7 +1050,7 @@ public class NewResponseActivity extends Activity {
             //change count
             questionCounter--;
 
-            counterButton.setText(questionCounter + 1 + " out of " + totalQuestionCount);
+            counterButton.setText(questionCounter + 1 + " out of "  + totalQuestionCount);
             for (int j = 0; j < categoriesList.size(); j++) {
                 if (categoriesList.get(j).getOrderNumber() == types.get(questionCounter)) {
                     Categories currentCategory = categoriesList.get(j);
@@ -1220,7 +1157,7 @@ public class NewResponseActivity extends Activity {
         for (int j = categories.getQuestionsList().size() - 1; j >= 0; j--) {
             categoryQuestionCounter++;
             buildLayout(categories.getQuestionsList().get(j));
-            checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
+            //checkForAnswer(categories.getQuestionsList().get(j), currentResponseId);
         }
         categoryQuestionCounter = 0;
 
@@ -1279,7 +1216,6 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);
-            answers.setRecordId(recordId);
             answers.setContent(answer.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
@@ -1302,7 +1238,6 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setQuestion_id(questions.getId());
             answers.setResponseId((int) dbAdapter.getMaxID());
-            answers.setRecordId(recordId);
             answers.setContent(answer.getText().toString());
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
@@ -1320,7 +1255,6 @@ public class NewResponseActivity extends Activity {
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
             tsLong = System.currentTimeMillis() / 1000;
-            answers.setRecordId(recordId);
             answers.setUpdated_at(tsLong);
             answers.setContent(answer.getText().toString());
             if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
@@ -1338,7 +1272,6 @@ public class NewResponseActivity extends Activity {
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
             tsLong = System.currentTimeMillis() / 1000;
-            answers.setRecordId(recordId);
             answers.setUpdated_at(tsLong);
             answers.setContent(dateText.getText().toString());
             if (!dbAdapter.doesAnswerExist(questions.getId(), currentResponseId))
@@ -1359,7 +1292,6 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setResponseId((int) dbAdapter.getMaxID());
             answers.setQuestion_id(questions.getId());
-            answers.setRecordId(recordId);
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             answers.setContent(String.valueOf(ratingBar.getRating()));
@@ -1380,7 +1312,6 @@ public class NewResponseActivity extends Activity {
             answers.setQuestion_id(questions.getId());
             answers.setType("PhotoQuestion");
             answers.setImage(fname);
-            answers.setRecordId(recordId);
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             long x = dbAdapter.insertDataAnswersTable(answers);
@@ -1392,7 +1323,6 @@ public class NewResponseActivity extends Activity {
             answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);
             answers.setType("RadioQuestion");
-            answers.setRecordId(recordId);
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
             answers.setContent("");
@@ -1404,7 +1334,6 @@ public class NewResponseActivity extends Activity {
             Answers answers = new Answers();
             answers.setType("DropDownQuestion");
             answers.setQuestion_id(questions.getId());
-            answers.setRecordId(recordId);
             answers.setResponseId(currentResponseId);
             tsLong = System.currentTimeMillis() / 1000;
             answers.setUpdated_at(tsLong);
@@ -1415,7 +1344,6 @@ public class NewResponseActivity extends Activity {
         if (questions.getType().equals("MultiChoiceQuestion")) {
             Answers answers = new Answers();
             answers.setType("MultiChoiceQuestion");
-            answers.setResponseId(currentResponseId);
             answers.setQuestion_id(questions.getId());
             answers.setResponseId(currentResponseId);
             tsLong = System.currentTimeMillis() / 1000;
@@ -1426,32 +1354,23 @@ public class NewResponseActivity extends Activity {
 
     }
 
+    //this will check if the ansdwer is saved and can be retrieved from the tables
     public void checkForAnswer(Questions qu, int responseId) {
 
-        if (qu.getType().equals("SingleLineQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
-            answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
-        }
-
-
-        if (qu.getType().equals("MultilineQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
+        if ((qu.getType().equals("SingleLineQuestion"))||(qu.getType().equals("MultilineQuestion"))||(qu.getType().equals("NumericQuestion"))) {
+            answer = (EditText) findViewById(qu.getId() + IntentConstants.VIEW_CONSTANT);
             answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
 
         if (qu.getType().equals("DateQuestion")) {
-            dateText = (TextView) findViewById(qu.getId() + 220 + recordId);
+            dateText = (TextView) findViewById(qu.getId() + IntentConstants.VIEW_CONSTANT );
             dateText.setText(dbAdapter.getAnswer(responseId, qu.getId()));
         }
 
-        if (qu.getType().equals("NumericQuestion")) {
-            answer = (EditText) findViewById(qu.getId() + 220 + recordId);
-            answer.setText(dbAdapter.getAnswer(responseId, qu.getId()));
-        }
         if (qu.getType().equals("RatingQuestion")) {
 
-            ratingBar = (RatingBar) findViewById(qu.getId() + 220 + recordId);
+            ratingBar = (RatingBar) findViewById(qu.getId() + IntentConstants.VIEW_CONSTANT );
             dbAdapter.getAnswer(responseId, qu.getId());
             //Integer.parseInt(dbAdapter.getAnswer(responseId, qu.getId()));
             try {
@@ -1482,31 +1401,24 @@ public class NewResponseActivity extends Activity {
 
             List<Integer> integers = new ArrayList<Integer>();
             integers = dbAdapter.getIdFromAnswerTable(responseId, qu.getId());
-
-
             List<Integer> list2 =
                     dbAdapter.getOptionIds(integers);
-
             for (int i = 0; i < list2.size(); i++) {
                 list2.get(i);
                 CheckBox checkBox = (CheckBox) findViewById(list2.get(i));
                 checkBox.setChecked(true);
-
-
                 for (int k = 0; k < options.size(); k++) {
                     if (options.get(k).getId() == list2.get(i)) {
                         Options options1 = options.get(k);
                         if (options1.getQuestions().size() > 0) {
                             for (int l = 0; l < options1.getQuestions().size(); l++) {
                                 buildLayout(options1.getQuestions().get(l));
-                                checkForAnswer(options1.getQuestions().get(l),currentResponseId);
+                                //checkForAnswer(options1.getQuestions().get(l),currentResponseId);
                             }
                         }
                     }
                 }
-
             }
-
         }
 
 
@@ -1560,8 +1472,7 @@ public class NewResponseActivity extends Activity {
                 for (int j = 0; j < qu.getOptions().size(); j++) {
                     if (qu.getOptions().get(j).getId() == list2.get(i)) {
 
-                        spinner.setSelection(j);
-
+                        spinner.setSelection(j+1);
                     }
 
                 }
@@ -1596,6 +1507,7 @@ public class NewResponseActivity extends Activity {
     public void removeOthersFromDataBase(Options options, Questions qu) {
 
 
+        //this removes the answers entry from answers table as well as choices in choices table of rest of the options
         for (int i = 0; i < qu.getOptions().size(); i++) {
             if (options.getId() != qu.getOptions().get(i).getId()) {
                 dbAdapter.deleteFromChoicesTableWhereOptionId(qu.getOptions().get(i).getId());
@@ -1607,6 +1519,7 @@ public class NewResponseActivity extends Activity {
                 }
 
 
+                //thius removes all the category questions stored in answers table
                 if (qu.getOptions().get(i).getCategories().size() > 0) {
                     for (int k = 0; k < qu.getOptions().get(i).getCategories().size(); k++) {
                         for (int l = 0; l < qu.getOptions().get(i).getCategories().get(k).getQuestionsList().size(); l++) {
@@ -1619,11 +1532,16 @@ public class NewResponseActivity extends Activity {
         }
     }
 
+
+    //function to check if the question is mandatory or not
+    //this function will also check all the questions on the page if any question is mandatory or not
     public boolean checkMandatory(List<Questions> nestedQuestionList) {
 
         proceed = true;
         for (int i = 0; i < nestedQuestionList.size(); i++) {
-            if (nestedQuestionList.get(i).getType().equals("SingleLineQuestion")) {
+
+            //this will check for answers for questions having answers in answeers table
+            if ((nestedQuestionList.get(i).getType().equals("SingleLineQuestion"))||(nestedQuestionList.get(i).getType().equals("MultilineQuestion")||(nestedQuestionList.get(i).getType().equals("RatingQuestion")))||(nestedQuestionList.get(i).getType().equals("DateQuestion"))||(nestedQuestionList.get(i).getType().equals("NumericQuestion"))) {
 
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
                     if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
@@ -1633,15 +1551,8 @@ public class NewResponseActivity extends Activity {
                 }
 
             }
-            if (nestedQuestionList.get(i).getType().equals("MultilineQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
-                        showDialog();
-                        proceed = false;
-                    } else proceed = true;
-                }
-            }
-            if (nestedQuestionList.get(i).getType().equals("RadioQuestion")) {
+            //this wil check questions having answers in choices tables have answers or not
+            if ((nestedQuestionList.get(i).getType().equals("RadioQuestion"))||(nestedQuestionList.get(i).getType().equals("MultiChoiceQuestion"))||((nestedQuestionList.get(i).getType().equals("DropDownQuestion")))) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
                     int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
                     if (count == 0) {
@@ -1657,29 +1568,8 @@ public class NewResponseActivity extends Activity {
                     }
                 }
             }
-            if (nestedQuestionList.get(i).getType().equals("MultiChoiceQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
-                    if (count == 0) {
-                        showDialog();
-                        proceed = false;
-                    }
-                    if (count != 0) {
-                        if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
-                            showDialog();
-                            proceed = false;
-                        }
-                    }
-                }
-            }
-            if (nestedQuestionList.get(i).getType().equals("RatingQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
-                        showDialog();
-                        proceed = false;
-                    } else proceed = true;
-                }
-            }
+
+            // this wil check if photo mandatory questions have answers in te anssweers table or not
             if (nestedQuestionList.get(i).getType().equals("PhotoQuestion")) {
                 if (nestedQuestionList.get(i).getMandatory() == 1) {
                     if (dbAdapter.doesImageExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
@@ -1687,45 +1577,15 @@ public class NewResponseActivity extends Activity {
                         proceed = false;
                     } else proceed = true;
                 }
-
             }
-            if (nestedQuestionList.get(i).getType().equals("DateQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
-                        showDialog();
-                        proceed = false;
-                    } else proceed = true;
-                }
-            }
-            if (nestedQuestionList.get(i).getType().equals("NumericQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    if (dbAdapter.doesAnswerExistAsNonNull(nestedQuestionList.get(i).getId(), currentResponseId).equals("")) {
-                        showDialog();
-                        proceed = false;
-                    } else proceed = true;
-                }
-            }
-            if (nestedQuestionList.get(i).getType().equals("DropDownQuestion")) {
-                if (nestedQuestionList.get(i).getMandatory() == 1) {
-                    int count = dbAdapter.getAnswerId(currentResponseId, nestedQuestionList.get(i).getId());
-                    if (count == 0) {
-                        showDialog();
-                        proceed = false;
-                    }
-                    if (count != 0) {
-                        if (dbAdapter.getChoicesCountWhereAnswerIdIs(count) == 0) {
-                            showDialog();
-                            proceed = false;
-                        }
-                    }
-                }
-            }
-
         }
         return proceed;
     }
 
 
+
+
+    //mandatory question dialog
     public void showDialog() {
         final Dialog dialog = new Dialog(NewResponseActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
@@ -1741,13 +1601,14 @@ public class NewResponseActivity extends Activity {
 
     }
 
+    //this is a class which implements datepicker dialog and shows up on item click of date questuions
     class mDateSetListener implements DatePickerDialog.OnDateSetListener {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             int mYear = year;
             int mMonth = monthOfYear;
             int mDay = dayOfMonth;
-            dateText = (TextView) findViewById(dateQuestion.getId() + 220 + recordId);
+            dateText = (TextView) findViewById(dateQuestion.getId() + IntentConstants.VIEW_CONSTANT );
             dateText.setText(new StringBuilder().append(mYear).append("/").append(mMonth + 1).append("/").append(mDay).toString());
 
 

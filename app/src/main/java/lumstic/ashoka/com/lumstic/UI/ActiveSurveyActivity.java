@@ -141,7 +141,7 @@ public class ActiveSurveyActivity extends Activity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mobilId = UUID.randomUUID().toString();
+
                 if (checkLocationOn()) {
                     Location location = getLocation();
                     if (null != location) {
@@ -458,6 +458,7 @@ public class ActiveSurveyActivity extends Activity {
                         obj.put("user_id", lumsticApp.getPreferences().getUserId());
                         obj.put("organization_id", lumsticApp.getPreferences().getOrganizationId());
                         obj.put("access_token", lumsticApp.getPreferences().getAccessToken());
+                        mobilId = UUID.randomUUID().toString();
                         obj.put("mobile_id", mobilId);
                         obj.put("answers_attributes", jsonArray);
                         jsonStr = obj.toString();
